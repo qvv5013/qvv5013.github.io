@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.quarto.org/posts/post-with-jupyter-nb/post-with-jupyter.html</loc>
-    <lastmod>2022-11-23T12:15:27.400Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.quarto.org/posts/matplotlib-example/matplotlib.html</loc>
-    <lastmod>2022-11-23T12:15:28.024Z</lastmod>
+    <loc>https://www.quarto.org/posts/welcome/index.html</loc>
+    <lastmod>2022-11-23T12:34:48.732Z</lastmod>
   </url>
   <url>
     <loc>https://www.quarto.org/posts/post-with-code/index.html</loc>
-    <lastmod>2022-11-23T12:15:28.308Z</lastmod>
+    <lastmod>2022-11-23T12:34:48.964Z</lastmod>
   </url>
   <url>
-    <loc>https://www.quarto.org/posts/welcome/index.html</loc>
-    <lastmod>2022-11-23T12:15:28.596Z</lastmod>
+    <loc>https://www.quarto.org/posts/post-with-jupyter-nb/post-with-jupyter.html</loc>
+    <lastmod>2022-11-23T12:34:49.208Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.quarto.org/posts/matplotlib-example/matplotlib.html</loc>
+    <lastmod>2022-11-23T12:34:49.432Z</lastmod>
   </url>
   <url>
     <loc>https://www.quarto.org/index.html</loc>
-    <lastmod>2022-11-23T12:15:28.948Z</lastmod>
+    <lastmod>2022-11-23T12:34:49.716Z</lastmod>
   </url>
   <url>
     <loc>https://www.quarto.org/about.html</loc>
-    <lastmod>2022-11-23T12:15:29.216Z</lastmod>
+    <lastmod>2022-11-23T12:34:49.920Z</lastmod>
   </url>
 </urlset>

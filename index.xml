@@ -10,7 +10,7 @@
 <atom:link href="https://www.quarto.org/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.269</generator>
-<lastBuildDate>Wed, 23 Nov 2022 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 22 Nov 2022 23:00:00 GMT</lastBuildDate>
 <item>
   <title>matplotlib2</title>
   <dc:creator>Quyen Vu</dc:creator>
@@ -29,7 +29,7 @@
   <category>code</category>
   <category>analysis</category>
   <guid>https://www.quarto.org/posts/matplotlib-example/matplotlib.html</guid>
-  <pubDate>Wed, 23 Nov 2022 00:00:00 GMT</pubDate>
+  <pubDate>Tue, 22 Nov 2022 23:00:00 GMT</pubDate>
 </item>
 <item>
   <title>matplotlib demo</title>
@@ -64,7 +64,7 @@
   <category>code</category>
   <category>analysis</category>
   <guid>https://www.quarto.org/posts/post-with-jupyter-nb/post-with-jupyter.html</guid>
-  <pubDate>Wed, 23 Nov 2022 00:00:00 GMT</pubDate>
+  <pubDate>Tue, 22 Nov 2022 23:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Post With Code</title>
@@ -84,7 +84,7 @@
   <category>code</category>
   <category>analysis</category>
   <guid>https://www.quarto.org/posts/post-with-code/index.html</guid>
-  <pubDate>Wed, 23 Nov 2022 00:00:00 GMT</pubDate>
+  <pubDate>Tue, 22 Nov 2022 23:00:00 GMT</pubDate>
   <media:content url="https://www.quarto.org/posts/post-with-code/image.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -105,7 +105,7 @@
  ]]></description>
   <category>news</category>
   <guid>https://www.quarto.org/posts/welcome/index.html</guid>
-  <pubDate>Sun, 20 Nov 2022 00:00:00 GMT</pubDate>
+  <pubDate>Sat, 19 Nov 2022 23:00:00 GMT</pubDate>
   <media:content url="https://www.quarto.org/posts/welcome/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
