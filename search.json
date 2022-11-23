@@ -7,6 +7,13 @@
     "text": "import numpy as np\nimport matplotlib.pyplot as plt\n\n\nx= np.arange(0, 2*np.pi, 2*np.pi/100)\n\n\ny= np.sin(x)\n\n\nplt.plot(x,y)"
   },
   {
+    "objectID": "posts/matplotlib-example/matplotlib.html",
+    "href": "posts/matplotlib-example/matplotlib.html",
+    "title": "matplotlib2",
+    "section": "",
+    "text": "This is again matplotlib post"
+  },
+  {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
     "title": "Post With Code",
@@ -25,7 +32,7 @@
     "href": "index.html",
     "title": "Listing posts",
     "section": "",
-    "text": "matplotlib demo\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "matplotlib2\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nmatplotlib demo\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",

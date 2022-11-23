@@ -12,6 +12,26 @@
 <generator>quarto-1.2.269</generator>
 <lastBuildDate>Wed, 23 Nov 2022 00:00:00 GMT</lastBuildDate>
 <item>
+  <title>matplotlib2</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://www.quarto.org/posts/matplotlib-example/matplotlib.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>This is again matplotlib post</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <category>code</category>
+  <category>analysis</category>
+  <guid>https://www.quarto.org/posts/matplotlib-example/matplotlib.html</guid>
+  <pubDate>Wed, 23 Nov 2022 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>matplotlib demo</title>
   <dc:creator>Quyen Vu</dc:creator>
   <link>https://www.quarto.org/posts/post-with-jupyter-nb/post-with-jupyter.html</link>
