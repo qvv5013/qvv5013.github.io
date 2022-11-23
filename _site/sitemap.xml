@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.quarto.org/posts/welcome/index.html</loc>
+    <lastmod>2022-11-23T11:56:50.808Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.quarto.org/posts/post-with-code/index.html</loc>
+    <lastmod>2022-11-23T12:00:05.548Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.quarto.org/posts/post-with-jupyter-nb/post-with-jupyter.html</loc>
+    <lastmod>2022-11-23T12:02:43.764Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.quarto.org/index.html</loc>
+    <lastmod>2022-11-23T12:02:44.084Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.quarto.org/about.html</loc>
+    <lastmod>2022-11-23T11:56:51.936Z</lastmod>
+  </url>
+</urlset>
