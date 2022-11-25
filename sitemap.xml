@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.quarto.org/posts/welcome/index.html</loc>
-    <lastmod>2022-11-23T12:35:18.244Z</lastmod>
+    <loc>https://qvv5013.github.io/about.html</loc>
+    <lastmod>2022-11-25T10:30:25.426Z</lastmod>
   </url>
   <url>
-    <loc>https://www.quarto.org/posts/post-with-code/index.html</loc>
-    <lastmod>2022-11-23T12:35:18.480Z</lastmod>
+    <loc>https://qvv5013.github.io/index.html</loc>
+    <lastmod>2022-11-25T10:30:26.154Z</lastmod>
   </url>
   <url>
-    <loc>https://www.quarto.org/posts/post-with-jupyter-nb/post-with-jupyter.html</loc>
-    <lastmod>2022-11-23T12:35:18.724Z</lastmod>
+    <loc>https://qvv5013.github.io/posts/post-with-jupyter-nb/post-with-jupyter.html</loc>
+    <lastmod>2022-11-25T10:30:26.454Z</lastmod>
   </url>
   <url>
-    <loc>https://www.quarto.org/posts/matplotlib-example/matplotlib.html</loc>
-    <lastmod>2022-11-23T12:35:18.944Z</lastmod>
+    <loc>https://qvv5013.github.io/posts/welcome/index.html</loc>
+    <lastmod>2022-11-25T10:30:26.734Z</lastmod>
   </url>
   <url>
-    <loc>https://www.quarto.org/index.html</loc>
-    <lastmod>2022-11-23T12:35:19.228Z</lastmod>
+    <loc>https://qvv5013.github.io/posts/post-with-code/index.html</loc>
+    <lastmod>2022-11-25T10:30:27.002Z</lastmod>
   </url>
   <url>
-    <loc>https://www.quarto.org/about.html</loc>
-    <lastmod>2022-11-23T12:35:19.448Z</lastmod>
+    <loc>https://qvv5013.github.io/posts/matplotlib-example/matplotlib.html</loc>
+    <lastmod>2022-11-25T10:30:27.270Z</lastmod>
   </url>
 </urlset>
