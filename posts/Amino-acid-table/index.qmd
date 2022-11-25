@@ -1,0 +1,10 @@
+---
+title: "Amino acid table"
+author: "Quyen Vu"
+date: "2022-11-25"
+categories: [Protein]
+image: "ProteinogenicAminoAcids.svg.png"
+---
+
+# Amino acids table with their properties
+![](ProteinogenicAminoAcids.svg.png){fig-alt="List of 20 amino acids and classification according to side-chain"}
