@@ -3,8 +3,8 @@ project:
   output-dir: docs
 
 website:
-  title: "blog"
-  site-url: "https://www.quarto.org"
+  title: "Quyen Vu"
+  site-url: "https://qvv5013.github.io/"
   search: 
     location: navbar
     type: overlay
@@ -12,13 +12,14 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/qvv5013
       - icon: twitter
-        href: https://twitter.com
+        href: https://twitter.com/qvv5013
 format:
   html:
     theme: cosmo
     css: styles.css
+    page-layout: full
 
 
 
