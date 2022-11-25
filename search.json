@@ -11,7 +11,7 @@
     "href": "index.html",
     "title": "Quyen Vu",
     "section": "",
-    "text": "matplotlib2\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nmatplotlib demo\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\nNo matching items"
+    "text": "Amino acid table\n\n\n\n\n\n\n\nProtein\n\n\n\n\n\n\n\n\n\n\n\n\nNov 25, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nmatplotlib2\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nmatplotlib demo\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 23, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/post-with-jupyter-nb/post-with-jupyter.html",
@@ -40,5 +40,12 @@
     "title": "matplotlib2",
     "section": "",
     "text": "This is again matplotlib post"
+  },
+  {
+    "objectID": "posts/Amino-acid-table/index.html",
+    "href": "posts/Amino-acid-table/index.html",
+    "title": "Amino acid table",
+    "section": "",
+    "text": "Amino acids table with their properties"
   }
 ]

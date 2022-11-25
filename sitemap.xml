@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://qvv5013.github.io/about.html</loc>
-    <lastmod>2022-11-25T10:30:25.426Z</lastmod>
+    <lastmod>2022-11-25T11:00:04.468Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/index.html</loc>
-    <lastmod>2022-11-25T10:30:26.154Z</lastmod>
+    <lastmod>2022-11-25T11:00:05.216Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/posts/post-with-jupyter-nb/post-with-jupyter.html</loc>
-    <lastmod>2022-11-25T10:30:26.454Z</lastmod>
+    <lastmod>2022-11-25T11:00:05.516Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/posts/welcome/index.html</loc>
-    <lastmod>2022-11-25T10:30:26.734Z</lastmod>
+    <lastmod>2022-11-25T11:00:05.792Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/posts/post-with-code/index.html</loc>
-    <lastmod>2022-11-25T10:30:27.002Z</lastmod>
+    <lastmod>2022-11-25T11:00:06.060Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/posts/matplotlib-example/matplotlib.html</loc>
-    <lastmod>2022-11-25T10:30:27.270Z</lastmod>
+    <lastmod>2022-11-25T11:00:06.324Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qvv5013.github.io/posts/Amino-acid-table/index.html</loc>
+    <lastmod>2022-11-25T11:00:06.588Z</lastmod>
   </url>
 </urlset>

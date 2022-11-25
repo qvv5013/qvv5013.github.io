@@ -10,7 +10,29 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.269</generator>
-<lastBuildDate>Wed, 23 Nov 2022 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 25 Nov 2022 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Amino acid table</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/Amino-acid-table/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="amino-acids-table-with-their-properties" class="level1">
+<h1>Amino acids table with their properties</h1>
+<p><img src="https://qvv5013.github.io/posts/Amino-acid-table/ProteinogenicAminoAcids.svg.png" class="img-fluid" alt="List of 20 amino acids and classification according to side-chain"></p>
+
+
+</section>
+
+ ]]></description>
+  <category>Protein</category>
+  <guid>https://qvv5013.github.io/posts/Amino-acid-table/index.html</guid>
+  <pubDate>Fri, 25 Nov 2022 00:00:00 GMT</pubDate>
+  <media:content url="https://qvv5013.github.io/posts/Amino-acid-table/ProteinogenicAminoAcids.svg.png" medium="image" type="image/png" height="115" width="144"/>
+</item>
 <item>
   <title>matplotlib2</title>
   <dc:creator>Quyen Vu</dc:creator>
