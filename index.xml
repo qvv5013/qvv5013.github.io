@@ -10,7 +10,42 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.269</generator>
-<lastBuildDate>Fri, 25 Nov 2022 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 26 Nov 2022 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Running jobs on clusters</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/Running-jobs-on-clusters/running-jobs-on-cluster.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="ares-supercomputer" class="level1">
+<h1>Ares supercomputer</h1>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<span id="cb1-2"><span class="co" style="color: #5E5E5E;">#SBATCH --partition plgrid</span></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;">#SBATCH --job-name cryosparc-master</span></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;">#SBATCH --nodes 1</span></span>
+<span id="cb1-5"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node 1</span></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;">#SBATCH --mem 15GB</span></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;">#SBATCH --time 72:00:00</span></span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;">#SBATCH -C localfs</span></span>
+<span id="cb1-9"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgrisa-cpu</span></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;">#SBATCH --dependency=singleton</span></span>
+<span id="cb1-11"><span class="co" style="color: #5E5E5E;">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
+<span id="cb1-12"><span class="co" style="color: #5E5E5E;">#SBATCH --signal=B:2@240</span></span>
+<span id="cb1-13"></span>
+<span id="cb1-14"><span class="bu" style="color: null;">echo</span> <span class="st" style="color: #20794D;">"Job run"</span> <span class="op" style="color: #5E5E5E;">&gt;</span> test.txt</span></code></pre></div>
+
+
+</section>
+
+ ]]></description>
+  <category>HPC</category>
+  <category>Slurm</category>
+  <guid>https://qvv5013.github.io/posts/Running-jobs-on-clusters/running-jobs-on-cluster.html</guid>
+  <pubDate>Sat, 26 Nov 2022 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Amino acid table</title>
   <dc:creator>Quyen Vu</dc:creator>
@@ -32,82 +67,6 @@
   <guid>https://qvv5013.github.io/posts/Amino-acid-table/index.html</guid>
   <pubDate>Fri, 25 Nov 2022 00:00:00 GMT</pubDate>
   <media:content url="https://qvv5013.github.io/posts/Amino-acid-table/ProteinogenicAminoAcids.svg.png" medium="image" type="image/png" height="115" width="144"/>
-</item>
-<item>
-  <title>matplotlib2</title>
-  <dc:creator>Quyen Vu</dc:creator>
-  <link>https://qvv5013.github.io/posts/matplotlib-example/matplotlib.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>This is again matplotlib post</p>
-
-
-
- ]]></description>
-  <category>news</category>
-  <category>code</category>
-  <category>analysis</category>
-  <guid>https://qvv5013.github.io/posts/matplotlib-example/matplotlib.html</guid>
-  <pubDate>Wed, 23 Nov 2022 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>matplotlib demo</title>
-  <dc:creator>Quyen Vu</dc:creator>
-  <link>https://qvv5013.github.io/posts/post-with-jupyter-nb/post-with-jupyter.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
-<span id="cb1-2"><span class="im" style="color: #00769E;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;">as</span> plt</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">x<span class="op" style="color: #5E5E5E;">=</span> np.arange(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">2</span><span class="op" style="color: #5E5E5E;">*</span>np.pi, <span class="dv" style="color: #AD0000;">2</span><span class="op" style="color: #5E5E5E;">*</span>np.pi<span class="op" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">100</span>)</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">y<span class="op" style="color: #5E5E5E;">=</span> np.sin(x)</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">plt.plot(x,y)</span></code></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="https://qvv5013.github.io/posts/post-with-jupyter-nb/post-with-jupyter_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-
-
-
- ]]></description>
-  <category>news</category>
-  <category>code</category>
-  <category>analysis</category>
-  <guid>https://qvv5013.github.io/posts/post-with-jupyter-nb/post-with-jupyter.html</guid>
-  <pubDate>Wed, 23 Nov 2022 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Post With Code</title>
-  <dc:creator>Quyen Vu</dc:creator>
-  <link>https://qvv5013.github.io/posts/post-with-code/index.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>This is a post with executable code.</p>
-
-
-
- ]]></description>
-  <category>news</category>
-  <category>code</category>
-  <category>analysis</category>
-  <guid>https://qvv5013.github.io/posts/post-with-code/index.html</guid>
-  <pubDate>Wed, 23 Nov 2022 00:00:00 GMT</pubDate>
-  <media:content url="https://qvv5013.github.io/posts/post-with-code/image.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Welcome To My Blog</title>
