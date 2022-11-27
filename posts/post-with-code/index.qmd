@@ -1,9 +1,0 @@
----
-title: "Post With Code"
-author: "Quyen Vu"
-date: "2022-11-23"
-categories: [news, code, analysis]
-image: "image.jpg"
----
-
-This is a post with executable code.
