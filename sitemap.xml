@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://qvv5013.github.io/about.html</loc>
-    <lastmod>2022-11-27T11:36:30.562Z</lastmod>
+    <lastmod>2022-12-03T14:33:24.358Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/tools.html</loc>
-    <lastmod>2022-11-27T11:36:31.338Z</lastmod>
+    <lastmod>2022-12-03T14:33:25.034Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qvv5013.github.io/pubs.html</loc>
+    <lastmod>2022-12-03T14:33:25.362Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/index.html</loc>
-    <lastmod>2022-11-27T11:36:31.838Z</lastmod>
+    <lastmod>2022-12-03T14:33:25.814Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/posts/welcome/index.html</loc>
-    <lastmod>2022-11-27T11:36:32.190Z</lastmod>
+    <lastmod>2022-12-03T14:33:26.150Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/posts/Amino-acid-table/index.html</loc>
-    <lastmod>2022-11-27T11:36:32.534Z</lastmod>
+    <lastmod>2022-12-03T14:33:26.470Z</lastmod>
   </url>
   <url>
     <loc>https://qvv5013.github.io/posts/Running-jobs-on-clusters/running-jobs-on-cluster.html</loc>
-    <lastmod>2022-11-27T11:36:32.890Z</lastmod>
+    <lastmod>2022-12-03T14:33:26.802Z</lastmod>
   </url>
 </urlset>
