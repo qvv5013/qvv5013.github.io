@@ -3,13 +3,14 @@ project:
   output-dir: docs
 
 website:
-  title: "Quyen Vu"
+  title: "<b>Quyen Vu</b>"
   site-url: "https://qvv5013.github.io/"
   search: 
     location: navbar
     type: overlay
   navbar:
     right:
+      - pubs.qmd
       - tools.qmd
       - about.qmd
       - icon: github
