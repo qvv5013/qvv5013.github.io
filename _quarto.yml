@@ -5,6 +5,7 @@ project:
 website:
   title: "<b>Quyen Vu</b>"
   site-url: "https://qvv5013.github.io/"
+  description: "A great sample blog"
   search: 
     location: navbar
     type: overlay
@@ -17,6 +18,7 @@ website:
         href: https://github.com/qvv5013
       - icon: twitter
         href: https://twitter.com/qvv5013
+
 format:
   html:
     theme: cosmo

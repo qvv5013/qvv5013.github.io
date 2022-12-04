@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Random things in my life"
 listing:
   contents: posts
   feed: true
@@ -13,5 +13,4 @@ listing:
 page-layout: full
 title-block-banner: true
 ---
-
 
