@@ -62,16 +62,20 @@
 <span id="cb4-11"><span class="co" style="color: #5E5E5E;">#SBATCH --dependency=singleton</span></span>
 <span id="cb4-12"><span class="co" style="color: #5E5E5E;">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
 <span id="cb4-13"><span class="co" style="color: #5E5E5E;">#SBATCH --signal=B:2@240</span></span>
-<span id="cb4-14"><span class="co" style="color: #5E5E5E;">## prometheus</span></span>
-<span id="cb4-15"><span class="co" style="color: #5E5E5E;">#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh</span></span>
-<span id="cb4-16"><span class="co" style="color: #5E5E5E;">## ares</span></span>
-<span id="cb4-17"><span class="ex" style="color: null;">conda</span> init bash</span>
-<span id="cb4-18"><span class="bu" style="color: null;">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
-<span id="cb4-19"><span class="ex" style="color: null;">conda</span> activate py310</span>
-<span id="cb4-20"><span class="ex" style="color: null;">module</span> add cuda/11.6.0</span>
-<span id="cb4-21"><span class="bu" style="color: null;">echo</span> <span class="st" style="color: #20794D;">"NVIDIA-DRIVER version:"</span><span class="kw" style="color: #003B4F;">`</span><span class="ex" style="color: null;">nvidia-smi</span><span class="kw" style="color: #003B4F;">`</span></span>
-<span id="cb4-22"></span>
-<span id="cb4-23"><span class="ex" style="color: null;">python</span> single_run_extend.py <span class="at" style="color: #657422;">-f</span> control.cntrl</span></code></pre></div>
+<span id="cb4-14"></span>
+<span id="cb4-15"><span class="co" style="color: #5E5E5E;">## prometheus</span></span>
+<span id="cb4-16"><span class="co" style="color: #5E5E5E;">#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh</span></span>
+<span id="cb4-17"><span class="co" style="color: #5E5E5E;">## ares</span></span>
+<span id="cb4-18"></span>
+<span id="cb4-19"><span class="bu" style="color: null;">cd</span> <span class="va" style="color: #111111;">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb4-20"></span>
+<span id="cb4-21"><span class="ex" style="color: null;">conda</span> init bash</span>
+<span id="cb4-22"><span class="bu" style="color: null;">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
+<span id="cb4-23"><span class="ex" style="color: null;">conda</span> activate py310</span>
+<span id="cb4-24"><span class="ex" style="color: null;">module</span> add cuda/11.6.0</span>
+<span id="cb4-25"><span class="bu" style="color: null;">echo</span> <span class="st" style="color: #20794D;">"NVIDIA-DRIVER version:"</span><span class="kw" style="color: #003B4F;">`</span><span class="ex" style="color: null;">nvidia-smi</span><span class="kw" style="color: #003B4F;">`</span></span>
+<span id="cb4-26"></span>
+<span id="cb4-27"><span class="ex" style="color: null;">python</span> single_run_extend.py <span class="at" style="color: #657422;">-f</span> control.cntrl</span></code></pre></div>
 </section>
 </section>
 <section id="interactive-mode-on-ares" class="level2">
