@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html",
       "/posts/linux-tips/count-line-in-file.html",
       "/posts/Running-jobs-on-clusters/running-jobs-on-cluster.html",
       "/posts/Amino-acid-table/index.html",

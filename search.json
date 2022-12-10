@@ -7,6 +7,27 @@
     "text": "Quyen Vu\nPhD student at IFPAN, Poland\n\nFavourite quote:\nWe all fear what we do not understand.\n― Dan Brown, The Lost Symbol"
   },
   {
+    "objectID": "posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html",
+    "href": "posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html",
+    "title": "Openmm Coarse-grained Simulations",
+    "section": "",
+    "text": "#!/bin/bash\n#SBATCH --partition plgrid\n#SBATCH --job-name cryosparc-master\n#SBATCH --nodes 1\n#SBATCH --ntasks-per-node 1\n#SBATCH --mem 15GB\n#SBATCH --time 72:00:00\n#SBATCH -C localfs\n#SBATCH -A plgrisa-cpu\n#SBATCH --dependency=singleton\n#SBATCH --output cryosparc-master-log-%J.txt\n#SBATCH --signal=B:2@240\n\necho \"Job run\" > test.txt"
+  },
+  {
+    "objectID": "posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html#install-packages",
+    "href": "posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html#install-packages",
+    "title": "Openmm Coarse-grained Simulations",
+    "section": "Install packages",
+    "text": "Install packages\nconda install -c openmm=7.7 parmed mdtraj\nNotes on cluster information:\n* local machine: (py310) openMM 7.7+ cudatoolkit 11.6\n* Plgrid: (py310) openMM 7.7+ cudatoolkit 10.2\n* ACI: (base) OpenMM 7.7+ cudatoolkit 11.7\n* Ares: openMM 7.7 + cudatoolkit 11.6 ( GPU Tesla V100)\n\nJob with GPU\n#!/bin/bash\n#SBATCH --job-name ares_gpu\n#SBATCH --nodes 1\n#SBATCH --partition plgrid-gpu-v100\n#SBATCH --gres=gpu:1\n#SBATCH --ntasks-per-node 1\n#SBATCH --mem 15GB\n#SBATCH --time 48:00:00\n#SBATCH -C localfs\n#SBATCH -A plgrisa-gpu\n#SBATCH --dependency=singleton\n#SBATCH --output cryosparc-master-log-%J.txt\n#SBATCH --signal=B:2@240\n## prometheus\n#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh\n## ares\nconda init bash\nsource /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh\nconda activate py310\nmodule add cuda/11.6.0\necho \"NVIDIA-DRIVER version:\"`nvidia-smi`\n\npython single_run_extend.py -f control.cntrl"
+  },
+  {
+    "objectID": "posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html#interactive-mode-on-ares",
+    "href": "posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html#interactive-mode-on-ares",
+    "title": "Openmm Coarse-grained Simulations",
+    "section": "interactive mode on ares:",
+    "text": "interactive mode on ares:\n\nusing GPU: srun -p plgrid-gpu-v100 --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash\nusing CPU: srun -p plgrid --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash"
+  },
+  {
     "objectID": "posts/linux-tips/count-line-in-file.html",
     "href": "posts/linux-tips/count-line-in-file.html",
     "title": "Counting number of line from file in linux",
@@ -39,7 +60,7 @@
     "href": "index.html",
     "title": "Random things in my life",
     "section": "",
-    "text": "Counting number of line from file in linux\n\n\n\n\n\n\n\nLinux\n\n\n\n\n\n\n\n\n\n\n\nDec 9, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRunning jobs on clusters\n\n\n\n\n\n\n\nHPC\n\n\nSlurm\n\n\n\n\n\n\n\n\n\n\n\nNov 26, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nAmino acid table\n\n\n\n\n\n\n\nProtein\n\n\n\n\n\n\n\n\n\n\n\n\nNov 25, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\nNo matching items"
+    "text": "Openmm Coarse-grained Simulations\n\n\n\n\n\n\n\nHPC\n\n\nSlurm\n\n\nOpenMM\n\n\n\n\n\n\n\n\n\n\n\nDec 9, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCounting number of line from file in linux\n\n\n\n\n\n\n\nLinux\n\n\n\n\n\n\n\n\n\n\n\nDec 9, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRunning jobs on clusters\n\n\n\n\n\n\n\nHPC\n\n\nSlurm\n\n\n\n\n\n\n\n\n\n\n\nNov 26, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nAmino acid table\n\n\n\n\n\n\n\nProtein\n\n\n\n\n\n\n\n\n\n\n\n\nNov 25, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "pubs.html",
