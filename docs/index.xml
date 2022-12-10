@@ -10,7 +10,38 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>A great sample blog</description>
 <generator>quarto-1.2.269</generator>
-<lastBuildDate>Fri, 25 Nov 2022 23:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 08 Dec 2022 23:00:00 GMT</lastBuildDate>
+<item>
+  <title>Counting number of line from file in linux</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/linux-tips/count-line-in-file.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Sometime, after perform a long analysis of many simulations. We want to make sure if the analysis is done automatically, instead of looking into single file one-by-one, we can use <code>bash</code> script to do so.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<span id="cb1-2"><span class="cf" style="color: #003B4F;">for</span> i <span class="kw" style="color: #003B4F;">in</span> <span class="dt" style="color: #AD0000;">{</span><span class="dv" style="color: #AD0000;">1</span><span class="dt" style="color: #AD0000;">..</span><span class="dv" style="color: #AD0000;">100</span><span class="dt" style="color: #AD0000;">}</span></span>
+<span id="cb1-3"><span class="cf" style="color: #003B4F;">do</span></span>
+<span id="cb1-4">        <span class="co" style="color: #5E5E5E;">#echo "$i"</span></span>
+<span id="cb1-5">        <span class="va" style="color: #111111;">nl</span><span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">$(</span><span class="fu" style="color: #4758AB;">wc</span> <span class="at" style="color: #657422;">-l</span> <span class="op" style="color: #5E5E5E;">&lt;</span> <span class="va" style="color: #111111;">$i</span>/G_traj_<span class="va" style="color: #111111;">${i}</span>.dat<span class="va" style="color: #111111;">)</span></span>
+<span id="cb1-6">        <span class="cf" style="color: #003B4F;">if</span> <span class="bu" style="color: null;">[</span> <span class="va" style="color: #111111;">$nl</span> <span class="ot" style="color: #003B4F;">-eq</span> 400008 <span class="bu" style="color: null;">]</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">then</span></span>
+<span id="cb1-7">                <span class="bu" style="color: null;">echo</span> <span class="st" style="color: #20794D;">"traj </span><span class="va" style="color: #111111;">$i</span><span class="st" style="color: #20794D;"> :  </span><span class="va" style="color: #111111;">$nl</span><span class="st" style="color: #20794D;"> --- DONE"</span></span>
+<span id="cb1-8">        <span class="cf" style="color: #003B4F;">else</span></span>
+<span id="cb1-9">                <span class="bu" style="color: null;">echo</span> <span class="st" style="color: #20794D;">"traj </span><span class="va" style="color: #111111;">$i</span><span class="st" style="color: #20794D;"> :  </span><span class="va" style="color: #111111;">$nl</span><span class="st" style="color: #20794D;"> --- Has not been DONE"</span></span>
+<span id="cb1-10">        <span class="cf" style="color: #003B4F;">fi</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12"><span class="cf" style="color: #003B4F;">done</span></span></code></pre></div>
+<p>In this example, we loop through all simulations (1 to 100) and use command: <code>wc -l &lt; $i/G_traj_${i}.dat</code> to count the number of lines in file. we assign the output from this command to <code>nl</code> variable by packing previous command by <code>$(command)</code></p>
+
+
+
+ ]]></description>
+  <category>Linux</category>
+  <guid>https://qvv5013.github.io/posts/linux-tips/count-line-in-file.html</guid>
+  <pubDate>Thu, 08 Dec 2022 23:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Running jobs on clusters</title>
   <dc:creator>Quyen Vu</dc:creator>

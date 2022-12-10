@@ -3,25 +3,36 @@ project:
   output-dir: docs
 
 website:
+
   title: "<b>Quyen Vu</b>"
   site-url: "https://qvv5013.github.io/"
   description: "A great sample blog"
   search: 
     location: navbar
-    type: overlay
+    type: textbox
+
   navbar:
+    search: true
+    pinned: true
     right:
       - pubs.qmd
       - tools.qmd
-      - about.qmd
+      - text: "About me"
+        href: about.qmd
       - icon: github
         href: https://github.com/qvv5013
       - icon: twitter
         href: https://twitter.com/qvv5013
 
+  page-footer:
+    center: 
+      - text: "About"
+        href: about.qmd
+
+
 format:
   html:
-    theme: cosmo
+    theme: lux
     css: styles.css
     page-layout: full
 

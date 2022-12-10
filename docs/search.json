@@ -21,11 +21,18 @@
     "text": "Amino acids table with their properties"
   },
   {
+    "objectID": "posts/linux-tips/count-line-in-file.html",
+    "href": "posts/linux-tips/count-line-in-file.html",
+    "title": "Counting number of line from file in linux",
+    "section": "",
+    "text": "Sometime, after perform a long analysis of many simulations. We want to make sure if the analysis is done automatically, instead of looking into single file one-by-one, we can use bash script to do so.\n#!/bin/bash\nfor i in {1..100}\ndo\n        #echo \"$i\"\n        nl=$(wc -l < $i/G_traj_${i}.dat)\n        if [ $nl -eq 400008 ]; then\n                echo \"traj $i :  $nl --- DONE\"\n        else\n                echo \"traj $i :  $nl --- Has not been DONE\"\n        fi\n\ndone\nIn this example, we loop through all simulations (1 to 100) and use command: wc -l < $i/G_traj_${i}.dat to count the number of lines in file. we assign the output from this command to nl variable by packing previous command by $(command)"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Random things in my life",
     "section": "",
-    "text": "Running jobs on clusters\n\n\n\n\n\n\n\nHPC\n\n\nSlurm\n\n\n\n\n\n\n\n\n\n\n\nNov 26, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nAmino acid table\n\n\n\n\n\n\n\nProtein\n\n\n\n\n\n\n\n\n\n\n\n\nNov 25, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\nNo matching items"
+    "text": "Counting number of line from file in linux\n\n\n\n\n\n\n\nLinux\n\n\n\n\n\n\n\n\n\n\n\nDec 9, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRunning jobs on clusters\n\n\n\n\n\n\n\nHPC\n\n\nSlurm\n\n\n\n\n\n\n\n\n\n\n\nNov 26, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nAmino acid table\n\n\n\n\n\n\n\nProtein\n\n\n\n\n\n\n\n\n\n\n\n\nNov 25, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "tools.html",
@@ -39,7 +46,7 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "Quyen Vu\nPhD student at IFPAN, Poland"
+    "text": "Quyen Vu\nPhD student at IFPAN, Poland\n\nFavourite quote:\nWe all fear what we do not understand.\n― Dan Brown, The Lost Symbol"
   },
   {
     "objectID": "pubs.html",
