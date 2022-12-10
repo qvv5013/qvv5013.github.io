@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Quyen Vu">
-<meta name="dcterms.date" content="2022-11-26">
+<meta name="dcterms.date" content="2022-12-09">
 
-<title>Quyen Vu - Running jobs on clusters</title>
+<title>Quyen Vu - Openmm Coarse-grained Simulations</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -175,10 +175,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
-      <h1 class="title">Running jobs on clusters</h1>
+      <h1 class="title">Openmm Coarse-grained Simulations</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">HPC</div>
                 <div class="quarto-category">Slurm</div>
+                <div class="quarto-category">OpenMM</div>
               </div>
                   </div>
   </div>
@@ -196,7 +197,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 26, 2022</p>
+        <p class="date">December 9, 2022</p>
       </div>
     </div>
     
@@ -230,8 +231,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Job run"</span> <span class="op">&gt;</span> test.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="prepare-environment-for-simulations" class="level1">
+<h1>Prepare environment for simulations</h1>
+<section id="install-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-packages">Install packages</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> openmm=7.7 parmed mdtraj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notes on cluster information:</p>
+<pre><code>* local machine: (py310) openMM 7.7+ cudatoolkit 11.6
+* Plgrid: (py310) openMM 7.7+ cudatoolkit 10.2
+* ACI: (base) OpenMM 7.7+ cudatoolkit 11.7
+* Ares: openMM 7.7 + cudatoolkit 11.6 ( GPU Tesla V100)</code></pre>
+<section id="job-with-gpu" class="level3">
+<h3 class="anchored" data-anchor-id="job-with-gpu">Job with GPU</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name test_ares</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes 1</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition plgrid-gpu-v100</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node 1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem 15GB</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time 48:00:00</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -C localfs</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -A plgrisa-gpu</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --dependency=singleton</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">## prometheus</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">## ares</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate py310</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> single_run_extend.py <span class="at">-f</span> control.cntrl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="interactive-mode-on-ares" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-mode-on-ares">interactive mode on ares:</h2>
+<ul>
+<li>using GPU: <code>srun -p plgrid-gpu-v100 --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
+<li>using CPU: <code>srun -p plgrid --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
+</ul>
+<p>even with gromacs: <code>module add gromacs/2022-foss-2021b-cuda-11.6.0-avx2-256</code></p>
+<p><code>gmx mdrun -v -deffnm md -nb gpu</code></p>
+<p><code>Fatal error: Cannot run short-ranged nonbonded interactions on a GPU because no GPU is detected.</code></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/linux-tips/count-line-in-file.html",
       "/posts/Running-jobs-on-clusters/running-jobs-on-cluster.html",
       "/posts/Amino-acid-table/index.html",
       "/posts/welcome/index.html"
