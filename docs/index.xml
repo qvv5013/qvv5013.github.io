@@ -12,6 +12,90 @@
 <generator>quarto-1.2.269</generator>
 <lastBuildDate>Thu, 08 Dec 2022 23:00:00 GMT</lastBuildDate>
 <item>
+  <title>Openmm Coarse-grained Simulations</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="ares-supercomputer" class="level1">
+<h1>Ares supercomputer</h1>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<span id="cb1-2"><span class="co" style="color: #5E5E5E;">#SBATCH --partition plgrid</span></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;">#SBATCH --job-name cryosparc-master</span></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;">#SBATCH --nodes 1</span></span>
+<span id="cb1-5"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node 1</span></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;">#SBATCH --mem 15GB</span></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;">#SBATCH --time 72:00:00</span></span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;">#SBATCH -C localfs</span></span>
+<span id="cb1-9"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgrisa-cpu</span></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;">#SBATCH --dependency=singleton</span></span>
+<span id="cb1-11"><span class="co" style="color: #5E5E5E;">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
+<span id="cb1-12"><span class="co" style="color: #5E5E5E;">#SBATCH --signal=B:2@240</span></span>
+<span id="cb1-13"></span>
+<span id="cb1-14"><span class="bu" style="color: null;">echo</span> <span class="st" style="color: #20794D;">"Job run"</span> <span class="op" style="color: #5E5E5E;">&gt;</span> test.txt</span></code></pre></div>
+</section>
+<section id="prepare-environment-for-simulations" class="level1">
+<h1>Prepare environment for simulations</h1>
+<section id="install-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-packages">Install packages</h2>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;">conda</span> install <span class="at" style="color: #657422;">-c</span> openmm=7.7 parmed mdtraj</span></code></pre></div>
+<p>Notes on cluster information:</p>
+<pre><code>* local machine: (py310) openMM 7.7+ cudatoolkit 11.6
+* Plgrid: (py310) openMM 7.7+ cudatoolkit 10.2
+* ACI: (base) OpenMM 7.7+ cudatoolkit 11.7
+* Ares: openMM 7.7 + cudatoolkit 11.6 ( GPU Tesla V100)</code></pre>
+<section id="job-with-gpu" class="level3">
+<h3 class="anchored" data-anchor-id="job-with-gpu">Job with GPU</h3>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<span id="cb4-2"><span class="co" style="color: #5E5E5E;">#SBATCH --job-name ares_gpu</span></span>
+<span id="cb4-3"><span class="co" style="color: #5E5E5E;">#SBATCH --nodes 1</span></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;">#SBATCH --partition plgrid-gpu-v100</span></span>
+<span id="cb4-5"><span class="co" style="color: #5E5E5E;">#SBATCH --gres=gpu:1</span></span>
+<span id="cb4-6"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node 1</span></span>
+<span id="cb4-7"><span class="co" style="color: #5E5E5E;">#SBATCH --mem 15GB</span></span>
+<span id="cb4-8"><span class="co" style="color: #5E5E5E;">#SBATCH --time 48:00:00</span></span>
+<span id="cb4-9"><span class="co" style="color: #5E5E5E;">#SBATCH -C localfs</span></span>
+<span id="cb4-10"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgrisa-gpu</span></span>
+<span id="cb4-11"><span class="co" style="color: #5E5E5E;">#SBATCH --dependency=singleton</span></span>
+<span id="cb4-12"><span class="co" style="color: #5E5E5E;">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
+<span id="cb4-13"><span class="co" style="color: #5E5E5E;">#SBATCH --signal=B:2@240</span></span>
+<span id="cb4-14"><span class="co" style="color: #5E5E5E;">## prometheus</span></span>
+<span id="cb4-15"><span class="co" style="color: #5E5E5E;">#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh</span></span>
+<span id="cb4-16"><span class="co" style="color: #5E5E5E;">## ares</span></span>
+<span id="cb4-17"><span class="ex" style="color: null;">conda</span> init bash</span>
+<span id="cb4-18"><span class="bu" style="color: null;">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
+<span id="cb4-19"><span class="ex" style="color: null;">conda</span> activate py310</span>
+<span id="cb4-20"><span class="ex" style="color: null;">module</span> add cuda/11.6.0</span>
+<span id="cb4-21"><span class="bu" style="color: null;">echo</span> <span class="st" style="color: #20794D;">"NVIDIA-DRIVER version:"</span><span class="kw" style="color: #003B4F;">`</span><span class="ex" style="color: null;">nvidia-smi</span><span class="kw" style="color: #003B4F;">`</span></span>
+<span id="cb4-22"></span>
+<span id="cb4-23"><span class="ex" style="color: null;">python</span> single_run_extend.py <span class="at" style="color: #657422;">-f</span> control.cntrl</span></code></pre></div>
+</section>
+</section>
+<section id="interactive-mode-on-ares" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-mode-on-ares">interactive mode on ares:</h2>
+<ul>
+<li>using GPU: <code>srun -p plgrid-gpu-v100 --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
+<li>using CPU: <code>srun -p plgrid --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
+</ul>
+<p>even with gromacs: <code>module add gromacs/2022-foss-2021b-cuda-11.6.0-avx2-256</code></p>
+<p><code>gmx mdrun -v -deffnm md -nb gpu</code></p>
+<p><code>Fatal error: Cannot run short-ranged nonbonded interactions on a GPU because no GPU is detected.</code></p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>HPC</category>
+  <category>Slurm</category>
+  <category>OpenMM</category>
+  <guid>https://qvv5013.github.io/posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html</guid>
+  <pubDate>Thu, 08 Dec 2022 23:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Counting number of line from file in linux</title>
   <dc:creator>Quyen Vu</dc:creator>
   <link>https://qvv5013.github.io/posts/linux-tips/count-line-in-file.html</link>
