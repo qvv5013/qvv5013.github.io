@@ -257,16 +257,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --dependency=singleton</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">## prometheus</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">## ares</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init bash</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate py310</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> add cuda/11.6.0</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"NVIDIA-DRIVER version:"</span><span class="kw">`</span><span class="ex">nvidia-smi</span><span class="kw">`</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> single_run_extend.py <span class="at">-f</span> control.cntrl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">## prometheus</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">## ares</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init bash</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate py310</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> add cuda/11.6.0</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"NVIDIA-DRIVER version:"</span><span class="kw">`</span><span class="ex">nvidia-smi</span><span class="kw">`</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> single_run_extend.py <span class="at">-f</span> control.cntrl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="interactive-mode-on-ares" class="level2">
@@ -275,9 +279,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>using GPU: <code>srun -p plgrid-gpu-v100 --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
 <li>using CPU: <code>srun -p plgrid --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
 </ul>
-<p>even with gromacs: <code>module add gromacs/2022-foss-2021b-cuda-11.6.0-avx2-256</code></p>
-<p><code>gmx mdrun -v -deffnm md -nb gpu</code></p>
-<p><code>Fatal error: Cannot run short-ranged nonbonded interactions on a GPU because no GPU is detected.</code></p>
 
 
 </section>
