@@ -28,6 +28,13 @@
     "text": "interactive mode on ares:\n\nusing GPU: srun -p plgrid-gpu-v100 --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash\nusing CPU: srun -p plgrid --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash"
   },
   {
+    "objectID": "posts/python/Problems-regarding-ipywidgets.html",
+    "href": "posts/python/Problems-regarding-ipywidgets.html",
+    "title": "Problems regarding ipywidgets has no attribute ‘version_info’",
+    "section": "",
+    "text": "Recently, Pyemma, MDAnalysis encounter problems with ipythonwidgets\nDue to the recent update of ipywidgets you will sometime encounter problems such that ipywidgets has no attribute 'version_info'.\nThe dirty solution is install version ipywidgets<8. version 7.7 may help and wait till developers of ipywidgets fix it"
+  },
+  {
     "objectID": "posts/linux-tips/count-line-in-file.html",
     "href": "posts/linux-tips/count-line-in-file.html",
     "title": "Counting number of line from file in linux",
@@ -42,25 +49,11 @@
     "text": "Ares supercomputer\n#!/bin/bash\n#SBATCH --partition plgrid\n#SBATCH --job-name cryosparc-master\n#SBATCH --nodes 1\n#SBATCH --ntasks-per-node 1\n#SBATCH --mem 15GB\n#SBATCH --time 72:00:00\n#SBATCH -C localfs\n#SBATCH -A plgrisa-cpu\n#SBATCH --dependency=singleton\n#SBATCH --output cryosparc-master-log-%J.txt\n#SBATCH --signal=B:2@240\n\necho \"Job run\" > test.txt"
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
-    "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
-  },
-  {
     "objectID": "posts/Amino-acid-table/index.html",
     "href": "posts/Amino-acid-table/index.html",
     "title": "Amino acid table",
     "section": "",
     "text": "Amino acids table with their properties"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Random things in my life",
-    "section": "",
-    "text": "Openmm Coarse-grained Simulations\n\n\n\n\n\n\n\nHPC\n\n\nSlurm\n\n\nOpenMM\n\n\n\n\n\n\n\n\n\n\n\nDec 9, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCounting number of line from file in linux\n\n\n\n\n\n\n\nLinux\n\n\n\n\n\n\n\n\n\n\n\nDec 9, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRunning jobs on clusters\n\n\n\n\n\n\n\nHPC\n\n\nSlurm\n\n\n\n\n\n\n\n\n\n\n\nNov 26, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nAmino acid table\n\n\n\n\n\n\n\nProtein\n\n\n\n\n\n\n\n\n\n\n\n\nNov 25, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 20, 2022\n\n\nQuyen Vu\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "pubs.html",
