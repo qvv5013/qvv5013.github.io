@@ -20,9 +20,8 @@
 
 
 
-<p>Recently, Pyemma, MDAnalysis encounter problems with <code>ipythonwidgets</code></p>
-<p>Due to the recent update of <code>ipywidgets</code> you will sometime encounter problems such that <code>ipywidgets has no attribute 'version_info'</code>.</p>
-<p>The dirty solution is install version <code>ipywidgets&lt;8</code>. version 7.7 may help and wait till developers of <code>ipywidgets</code> fix it</p>
+<p>With the recent update of <code>ipywidgets</code>, Pyemma, MDAnalysis and some other package encounter problems with <code>ipywidgets</code>.</p>
+<p>The dirty solution is install version <code>ipywidgets&lt;8</code>. version 7.7 may help and wait till developers of <code>ipywidgets</code> fix it.</p>
 
 
 

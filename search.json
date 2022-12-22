@@ -60,13 +60,13 @@
     "href": "posts/python/Problems-regarding-ipywidgets.html",
     "title": "Problems regarding ipywidgets has no attribute ‘version_info’",
     "section": "",
-    "text": "Recently, Pyemma, MDAnalysis encounter problems with ipythonwidgets\nDue to the recent update of ipywidgets you will sometime encounter problems such that ipywidgets has no attribute 'version_info'.\nThe dirty solution is install version ipywidgets<8. version 7.7 may help and wait till developers of ipywidgets fix it"
+    "text": "With the recent update of ipywidgets, Pyemma, MDAnalysis and some other package encounter problems with ipywidgets.\nThe dirty solution is install version ipywidgets<8. version 7.7 may help and wait till developers of ipywidgets fix it."
   },
   {
     "objectID": "tools.html",
     "href": "tools.html",
     "title": "Code",
     "section": "",
-    "text": "hpsOpenMM\n\n\nentanglement Analysis"
+    "text": "hpsOpenMM\n(available soon, when first paper published)\n\n\nentanglement Analysis\nThere are two main version of entanglement analysis:\n\nThe first one is characterized by the linking number of loops and the open terminal, which is composed of the whole terminal. Please check this paper for more details. This kind of entanglement can be calculated by the following code which is developed by Ian Sitarik (Penn State). Python version\nThe maximum linking number between the loop and all possible segments of the terminal is calculated by the following code: Julia version. There are two versions for this kind of entanglement calculation, in python and Julia. julia is much faster than Python."
   }
 ]
