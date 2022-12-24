@@ -1,5 +1,5 @@
 ---
-title: "Everything Happens for a Reason"
+title: "<i>Everything Happens for a Reason</i>"
 listing: 
   contents: posts
   feed: true

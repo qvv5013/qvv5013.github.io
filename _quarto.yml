@@ -6,7 +6,7 @@ website:
 
   title: "<b>Quyen Vu</b>"
   site-url: "https://qvv5013.github.io/"
-  description: "A great sample blog"
+  description: "My blog"
   search: 
     location: navbar
     type: textbox
