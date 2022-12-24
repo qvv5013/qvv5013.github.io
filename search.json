@@ -63,6 +63,20 @@
     "text": "With the recent update of ipywidgets, Pyemma, MDAnalysis and some other package encounter problems with ipywidgets.\nThe dirty solution is install version ipywidgets<8. version 7.7 may help and wait till developers of ipywidgets fix it."
   },
   {
+    "objectID": "posts/python/Beautiful-plot-with-Matplotlib.html",
+    "href": "posts/python/Beautiful-plot-with-Matplotlib.html",
+    "title": "Make a beautiful plot using Matplotlib",
+    "section": "",
+    "text": "When writing a paper, a beautiful figure is very important. Before, I used Gnuplot or XMGRACE to make figures because it is easy to config.\nRecently I moved to Matplotlib and used it in many of my projects, found it convenient to make plots and tweak them to produce beautiful figures.\nHere are some snippet for reference to easily look back."
+  },
+  {
+    "objectID": "posts/python/Beautiful-plot-with-Matplotlib.html#import-library",
+    "href": "posts/python/Beautiful-plot-with-Matplotlib.html#import-library",
+    "title": "Make a beautiful plot using Matplotlib",
+    "section": "Import library",
+    "text": "Import library\n\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom scipy.ndimage import gaussian_filter1d\nimport matplotlib\n%matplotlib notebook\n\nConfig for matplotlib\n\n# config for matplotlib\nfont = {'family' : 'arial',\n        'weight' : 'normal',\n        'size'   : 12}\n\nmatplotlib.rc('font', **font)\nmatplotlib.rcParams['axes.spines.right'] = False\nmatplotlib.rcParams['axes.spines.top'] = False\nmatplotlib.rcParams['axes.linewidth'] = 2 #set the value globally\n\n# set tick width\nmatplotlib.rcParams['xtick.major.size'] = 6\nmatplotlib.rcParams['xtick.major.width'] = 2\nmatplotlib.rcParams['ytick.major.size'] = 6\nmatplotlib.rcParams['ytick.major.width'] = 2\n\n\n# Create a fake data:\nx = np.arange(0, 2*np.pi, 2*np.pi/1000)\ny = np.sin(x)\ny2 = np.cos(x)\n\n\nfig = plt.figure(figsize=(8,5))\nplt.plot(x,y, color='black', lw=2, label='sin(x)', alpha=0.8)\nplt.plot(x,y2, color='red', lw=2, label='cos(x)', alpha=0.8)\n\n# Plot horizontal\nplt.axhline(y = 0.0, color = 'blue', linestyle = '--', alpha=0.5)\n\n# Config Legends and labels\n# set yticks\nplt.yticks([-1, 0, 1], ['first', 'second', ''])\n\nplt.legend(loc='upper center', ncol=2)\nplt.xlim(0, 2*np.pi)\nplt.ylim(-1,1)\nplt.ylabel(r'$f_x$') #latex type\nplt.xlabel('x')\n\n# To save figure with high DPI, uncomment following line: the more dpi, the clearer figure but large file\nplt.savefig('Demo_matplotlib.png', dpi=1200)"
+  },
+  {
     "objectID": "tools.html",
     "href": "tools.html",
     "title": "Code",
