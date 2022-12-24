@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/python/Beautiful-plot-with-Matplotlib.html",
       "/posts/python/Problems-regarding-ipywidgets.html",
       "/posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html",
       "/posts/linux-tips/count-line-in-file.html",
