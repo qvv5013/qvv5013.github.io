@@ -7,6 +7,8 @@ website:
   title: "<b>Quyen Vu</b>"
   site-url: "https://qvv5013.github.io/"
   description: "My blog"
+  page-navigation: true
+  favicon: img/QV.png
   search: 
     location: navbar
     type: textbox
