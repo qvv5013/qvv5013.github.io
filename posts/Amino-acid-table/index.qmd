@@ -7,4 +7,9 @@ image: "ProteinogenicAminoAcids.svg.png"
 ---
 
 # Amino acids table with their properties
+
+21 amino acids make up proteins.
+
 ![](ProteinogenicAminoAcids.svg.png){fig-alt="List of 20 amino acids and classification according to side-chain"}
+
+(Source: [Wikipedia](https://en.wikipedia.org/wiki/Amino_acid))
