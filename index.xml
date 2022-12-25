@@ -1262,7 +1262,9 @@ if (IPython.notebook.kernel !== null) {
 
 <section id="amino-acids-table-with-their-properties" class="level1">
 <h1>Amino acids table with their properties</h1>
+<p>21 amino acids make up proteins.</p>
 <p><img src="https://qvv5013.github.io/posts/Amino-acid-table/ProteinogenicAminoAcids.svg.png" class="img-fluid" alt="List of 20 amino acids and classification according to side-chain"></p>
+<p>(Source: <a href="https://en.wikipedia.org/wiki/Amino_acid">Wikipedia</a>)</p>
 
 
 </section>
