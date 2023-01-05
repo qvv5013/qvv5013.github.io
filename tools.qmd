@@ -13,7 +13,7 @@ about:
       href: https://github.com/qvv5013
 
 ---
-
+<div style="text-align: left">
 # hpsOpenMM
 
 OpenMM codebase for IDP which uses HPS-Urry/HPS-KR force field
@@ -30,7 +30,7 @@ OpenMM codebase for IDP which uses HPS-Urry/HPS-KR force field
 
 The package is ready for studying various problems such as, conformation dynamics of single chain, LLPS ...
 
-(available soon, when first paper published)
+(Source code will be available soon, when first paper published)
 
 # entanglement Analysis
 
@@ -42,3 +42,5 @@ There are two main version of entanglement analysis:
 
 * The maximum linking number between the loop and all possible segments of the terminal is calculated by the following code: [Julia version](https://github.com/qvv5013/entanglement_analysis).
 There are two versions for this kind of entanglement calculation, in python and Julia. julia is much faster than Python.
+
+</div>
