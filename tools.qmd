@@ -32,7 +32,7 @@ The package is ready for studying various problems such as, conformation dynamic
 
 (Source code is available on [Github](https://github.com/qvv5013/hpsOpenMM))
 
-Check out docs for more details [here](/tools/hpsOpenMM/)
+Check out docs for more details [here](https://qvv5013.github.io/docs-hpsOpenMM/
 
 # entanglement Analysis
 
