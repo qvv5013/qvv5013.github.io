@@ -338,8 +338,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="epsilon_ij-pair-parameters" class="level2">
-<h2 class="anchored" data-anchor-id="epsilon_ij-pair-parameters"><span class="math inline">\(\epsilon_{ij}\)</span> pair parameters</h2>
+<hr>
+<p><b> <span class="math inline">\(\epsilon_{ij}\)</span> pair parameters</b>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>table_eps <span class="op">=</span> np.array([[<span class="fl">0.165536</span>, <span class="fl">0.284583</span>, <span class="fl">0.136758</span>, <span class="fl">0.147114</span>, <span class="fl">0.717619</span>,</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                               <span class="fl">0.186280</span>, <span class="fl">0.306152</span>, <span class="fl">0.324582</span>, <span class="fl">0.959705</span>, <span class="fl">0.094437</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                               <span class="fl">0.105776</span>, <span class="fl">0.502105</span>, <span class="fl">1.233991</span>, <span class="fl">0.902083</span>, <span class="fl">0.211635</span>,</span>
@@ -423,6 +423,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        table_eps_ravel <span class="op">=</span> table_eps.ravel().tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This table has a shape of (20,20)- 20 rows and 20 columns. The order of rows and columns follows the <code>id</code> in the residue definition above.</p>
 <p>Each element of the matrix is the <span class="math inline">\(\epsilon_{ij}\)</span> parameter between residue type <code>i</code> and type <code>j</code>. For example, <code>table_eps[0,0]</code> is the interaction between residue type <code>0</code> and <code>0</code>, which corresponds to the <code>MET-MET</code> interaction. Similarly, <code>table_eps[19,0]</code> is interaction between ILE-MET</p>
+<hr>
 <p>Using the same method, we define <span class="math inline">\(\sigma\)</span> matrix:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>table_sigma <span class="op">=</span> np.array([[<span class="fl">0.646795</span>, <span class="fl">0.557618</span>, <span class="fl">0.656778</span>, <span class="fl">0.617823</span>, <span class="fl">0.664396</span>,</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="fl">0.586850</span>, <span class="fl">0.614146</span>, <span class="fl">0.631818</span>, <span class="fl">0.659004</span>, <span class="fl">0.632057</span>,</span>
@@ -505,10 +506,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>                                 <span class="fl">0.660772</span>, <span class="fl">0.636715</span>, <span class="fl">0.675603</span>, <span class="fl">0.653879</span>, <span class="fl">0.595253</span>,</span>
 <span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>                                 <span class="fl">0.639315</span>, <span class="fl">0.618999</span>, <span class="fl">0.614386</span>, <span class="fl">0.610587</span>, <span class="fl">0.692168</span>]])</span>
 <span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>        table_sigma_ravel <span class="op">=</span> table_sigma.ravel().tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-</section>
-<section id="nu_ij-matrix" class="level1">
-<h1><span class="math inline">\(\nu_{ij}\)</span> matrix:</h1>
+<p><b> <span class="math inline">\(\nu_{ij}\)</span> matrix:</b></p>
 <p>As said above, <span class="math inline">\(\nu_{ij}\)</span> is one for all. But for generalize in case we want to modify, I till defined this matrix in the same fashion.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>table_nu <span class="op">=</span> np.array([[<span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>,</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                              <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>],</span>
@@ -551,9 +549,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>                             [<span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>,</span>
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>                              <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">1.</span>]])</span>
 <span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        table_nu_ravel <span class="op">=</span> table_nu.ravel().tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="mu_ij-matrix" class="level1">
-<h1><span class="math inline">\(\mu_{ij}\)</span> matrix:</h1>
+<hr>
+<p><b> <span class="math inline">\(\mu_{ij}\)</span> matrix:</b></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>table_mu <span class="op">=</span> np.array([[<span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>,</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>],</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                            [<span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>,</span>
@@ -595,9 +592,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                            [<span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">4.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>,</span>
 <span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">11.</span>]])</span>
 <span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        table_mu_ravel <span class="op">=</span> table_mu.ravel().tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="r_ij-matrix" class="level1">
-<h1><span class="math inline">\(R_{ij}\)</span> matrix:</h1>
+<hr>
+<p><b> <span class="math inline">\(R_{ij}\)</span> matrix:</b></p>
 <p>This is simplely <span class="math inline">\(3\sigma_{ij}\)</span></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>table_rc <span class="op">=</span> np.array([[<span class="fl">1.940385</span>, <span class="fl">1.672854</span>, <span class="fl">1.970335</span>, <span class="fl">1.853468</span>, <span class="fl">1.993189</span>,</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                              <span class="fl">1.760551</span>, <span class="fl">1.842438</span>, <span class="fl">1.895453</span>, <span class="fl">1.977011</span>, <span class="fl">1.896171</span>,</span>
