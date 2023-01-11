@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/openMM/mpipi_model.html",
       "/posts/python/Beautiful-plot-with-Matplotlib.html",
       "/posts/python/Problems-regarding-ipywidgets.html",
       "/posts/Create-env-for-openmm-cg-simulations/Openmm-coarse-grained-simulations.html",
