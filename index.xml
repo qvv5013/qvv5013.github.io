@@ -20,7 +20,7 @@
 
 
 
-<p>Mpipi model is a coarse-grain model for simulating IDP. The original code is implemented in LAMMPS but I do not have access to the source code and am not familiar with LAMMPS either.</p>
+<p><b>Mpipi model is a coarse-grain model for simulating IDP.</b> The original code is implemented in LAMMPS but I do not have access to the source code and am not familiar with LAMMPS either.</p>
 <p>The original paper: <b> Physics-driven coarse-grained model for biomolecular phase separation with near-quantitative accuracy </b> Nature Computational Science volume 1, pages732–743 (2021)</p>
 <p>PDF file can be accessed from <a href="https://www.nature.com/articles/s43588-021-00155-3.epdf?sharing_token=EFzbweM1tOcYysI9oqUf9tRgN0jAjWel9jnR3ZoTv0OS6pLrbg60YiLYD1_wVdGp2Eu-H3ug5R37GhptvP-gObky-AytK6zbXFSGemcfdNg2kiUHIMYOv2d1wMOnNfHohUITqWql4RDHZjLEnHFs365Wh9a4RcPzXXly-vH42d8%3D">here</a></p>
 <p>This model is different from other hps-based model is instead of using LJ12-6 potential, it used Wang-Frenkel potential.</p>
