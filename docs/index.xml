@@ -20,7 +20,8 @@
 
 
 
-<p><b>Mpipi model is a coarse-grain model for simulating IDP.</b> The original code is implemented in LAMMPS but I do not have access to the source code and am not familiar with LAMMPS either.</p>
+<p><img src="https://qvv5013.github.io/posts/openMM/WF_LJ.jpg" class="img-fluid"></p>
+<p><b>Mpipi model is a coarse-grain model for simulating IDP.</b> The original code is implemented in LAMMPS but I am not familiar with LAMMPS either.</p>
 <p>The original paper: <b> Physics-driven coarse-grained model for biomolecular phase separation with near-quantitative accuracy.</b></p>
 <p>Nature Computational Science volume 1, pages732–743 (2021). PDF file can be accessed from <a href="https://www.nature.com/articles/s43588-021-00155-3.epdf?sharing_token=EFzbweM1tOcYysI9oqUf9tRgN0jAjWel9jnR3ZoTv0OS6pLrbg60YiLYD1_wVdGp2Eu-H3ug5R37GhptvP-gObky-AytK6zbXFSGemcfdNg2kiUHIMYOv2d1wMOnNfHohUITqWql4RDHZjLEnHFs365Wh9a4RcPzXXly-vH42d8%3D">here</a></p>
 <p>This model is different from other hps-based model is instead of using LJ12-6 potential, it used Wang-Frenkel potential.</p>
@@ -31,7 +32,6 @@
 <p><img src="https://latex.codecogs.com/png.latex?%5Csigma_%7Bij%7D,%20%5Cepsilon_%7Bij%7D,%20%5Cmu_%7Bij%7D"> are parameters specified for each pait of interacting beads.</p>
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
-<p><b>This post is for purpose of code snippets which I implemented but it still not working. I will try to improve the post when I have time to make it clear.</b></p>
 <p>To implement this functional form. We used TabulatedFunction in OpenMM.</p>
 <p>First, we need to define the atom type of each residue, this definition is implemented in <code>hps/parameters/model_parameters.py</code> file as a dictionary, or github: <a href="https://github.com/qvv5013/hpsOpenMM/blob/main/hps/parameters/model_parameters.py">here</a></p>
 <hr>
@@ -141,6 +141,7 @@
   <category>OpenMM</category>
   <guid>https://qvv5013.github.io/posts/openMM/mpipi_model.html</guid>
   <pubDate>Tue, 10 Jan 2023 23:00:00 GMT</pubDate>
+  <media:content url="https://qvv5013.github.io/posts/openMM/WF_LJ.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Make a beautiful plot using Matplotlib</title>
