@@ -310,6 +310,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>the only Per-Particle-Parameter is the <code>id</code> of the particle, this is <code>id</code> of the residue type which is defined in <code>model_parameters.py</code></li>
 <li>Other lines are self-explained.</li>
 </ul>
+<p>The above code used global cutoff for Wang-Frenkel potential is <code>2.5nm</code>. As stated in the paper, authors used the cutoff for each pair interaction is <span class="math inline">\(3\sigma\)</span>. To do so, we can add the stepsize function before the energy function. <code>Step</code> function in openMM work as: <code>step(x)=0 if x&lt; 0 and 1 if x&gt;=0</code>.</p>
+<p>We can add: <code>step(rc-r)*eps...</code> to the energy function. So, if <span class="math inline">\(r \gt rc \Rightarrow rc-r \lt 0 \Rightarrow step(rc-r) =0\)</span></p>
 </section>
 <section id="tabulatedfunction" class="level1">
 <h1>TabulatedFunction:</h1>
