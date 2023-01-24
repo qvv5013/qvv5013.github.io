@@ -10,7 +10,57 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
 <generator>quarto-1.2.269</generator>
-<lastBuildDate>Tue, 10 Jan 2023 23:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 21 Jan 2023 23:00:00 GMT</lastBuildDate>
+<item>
+  <title>hpsOpenMM tutorial</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;"># ```{python}</span></span>
+<span id="cb1-2"><span class="im" style="color: #00769E;">import</span> MDAnalysis <span class="im" style="color: #00769E;">as</span> mda</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;">import</span> nglview <span class="im" style="color: #00769E;">as</span> nv</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;">from</span> ipywidgets <span class="im" style="color: #00769E;">import</span> interact, fixed</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;">from</span> IPython.display <span class="im" style="color: #00769E;">import</span> display</span>
+<span id="cb1-6">u<span class="op" style="color: #5E5E5E;">=</span>mda.Universe(<span class="st" style="color: #20794D;">'hpsopenmm/FUS_4chains.pdb'</span>)</span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;"># protein</span></span>
+<span id="cb1-8">view <span class="op" style="color: #5E5E5E;">=</span> nv.show_mdanalysis(u)</span>
+<span id="cb1-9"><span class="co" style="color: #5E5E5E;"># view.orientation = [[48.326230767865376, -9.748747266627937, -70.91162108709592],</span></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;">#  [-0.37675314228157986, 0.8477619388303186, -0.37330518996072426],</span></span>
+<span id="cb1-11"><span class="co" style="color: #5E5E5E;">#  [-24.275074005126953, -25.68029546737671, -38.50686955451965],</span></span>
+<span id="cb1-12"><span class="co" style="color: #5E5E5E;">#  [0, 0, 0]]</span></span>
+<span id="cb1-13">view.add_cartoon()</span>
+<span id="cb1-14">view</span>
+<span id="cb1-15"><span class="co" style="color: #5E5E5E;"># ```</span></span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"89069cc43e07465b85ef276e787fdc1a","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: importing 'simtk.openmm' is deprecated.  Import 'openmm' instead.</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"91c891325666485b93881112be75185c","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+<p>u=mda.Universe(‘hpsopenmm/FUS_4chains.pdb’) # protein view = nv.show_mdanalysis(u) # view.orientation = [[48.326230767865376, -9.748747266627937, -70.91162108709592], # [-0.37675314228157986, 0.8477619388303186, -0.37330518996072426], # [-24.275074005126953, -25.68029546737671, -38.50686955451965], # [0, 0, 0]] view.add_cartoon() view ``` # view.render_image()</p>
+<p>view.clear() view.parameters = dict(camera_type=‘orthographic’, background_color=‘black’, clip_dist=0) view.add_cartoon()</p>
+
+
+
+ ]]></description>
+  <category>IDP</category>
+  <category>OpenMM</category>
+  <guid>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</guid>
+  <pubDate>Sat, 21 Jan 2023 23:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Implementation of Mpipi model in OpenMM</title>
   <dc:creator>Quyen Vu</dc:creator>
@@ -114,6 +164,8 @@
 <li>the only Per-Particle-Parameter is the <code>id</code> of the particle, this is <code>id</code> of the residue type which is defined in <code>model_parameters.py</code></li>
 <li>Other lines are self-explained.</li>
 </ul>
+<p>The above code used global cutoff for Wang-Frenkel potential is <code>2.5nm</code>. As stated in the paper, authors used the cutoff for each pair interaction is <img src="https://latex.codecogs.com/png.latex?3%5Csigma">. To do so, we can add the stepsize function before the energy function. <code>Step</code> function in openMM work as: <code>step(x)=0 if x&lt; 0 and 1 if x&gt;=0</code>.</p>
+<p>We can add: <code>step(rc-r)*eps...</code> to the energy function. So, if <img src="https://latex.codecogs.com/png.latex?r%20%5Cgt%20rc%20%5CRightarrow%20rc-r%20%5Clt%200%20%5CRightarrow%20step(rc-r)%20=0"></p>
 </section>
 <section id="tabulatedfunction" class="level1">
 <h1>TabulatedFunction:</h1>
