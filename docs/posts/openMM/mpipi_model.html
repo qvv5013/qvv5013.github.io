@@ -225,11 +225,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>where,</p>
 <p><span class="math inline">\(\alpha_{ij}= 2\nu_{ij} \times \left(\frac{R_{ij}}{\sigma_{ij}}\right)^{2\mu_{ij}} \times \left[ \frac{(2\nu_{ij}+1)}{2\nu_{ij} \left( \left(\frac{R_{ij}}{\sigma_{ij}}\right)^{2\mu_{ij}}-1 \right) })\right]^{2\nu_{ij}+1}\)</span></p>
 <p>They used: <span class="math inline">\(\nu_{ij}=1\)</span> and <span class="math inline">\(R_{ij}=3\sigma_{ij}\)</span></p>
-<p><span class="math inline">\(\sigma_{ij}, \epsilon_{ij}, \mu_{ij}\)</span> are parameters specified for each pait of interacting beads.</p>
+<p><span class="math inline">\(\sigma_{ij}, \epsilon_{ij}, \mu_{ij}\)</span> are parameters specified for each pair of interacting beads.</p>
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
 <p>To implement this functional form. We used TabulatedFunction in OpenMM.</p>
-<p>First, we need to define the atom type of each residue, this definition is implemented in <code>hps/parameters/model_parameters.py</code> file as a dictionary, or github: <a href="https://github.com/qvv5013/hpsOpenMM/blob/main/hps/parameters/model_parameters.py">here</a></p>
+<p>First, we need to define the atom type of each residue, this definition is implemented in <code>hps/parameters/model_parameters.py</code> file as a dictionary, or github: <a href="https://raw.githubusercontent.com/qvv5013/hpsOpenMM/main/hps/parameters/model_parameters.py">here</a></p>
 <hr>
 <p>Function is defined in <code>hps/core/system.py</code>. Here is the copied function:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python numberLines lineAnchors code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>    <span class="kw">def</span> add_Wang_Frenkel_Forces(<span class="va">self</span>, use_pbc: <span class="bu">bool</span>):</span>
