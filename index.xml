@@ -20,6 +20,7 @@
 
 
 
+<p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
 <section id="generate-initial-structure" class="level1">
 <h1>Generate initial structure:</h1>
 <p>To generate initial structure, we can use a provided script: <code>scripts/generate_structure_from_fasta/generate_structure.py</code></p>
