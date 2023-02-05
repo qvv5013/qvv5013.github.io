@@ -10,7 +10,7 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
 <generator>quarto-1.2.269</generator>
-<lastBuildDate>Sat, 21 Jan 2023 23:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 03 Feb 2023 23:00:00 GMT</lastBuildDate>
 <item>
   <title>hpsOpenMM tutorial</title>
   <dc:creator>Quyen Vu</dc:creator>
@@ -20,6 +20,7 @@
 
 
 
+<p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
 <section id="generate-initial-structure" class="level1">
 <h1>Generate initial structure:</h1>
 <p>To generate initial structure, we can use a provided script: <code>scripts/generate_structure_from_fasta/generate_structure.py</code></p>
@@ -96,7 +97,7 @@
   <category>IDP</category>
   <category>OpenMM</category>
   <guid>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</guid>
-  <pubDate>Sat, 21 Jan 2023 23:00:00 GMT</pubDate>
+  <pubDate>Fri, 03 Feb 2023 23:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Implementation of Mpipi model in OpenMM</title>

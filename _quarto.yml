@@ -17,6 +17,7 @@ website:
     search: true
     pinned: true
     right:
+      - pages/team.qmd
       - pubs.qmd
       - tools.qmd
       - text: "About me"
