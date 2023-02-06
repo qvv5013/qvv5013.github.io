@@ -9,7 +9,7 @@ format:
 ---
 
 | Avatar | Descriptions | ID |
-|:-----|------:|:------:|
+|:-----:|:------:|:------:|
 | ![Quyen Vu](../img/quyen.jpg){width=300} | who engage with reality are often characterized as being warm, amicable, and considerate. Although they may exhibit a tendency towards shyness, they radiate kindness and friendliness. | M-0  |
 | ![Noname](../img/avatar7.png){width=300} | A challenging individual, he possesses a toxic demeanor, however, he proves to be effective in resolving complex issues. Although he may take charge without notice, the protagonist is unaware of his actions. | M-2015|
 : {tbl-colwidths="[25,55, 20]"}
