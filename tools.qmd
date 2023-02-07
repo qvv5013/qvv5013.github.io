@@ -1,6 +1,7 @@
 ---
 title: "**Tools**"
-# image: profile.jpg
+# image: profile.
+comments: false
 about:
   template: jolla
   links:

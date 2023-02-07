@@ -1,6 +1,6 @@
 ---
 title: "**Publications**"
-
+comments: false
 about:
   template: solana
   links:

@@ -1,5 +1,6 @@
 ---
 title: "<i>Everything Happens for a Reason</i>"
+comments: false
 listing: 
   contents: posts
   feed: true
