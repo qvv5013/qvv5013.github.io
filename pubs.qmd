@@ -12,6 +12,7 @@ about:
       href: https://github.com/qvv5013
 
 ---
+
 <div style="text-align: left">
 1) <u>Quyen V. Vu</u>, Ian Sitarik,  Yang Jiang, Divya Yadav, Piyoosh Sharma,  Stephen D. Fried, Mai Suan Li, Edward P. O’Brien.
 *A Newly Identified Class of Protein Misfolding in All-atom Folding Simulations Consistent with Limited Proteolysis Mass Spectrometry.*

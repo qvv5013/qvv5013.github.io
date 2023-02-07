@@ -39,5 +39,6 @@ format:
     css: styles.css
     page-layout: full
 
-
-
+comments:
+  giscus:
+    repo: qvv5013/qvv5013.github.io
