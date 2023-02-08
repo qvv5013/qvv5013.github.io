@@ -21,6 +21,7 @@
 
 
 <p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
+<p><img src="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" class="img-fluid"></p>
 <section id="generate-initial-structure" class="level1">
 <h1>Generate initial structure:</h1>
 <p>To generate initial structure, we can use a provided script: <code>scripts/generate_structure_from_fasta/generate_structure.py</code></p>
@@ -30,6 +31,7 @@
 <span id="cb1-3"><span class="co" style="color: #5E5E5E;"># number of chains = nx*ny</span></span>
 <span id="cb1-4">nx <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">2</span></span>
 <span id="cb1-5">ny <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">2</span></span></code></pre></div>
+<p>The long axis of molecule will be aligned along z-axis, we will expand the system along x-y plane.</p>
 <ul>
 <li>line 1: the fasta sequence of protein we are studying</li>
 <li>line 2: name of protein, will be used to write pdb output file name</li>
@@ -98,6 +100,7 @@
   <category>OpenMM</category>
   <guid>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</guid>
   <pubDate>Sat, 04 Feb 2023 00:00:00 GMT</pubDate>
+  <media:content url="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" medium="image" type="image/png" height="153" width="144"/>
 </item>
 <item>
   <title>Implementation of Mpipi model in OpenMM</title>
@@ -2358,6 +2361,12 @@ if (IPython.notebook.kernel !== null) {
 <li>line 5: check if file <code>prot_l213_dissociation_final.cor</code> in specified directory existed. If yes, then run the code block.</li>
 <li>line 11-12: <code>sed</code> command used to search and replace pattern <code>SETINDEX</code> in file <code>${i}/job_plgrid_gpu.sh</code> by value of variable <code>$i</code></li>
 </ul>
+</section>
+<section id="sync-data-between-local-and-cluster-computer" class="level1">
+<h1>Sync data between local and cluster computer</h1>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;">rsync</span> <span class="at" style="color: #657422;">-avzhP</span> plgqvuvan@pro.cyfronet.pl:/net/people/plgqvuvan/plggligroup/qvuvan/10proj/post_trans/cat3/stride_by5/combine_trajs/ post_trans/</span></code></pre></div>
+<p>The above command sync the data from cluster pro.cyfronet.pl to local computer. To exclude files (e.g xtc file), add this: –exclude=*.xtc</p>
 
 
 </section>
