@@ -110,7 +110,7 @@
 <p><img src="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" class="img-fluid"></p>
 <section id="installation-hpsopenmm" class="level1">
 <h1>Installation <code>hpsOpenMM</code></h1>
-<p>First, you need to follow the <a href="https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html">Readme file here</a> to install the package:</p>
+<p>First, you need to follow the <a href="https://github.com/qvv5013/hpsOpenMM#how-to-use-hpsopenmm">Readme file here</a> to install the package.</p>
 </section>
 <section id="generate-initial-structure" class="level1">
 <h1>Generate initial structure:</h1>
