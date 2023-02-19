@@ -108,6 +108,10 @@
 
 <p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
 <p><img src="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" class="img-fluid"></p>
+<section id="installation-hpsopenmm" class="level1">
+<h1>Installation <code>hpsOpenMM</code></h1>
+<p>First, you need to follow the <a href="https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html">Readme file here</a> to install the package:</p>
+</section>
 <section id="generate-initial-structure" class="level1">
 <h1>Generate initial structure:</h1>
 <p>To generate initial structure, we can use a provided script: <code>scripts/generate_structure_from_fasta/generate_structure.py</code></p>
@@ -133,7 +137,7 @@
 <span id="cb2-4">nstxout <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">100</span> <span class="op" style="color: #5E5E5E;">;</span> number of steps to write checkpoint <span class="op" style="color: #5E5E5E;">=</span> nstxout</span>
 <span id="cb2-5">nstlog <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">100</span> <span class="op" style="color: #5E5E5E;">;</span> number of steps to <span class="bu" style="color: null;">print</span> log</span>
 <span id="cb2-6">nstcomm <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">100</span> <span class="op" style="color: #5E5E5E;">;</span> frequency <span class="cf" style="color: #003B4F;">for</span> center of mass motion removal</span>
-<span id="cb2-7"><span class="op" style="color: #5E5E5E;">;</span> select HPS model, available options: hps_kr, hps_urry, <span class="kw" style="color: #003B4F;">or</span> hps_ss</span>
+<span id="cb2-7"><span class="op" style="color: #5E5E5E;">;</span> select HPS model, available options: hps_kr, hps_urry, hps_ss, <span class="kw" style="color: #003B4F;">or</span> mpipi</span>
 <span id="cb2-8">model <span class="op" style="color: #5E5E5E;">=</span> mpipi</span>
 <span id="cb2-9"></span>
 <span id="cb2-10"><span class="op" style="color: #5E5E5E;">;</span> control temperature coupling</span>
@@ -149,20 +153,21 @@
 <span id="cb2-20"><span class="op" style="color: #5E5E5E;">;</span> Periodic boundary condition: <span class="cf" style="color: #003B4F;">if</span> pcoupl <span class="kw" style="color: #003B4F;">is</span> yes then pbc must be yes.</span>
 <span id="cb2-21">pbc <span class="op" style="color: #5E5E5E;">=</span> yes</span>
 <span id="cb2-22"><span class="op" style="color: #5E5E5E;">;</span> <span class="cf" style="color: #003B4F;">if</span> pbc<span class="op" style="color: #5E5E5E;">=</span>yes, then use box_dimension option to specify box_dimension <span class="op" style="color: #5E5E5E;">=</span> x <span class="kw" style="color: #003B4F;">or</span> [x, y, z], unit of nanometer</span>
-<span id="cb2-23">box_dimension <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">30</span> <span class="op" style="color: #5E5E5E;">;</span> [<span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">60</span>]</span>
-<span id="cb2-24"></span>
-<span id="cb2-25"><span class="op" style="color: #5E5E5E;">;</span> <span class="bu" style="color: null;">input</span></span>
-<span id="cb2-26">protein_code <span class="op" style="color: #5E5E5E;">=</span> ASYN</span>
-<span id="cb2-27">pdb_file <span class="op" style="color: #5E5E5E;">=</span> asyn.pdb</span>
-<span id="cb2-28"><span class="op" style="color: #5E5E5E;">;</span> output</span>
-<span id="cb2-29">checkpoint <span class="op" style="color: #5E5E5E;">=</span> asyn.chk</span>
-<span id="cb2-30"><span class="op" style="color: #5E5E5E;">;</span>Use GPU<span class="op" style="color: #5E5E5E;">/</span>CPU</span>
-<span id="cb2-31">device <span class="op" style="color: #5E5E5E;">=</span> GPU</span>
-<span id="cb2-32"><span class="op" style="color: #5E5E5E;">;</span> If CPU <span class="kw" style="color: #003B4F;">is</span> specified, then use ppn variable</span>
-<span id="cb2-33">ppn <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">4</span></span>
-<span id="cb2-34"><span class="op" style="color: #5E5E5E;">;</span>Restart simulation</span>
-<span id="cb2-35">restart <span class="op" style="color: #5E5E5E;">=</span> no</span>
-<span id="cb2-36">minimize <span class="op" style="color: #5E5E5E;">=</span> yes <span class="op" style="color: #5E5E5E;">;</span><span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> restart, then minimize will be loaded, otherwise, minimize<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span></span></code></pre></div>
+<span id="cb2-23"><span class="op" style="color: #5E5E5E;">;</span> otherwise, box_dimension <span class="kw" style="color: #003B4F;">is</span> <span class="kw" style="color: #003B4F;">not</span> required <span class="kw" style="color: #003B4F;">and</span> does <span class="kw" style="color: #003B4F;">not</span> take <span class="bu" style="color: null;">any</span> effect.</span>
+<span id="cb2-24">box_dimension <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">30</span> <span class="op" style="color: #5E5E5E;">;</span> [<span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">60</span>]</span>
+<span id="cb2-25"></span>
+<span id="cb2-26"><span class="op" style="color: #5E5E5E;">;</span> <span class="bu" style="color: null;">input</span></span>
+<span id="cb2-27">protein_code <span class="op" style="color: #5E5E5E;">=</span> ASYN</span>
+<span id="cb2-28">pdb_file <span class="op" style="color: #5E5E5E;">=</span> asyn.pdb</span>
+<span id="cb2-29"><span class="op" style="color: #5E5E5E;">;</span> output</span>
+<span id="cb2-30">checkpoint <span class="op" style="color: #5E5E5E;">=</span> asyn.chk</span>
+<span id="cb2-31"><span class="op" style="color: #5E5E5E;">;</span>Use GPU<span class="op" style="color: #5E5E5E;">/</span>CPU</span>
+<span id="cb2-32">device <span class="op" style="color: #5E5E5E;">=</span> GPU</span>
+<span id="cb2-33"><span class="op" style="color: #5E5E5E;">;</span> If CPU <span class="kw" style="color: #003B4F;">is</span> specified, then use ppn variable</span>
+<span id="cb2-34">ppn <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">4</span></span>
+<span id="cb2-35"><span class="op" style="color: #5E5E5E;">;</span>Restart simulation</span>
+<span id="cb2-36">restart <span class="op" style="color: #5E5E5E;">=</span> no</span>
+<span id="cb2-37">minimize <span class="op" style="color: #5E5E5E;">=</span> yes <span class="op" style="color: #5E5E5E;">;</span><span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> restart, then minimize will be loaded, otherwise, minimize<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span></span></code></pre></div>
 <p>This control file is almost self-explaination if you are familiar with other MD simulation packages.</p>
 </section>
 <section id="running-simulation" class="level1">
