@@ -2565,7 +2565,7 @@ if (IPython.notebook.kernel !== null) {
 <h1>Ares supercomputer</h1>
 <section id="cpu-job-script" class="level4">
 <h4 class="anchored" data-anchor-id="cpu-job-script">CPU job script</h4>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
 <span id="cb1-2"><span class="co" style="color: #5E5E5E;">#SBATCH --partition plgrid</span></span>
 <span id="cb1-3"><span class="co" style="color: #5E5E5E;">#SBATCH --job-name cryosparc-master</span></span>
 <span id="cb1-4"><span class="co" style="color: #5E5E5E;">#SBATCH --nodes 1</span></span>
@@ -2582,6 +2582,28 @@ if (IPython.notebook.kernel !== null) {
 </section>
 <section id="gpu-job-script" class="level4">
 <h4 class="anchored" data-anchor-id="gpu-job-script">GPU Job script</h4>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;">#SBATCH --job-name ispe_0</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;">#SBATCH --nodes 1</span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;">#SBATCH --partition plgrid-gpu-v100</span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;">#SBATCH --gres=gpu:1</span></span>
+<span id="cb2-6"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node 1</span></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;">#SBATCH --mem 15GB</span></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;">#SBATCH --time 48:00:00</span></span>
+<span id="cb2-9"><span class="co" style="color: #5E5E5E;">#SBATCH -C localfs</span></span>
+<span id="cb2-10"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgrisa-gpu</span></span>
+<span id="cb2-11"><span class="co" style="color: #5E5E5E;">#SBATCH --dependency=singleton</span></span>
+<span id="cb2-12"><span class="co" style="color: #5E5E5E;">#SBATCH --output=output.out</span></span>
+<span id="cb2-13"><span class="co" style="color: #5E5E5E;">#SBATCH --error=error.err</span></span>
+<span id="cb2-14"><span class="co" style="color: #5E5E5E;">#SBATCH --signal=B:2@240</span></span>
+<span id="cb2-15"><span class="co" style="color: #5E5E5E;">## ares</span></span>
+<span id="cb2-16"><span class="ex" style="color: null;">conda</span> init bash</span>
+<span id="cb2-17"><span class="bu" style="color: null;">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
+<span id="cb2-18"><span class="ex" style="color: null;">conda</span> activate py310</span>
+<span id="cb2-19"><span class="bu" style="color: null;">cd</span> <span class="va" style="color: #111111;">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb2-20"><span class="bu" style="color: null;">echo</span> <span class="kw" style="color: #003B4F;">`</span><span class="bu" style="color: null;">pwd</span><span class="kw" style="color: #003B4F;">`</span></span>
+<span id="cb2-21"><span class="co" style="color: #5E5E5E;">#</span></span>
+<span id="cb2-22"><span class="ex" style="color: null;">python</span> single_run.py <span class="at" style="color: #657422;">-f</span> control.cntrl</span></code></pre></div>
 </section>
 </section>
 <section id="prometheus-supercomputer" class="level1">
@@ -2591,21 +2613,21 @@ if (IPython.notebook.kernel !== null) {
 </section>
 <section id="gpu-job-scripts" class="level4">
 <h4 class="anchored" data-anchor-id="gpu-job-scripts">GPU job scripts</h4>
-<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash -l</span></span>
-<span id="cb2-2"><span class="co" style="color: #5E5E5E;">#SBATCH -J pGcat_SETINDEX</span></span>
-<span id="cb2-3"><span class="co" style="color: #5E5E5E;">#SBATCH -N 1</span></span>
-<span id="cb2-4"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node=1</span></span>
-<span id="cb2-5"><span class="co" style="color: #5E5E5E;">#SBATCH --mem-per-cpu=5GB</span></span>
-<span id="cb2-6"><span class="co" style="color: #5E5E5E;">#SBATCH --time=72:00:00</span></span>
-<span id="cb2-7"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgribo3gpu</span></span>
-<span id="cb2-8"><span class="co" style="color: #5E5E5E;">#SBATCH --gres=gpu</span></span>
-<span id="cb2-9"><span class="co" style="color: #5E5E5E;">#SBATCH -p plgrid-gpu</span></span>
-<span id="cb2-10"><span class="co" style="color: #5E5E5E;">#SBATCH --output=output.out</span></span>
-<span id="cb2-11"><span class="co" style="color: #5E5E5E;">#SBATCH --error=error.err</span></span>
-<span id="cb2-12"><span class="bu" style="color: null;">cd</span> <span class="va" style="color: #111111;">$SLURM_SUBMIT_DIR</span></span>
-<span id="cb2-13"><span class="ex" style="color: null;">srun</span> /bin/hostname</span>
-<span id="cb2-14"></span>
-<span id="cb2-15"><span class="fu" style="color: #4758AB;">perl</span> calc_entanglement_number.pl <span class="at" style="color: #657422;">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at" style="color: #657422;">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at" style="color: #657422;">-o</span> ./</span></code></pre></div>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash -l</span></span>
+<span id="cb3-2"><span class="co" style="color: #5E5E5E;">#SBATCH -J pGcat_SETINDEX</span></span>
+<span id="cb3-3"><span class="co" style="color: #5E5E5E;">#SBATCH -N 1</span></span>
+<span id="cb3-4"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node=1</span></span>
+<span id="cb3-5"><span class="co" style="color: #5E5E5E;">#SBATCH --mem-per-cpu=5GB</span></span>
+<span id="cb3-6"><span class="co" style="color: #5E5E5E;">#SBATCH --time=72:00:00</span></span>
+<span id="cb3-7"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgribo3gpu</span></span>
+<span id="cb3-8"><span class="co" style="color: #5E5E5E;">#SBATCH --gres=gpu</span></span>
+<span id="cb3-9"><span class="co" style="color: #5E5E5E;">#SBATCH -p plgrid-gpu</span></span>
+<span id="cb3-10"><span class="co" style="color: #5E5E5E;">#SBATCH --output=output.out</span></span>
+<span id="cb3-11"><span class="co" style="color: #5E5E5E;">#SBATCH --error=error.err</span></span>
+<span id="cb3-12"><span class="bu" style="color: null;">cd</span> <span class="va" style="color: #111111;">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb3-13"><span class="ex" style="color: null;">srun</span> /bin/hostname</span>
+<span id="cb3-14"></span>
+<span id="cb3-15"><span class="fu" style="color: #4758AB;">perl</span> calc_entanglement_number.pl <span class="at" style="color: #657422;">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at" style="color: #657422;">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at" style="color: #657422;">-o</span> ./</span></code></pre></div>
 
 
 </section>

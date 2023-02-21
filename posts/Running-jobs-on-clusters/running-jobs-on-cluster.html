@@ -223,23 +223,45 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Ares supercomputer</h1>
 <section id="cpu-job-script" class="level4">
 <h4 class="anchored" data-anchor-id="cpu-job-script">CPU job script</h4>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition plgrid</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name cryosparc-master</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes 1</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node 1</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem 15GB</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time 72:00:00</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -C localfs</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -A plgrisa-cpu</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --dependency=singleton</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Job run"</span> <span class="op">&gt;</span> test.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">#SBATCH --partition plgrid</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#SBATCH --job-name cryosparc-master</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">#SBATCH --nodes 1</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">#SBATCH --ntasks-per-node 1</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">#SBATCH --mem 15GB</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#SBATCH --time 72:00:00</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#SBATCH -C localfs</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#SBATCH -A plgrisa-cpu</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co">#SBATCH --dependency=singleton</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="bu">echo</span> <span class="st">"Job run"</span> <span class="op">&gt;</span> test.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="gpu-job-script" class="level4">
 <h4 class="anchored" data-anchor-id="gpu-job-script">GPU Job script</h4>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">#SBATCH --job-name ispe_0</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">#SBATCH --nodes 1</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#SBATCH --partition plgrid-gpu-v100</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#SBATCH --gres=gpu:1</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#SBATCH --ntasks-per-node 1</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#SBATCH --mem 15GB</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co">#SBATCH --time 48:00:00</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#SBATCH -C localfs</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co">#SBATCH -A plgrisa-gpu</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co">#SBATCH --dependency=singleton</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">#SBATCH --output=output.out</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">#SBATCH --error=error.err</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co">## ares</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="ex">conda</span> init bash</span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="bu">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="ex">conda</span> activate py310</span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="bu">cd</span> <span class="va">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="bu">echo</span> <span class="kw">`</span><span class="bu">pwd</span><span class="kw">`</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co">#</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="ex">python</span> single_run.py <span class="at">-f</span> control.cntrl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="prometheus-supercomputer" class="level1">
@@ -249,21 +271,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="gpu-job-scripts" class="level4">
 <h4 class="anchored" data-anchor-id="gpu-job-scripts">GPU job scripts</h4>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash -l</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -J pGcat_SETINDEX</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -N 1</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node=1</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem-per-cpu=5GB</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=72:00:00</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -A plgribo3gpu</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -p plgrid-gpu</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=output.out</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --error=error.err</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$SLURM_SUBMIT_DIR</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> /bin/hostname</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">perl</span> calc_entanglement_number.pl <span class="at">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at">-o</span> ./</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#!/bin/bash -l</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#SBATCH -J pGcat_SETINDEX</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#SBATCH -N 1</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#SBATCH --ntasks-per-node=1</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#SBATCH --mem-per-cpu=5GB</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#SBATCH --time=72:00:00</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#SBATCH -A plgribo3gpu</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#SBATCH --gres=gpu</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#SBATCH -p plgrid-gpu</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#SBATCH --output=output.out</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#SBATCH --error=error.err</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="bu">cd</span> <span class="va">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="ex">srun</span> /bin/hostname</span>
+<span id="cb3-14"><a href="#cb3-14"></a></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="fu">perl</span> calc_entanglement_number.pl <span class="at">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at">-o</span> ./</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
