@@ -21,6 +21,20 @@
     "text": "This post contains some bash code-snippet to make my daily work easier.\n\nLoop through array\nIn case of looping through an continous list of number:\n#!/bin/bash\nfor i in {1..100}\ndo\n    # DO SOMETHING\ndone\nIf the list to loop is not continous, used the following form:\n#!/bin/bash\narr=( 3 4 9 10)\nfor i in \"${arr[@]}\"\ndo\n    echo $i       \n    #DONE SOMETHING HERE\ndone\nNote that arr definition is without whitespace.\n\n\nCounting number of lines in file\nSometime, after perform a long analysis of many simulations. We want to make sure if the analysis is done automatically, instead of looking into single file one-by-one, we can use bash script to do so.\n#!/bin/bash\nfor i in {1..100}\ndo\n        #echo \"$i\"\n        nl=$(wc -l < $i/G_traj_${i}.dat)\n        if [ $nl -eq 400008 ]; then\n                echo \"traj $i :  $nl --- DONE\"\n        else\n                echo \"traj $i :  $nl --- Has not been DONE\"\n        fi\n\ndone\nIn this example, we loop through all simulations (1 to 100) and use command: wc -l < $i/G_traj_${i}.dat to count the number of lines in file. we assign the output from this command to nl variable by packing previous command by $(command)\n\n\nSearch and replace in file\n#!/bin/bash\ncur_dir=`pwd`\nfor i in {1..100}\ndo\n        if [ -f \"/net/people/plgqvuvan/plggligroup/qvuvan/10proj/synthesize/cat3/wt/$i/traj/1/prot_l213_dissociation_final.cor\" ]; then\n                echo \"copy cor and vel file for run $i\"\n                rm -rf $i && mkdir $i\n                cp /net/people/plgqvuvan/plggligroup/qvuvan/10proj/synthesize/cat3/wt/$i/traj/1/prot_l213_dissociation_final.cor $i/\n                cp /net/people/plgqvuvan/plggligroup/qvuvan/10proj/synthesize/cat3/wt/$i/traj/1/prot_l213_dissociation_final.vel $i/\n                cp template/* $i/\n                sed \"s/SETINDEX/${i}/g\" -i ${i}/job_plgrid_gpu.sh\n                sed \"s/SETINDEX/${i}/g\" -i ${i}/control.cntrl\n        else\n                echo \"simulation $i is not finished\"\n        fi\ndone\n\nline 5: check if file prot_l213_dissociation_final.cor in specified directory existed. If yes, then run the code block.\nline 11-12: sed command used to search and replace pattern SETINDEX in file ${i}/job_plgrid_gpu.sh by value of variable $i\n\n\n\nSync data between local and cluster computer\n#!/bin/bash\nrsync -avzhP plgqvuvan@pro.cyfronet.pl:/net/people/plgqvuvan/plggligroup/qvuvan/10proj/post_trans/cat3/stride_by5/combine_trajs/ post_trans/\nThe above command sync the data from cluster pro.cyfronet.pl to local computer. To exclude files (e.g xtc file), add this: –exclude=*.xtc"
   },
   {
+    "objectID": "posts/python/conda-commands.html",
+    "href": "posts/python/conda-commands.html",
+    "title": "Some Conda Commands Frequently Used",
+    "section": "",
+    "text": "conda is a great python package environment."
+  },
+  {
+    "objectID": "posts/python/conda-commands.html#post-under-construction",
+    "href": "posts/python/conda-commands.html#post-under-construction",
+    "title": "Some Conda Commands Frequently Used",
+    "section": "(Post under construction)",
+    "text": "(Post under construction)\n\nCreate a new environment: conda create -n ENV_NAME python=PYTHON_VERSION\nList all env: conda env list\nDelete environment: conda env remove -n ENV_NAME"
+  },
+  {
     "objectID": "posts/python/Problems-regarding-ipywidgets.html",
     "href": "posts/python/Problems-regarding-ipywidgets.html",
     "title": "Problems regarding ipywidgets has no attribute ‘version_info’",

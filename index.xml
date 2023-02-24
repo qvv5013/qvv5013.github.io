@@ -10,7 +10,36 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Thu, 09 Feb 2023 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 24 Feb 2023 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Some Conda Commands Frequently Used</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/python/conda-commands.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p><code>conda</code> is a great python package environment.</p>
+<section id="here-is-some-frequently-used-commands" class="level1">
+<h1>Here is some frequently used commands:</h1>
+<section id="post-under-construction" class="level2">
+<h2 class="anchored" data-anchor-id="post-under-construction">(Post under construction)</h2>
+<ol type="1">
+<li>Create a new environment: <code>conda create -n ENV_NAME python=PYTHON_VERSION</code></li>
+<li>List all env: <code>conda env list</code></li>
+<li>Delete environment: <code>conda env remove -n ENV_NAME</code></li>
+</ol>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>Python</category>
+  <guid>https://qvv5013.github.io/posts/python/conda-commands.html</guid>
+  <pubDate>Fri, 24 Feb 2023 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Simple OpenMM system for testing code development</title>
   <dc:creator>Quyen Vu</dc:creator>
