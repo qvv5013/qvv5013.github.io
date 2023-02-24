@@ -9,8 +9,123 @@
 <link>https://qvv5013.github.io/index.html</link>
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
-<generator>quarto-1.2.269</generator>
-<lastBuildDate>Fri, 03 Feb 2023 23:00:00 GMT</lastBuildDate>
+<generator>quarto-1.2.335</generator>
+<lastBuildDate>Thu, 23 Feb 2023 23:00:00 GMT</lastBuildDate>
+<item>
+  <title>Some Conda Commands Frequently Used</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/python/conda-commands.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p><code>conda</code> is a great python package environment.</p>
+<section id="here-is-some-frequently-used-commands" class="level1">
+<h1>Here is some frequently used commands:</h1>
+<section id="post-under-construction" class="level2">
+<h2 class="anchored" data-anchor-id="post-under-construction">(Post under construction)</h2>
+<ol type="1">
+<li>Create a new environment: <code>conda create -n ENV_NAME python=PYTHON_VERSION</code></li>
+<li>List all env: <code>conda env list</code></li>
+<li>Delete environment: <code>conda env remove -n ENV_NAME</code></li>
+</ol>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>Python</category>
+  <guid>https://qvv5013.github.io/posts/python/conda-commands.html</guid>
+  <pubDate>Thu, 23 Feb 2023 23:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Simple OpenMM system for testing code development</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/openMM/openmm_code_snippet.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>This post contains a simple system definition of two beads with custom nonbonded for testing</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python numberLines lineAnchors code-with-copy"><code class="sourceCode python"><span id="cb1-1"></span>
+<span id="cb1-2"><span class="im" style="color: #00769E;">import</span> openmm <span class="im" style="color: #00769E;">as</span> mm</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;">import</span> openmm.app <span class="im" style="color: #00769E;">as</span> app</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="bu" style="color: null;">print</span>(mm.__version__)</span>
+<span id="cb1-7">sys <span class="op" style="color: #5E5E5E;">=</span> mm.System()</span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;"># 2 GLY</span></span>
+<span id="cb1-9">sys.addParticle(<span class="fl" style="color: #AD0000;">57.05</span><span class="op" style="color: #5E5E5E;">*</span>mm.unit.amu)</span>
+<span id="cb1-10">sys.addParticle(<span class="fl" style="color: #AD0000;">57.05</span><span class="op" style="color: #5E5E5E;">*</span>mm.unit.amu)</span>
+<span id="cb1-11"></span>
+<span id="cb1-12"><span class="co" style="color: #5E5E5E;"># build topology</span></span>
+<span id="cb1-13">top<span class="op" style="color: #5E5E5E;">=</span>mm.app.topology.Topology()</span>
+<span id="cb1-14">top.addChain(<span class="st" style="color: #20794D;">'prot'</span>)</span>
+<span id="cb1-15">prot_chain <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">list</span>(top.chains())[<span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>]</span>
+<span id="cb1-16">top.addResidue(<span class="st" style="color: #20794D;">'GLY'</span>, prot_chain)</span>
+<span id="cb1-17">res1 <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">list</span>(top.residues())[<span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>]</span>
+<span id="cb1-18">top.addAtom(<span class="st" style="color: #20794D;">'CA'</span>, app.Element.getBySymbol(<span class="st" style="color: #20794D;">'C'</span>), res1)</span>
+<span id="cb1-19"></span>
+<span id="cb1-20">top.addResidue(<span class="st" style="color: #20794D;">'GLY'</span>, prot_chain)</span>
+<span id="cb1-21">res2 <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">list</span>(top.residues())[<span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>]</span>
+<span id="cb1-22">top.addAtom(<span class="st" style="color: #20794D;">'CA'</span>, app.Element.getBySymbol(<span class="st" style="color: #20794D;">'C'</span>), res2)</span>
+<span id="cb1-23"></span>
+<span id="cb1-24"><span class="co" style="color: #5E5E5E;"># # first implementation</span></span>
+<span id="cb1-25"><span class="co" style="color: #5E5E5E;"># energy_function = '((rc/r)^(4)-1)^(2)'</span></span>
+<span id="cb1-26"><span class="co" style="color: #5E5E5E;"># wang_frenkel_force = mm.CustomNonbondedForce(energy_function)</span></span>
+<span id="cb1-27"><span class="co" style="color: #5E5E5E;"># wang_frenkel_force.addGlobalParameter('rc', 1.408533*mm.unit.nanometer)</span></span>
+<span id="cb1-28"></span>
+<span id="cb1-29"><span class="co" style="color: #5E5E5E;"># second implementation</span></span>
+<span id="cb1-30">energy_function <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'step(rc-r)*((rc/r)^(2*mu)-1)^(2*nu);'</span></span>
+<span id="cb1-31">wang_frenkel_force <span class="op" style="color: #5E5E5E;">=</span> mm.CustomNonbondedForce(energy_function)</span>
+<span id="cb1-32">wang_frenkel_force.addGlobalParameter(<span class="st" style="color: #20794D;">'rc'</span>, <span class="fl" style="color: #AD0000;">1.408533</span><span class="op" style="color: #5E5E5E;">*</span>mm.unit.nanometer)</span>
+<span id="cb1-33">wang_frenkel_force.addGlobalParameter(<span class="st" style="color: #20794D;">'mu'</span>, <span class="dv" style="color: #AD0000;">2</span>)</span>
+<span id="cb1-34">wang_frenkel_force.addGlobalParameter(<span class="st" style="color: #20794D;">'nu'</span>, <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb1-35"></span>
+<span id="cb1-36"><span class="co" style="color: #5E5E5E;"># # # third implementation</span></span>
+<span id="cb1-37"><span class="co" style="color: #5E5E5E;"># energy_function = '((rc/r)^(4)-1)^(2*nu);'</span></span>
+<span id="cb1-38"><span class="co" style="color: #5E5E5E;"># wang_frenkel_force = mm.CustomNonbondedForce(energy_function)</span></span>
+<span id="cb1-39"><span class="co" style="color: #5E5E5E;"># wang_frenkel_force.addGlobalParameter('rc', 1.408533*mm.unit.nanometer)</span></span>
+<span id="cb1-40"><span class="co" style="color: #5E5E5E;"># # wang_frenkel_force.addGlobalParameter('mu', 2)</span></span>
+<span id="cb1-41"><span class="co" style="color: #5E5E5E;"># wang_frenkel_force.addGlobalParameter('nu', 1)</span></span>
+<span id="cb1-42"></span>
+<span id="cb1-43"><span class="cf" style="color: #003B4F;">for</span> _ <span class="kw" style="color: #003B4F;">in</span> top.atoms():</span>
+<span id="cb1-44">    wang_frenkel_force.addParticle(())</span>
+<span id="cb1-45"></span>
+<span id="cb1-46">sys.addForce(wang_frenkel_force)</span>
+<span id="cb1-47"></span>
+<span id="cb1-48">integrator <span class="op" style="color: #5E5E5E;">=</span> mm.LangevinIntegrator(<span class="dv" style="color: #AD0000;">1</span><span class="op" style="color: #5E5E5E;">*</span>mm.unit.kelvin, <span class="dv" style="color: #AD0000;">1</span><span class="op" style="color: #5E5E5E;">/</span>mm.unit.picosecond, <span class="fl" style="color: #AD0000;">0.000001</span><span class="op" style="color: #5E5E5E;">*</span>mm.unit.picosecond)</span>
+<span id="cb1-49"></span>
+<span id="cb1-50"><span class="co" style="color: #5E5E5E;"># # CPU</span></span>
+<span id="cb1-51"><span class="co" style="color: #5E5E5E;"># platform = mm.Platform.getPlatformByName('CPU')</span></span>
+<span id="cb1-52"><span class="co" style="color: #5E5E5E;"># properties = {'Threads': str(8)}</span></span>
+<span id="cb1-53"></span>
+<span id="cb1-54"><span class="co" style="color: #5E5E5E;"># GPU</span></span>
+<span id="cb1-55">platform <span class="op" style="color: #5E5E5E;">=</span> mm.Platform.getPlatformByName(<span class="st" style="color: #20794D;">'CUDA'</span>)</span>
+<span id="cb1-56">properties <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">'CudaPrecision'</span>: <span class="st" style="color: #20794D;">'single'</span>, <span class="st" style="color: #20794D;">"DeviceIndex"</span>: <span class="st" style="color: #20794D;">"0"</span>}</span>
+<span id="cb1-57">sim <span class="op" style="color: #5E5E5E;">=</span> mm.app.Simulation(top, sys, integrator, platform, properties)</span>
+<span id="cb1-58"></span>
+<span id="cb1-59"><span class="co" style="color: #5E5E5E;"># pos=np.array([[0,0,0],[1.409,0,0]])</span></span>
+<span id="cb1-60"><span class="co" style="color: #5E5E5E;"># pos=np.array([[0,0,0],[1.4,0,0]])</span></span>
+<span id="cb1-61">pos<span class="op" style="color: #5E5E5E;">=</span>np.array([[<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>],[<span class="fl" style="color: #AD0000;">1.9</span>,<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>]])</span>
+<span id="cb1-62"></span>
+<span id="cb1-63">sim.context.setPositions(pos)</span>
+<span id="cb1-64">state <span class="op" style="color: #5E5E5E;">=</span> sim.context.getState(getForces<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>, getEnergy<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>)</span>
+<span id="cb1-65"><span class="bu" style="color: null;">print</span>(platform)</span>
+<span id="cb1-66"><span class="bu" style="color: null;">print</span>(properties)</span>
+<span id="cb1-67"><span class="bu" style="color: null;">print</span>(state.getPotentialEnergy())</span>
+<span id="cb1-68"><span class="bu" style="color: null;">print</span>(state.getForces())</span></code></pre></div>
+
+
+
+ ]]></description>
+  <category>OpenMM</category>
+  <guid>https://qvv5013.github.io/posts/openMM/openmm_code_snippet.html</guid>
+  <pubDate>Wed, 08 Feb 2023 23:00:00 GMT</pubDate>
+</item>
 <item>
   <title>hpsOpenMM tutorial</title>
   <dc:creator>Quyen Vu</dc:creator>
@@ -22,6 +137,10 @@
 
 <p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
 <p><img src="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" class="img-fluid"></p>
+<section id="installation-hpsopenmm" class="level1">
+<h1>Installation <code>hpsOpenMM</code></h1>
+<p>First, you need to follow the <a href="https://github.com/qvv5013/hpsOpenMM#how-to-use-hpsopenmm">Readme file here</a> to install the package.</p>
+</section>
 <section id="generate-initial-structure" class="level1">
 <h1>Generate initial structure:</h1>
 <p>To generate initial structure, we can use a provided script: <code>scripts/generate_structure_from_fasta/generate_structure.py</code></p>
@@ -47,7 +166,7 @@
 <span id="cb2-4">nstxout <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">100</span> <span class="op" style="color: #5E5E5E;">;</span> number of steps to write checkpoint <span class="op" style="color: #5E5E5E;">=</span> nstxout</span>
 <span id="cb2-5">nstlog <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">100</span> <span class="op" style="color: #5E5E5E;">;</span> number of steps to <span class="bu" style="color: null;">print</span> log</span>
 <span id="cb2-6">nstcomm <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">100</span> <span class="op" style="color: #5E5E5E;">;</span> frequency <span class="cf" style="color: #003B4F;">for</span> center of mass motion removal</span>
-<span id="cb2-7"><span class="op" style="color: #5E5E5E;">;</span> select HPS model, available options: hps_kr, hps_urry, <span class="kw" style="color: #003B4F;">or</span> hps_ss</span>
+<span id="cb2-7"><span class="op" style="color: #5E5E5E;">;</span> select HPS model, available options: hps_kr, hps_urry, hps_ss, <span class="kw" style="color: #003B4F;">or</span> mpipi</span>
 <span id="cb2-8">model <span class="op" style="color: #5E5E5E;">=</span> mpipi</span>
 <span id="cb2-9"></span>
 <span id="cb2-10"><span class="op" style="color: #5E5E5E;">;</span> control temperature coupling</span>
@@ -63,20 +182,21 @@
 <span id="cb2-20"><span class="op" style="color: #5E5E5E;">;</span> Periodic boundary condition: <span class="cf" style="color: #003B4F;">if</span> pcoupl <span class="kw" style="color: #003B4F;">is</span> yes then pbc must be yes.</span>
 <span id="cb2-21">pbc <span class="op" style="color: #5E5E5E;">=</span> yes</span>
 <span id="cb2-22"><span class="op" style="color: #5E5E5E;">;</span> <span class="cf" style="color: #003B4F;">if</span> pbc<span class="op" style="color: #5E5E5E;">=</span>yes, then use box_dimension option to specify box_dimension <span class="op" style="color: #5E5E5E;">=</span> x <span class="kw" style="color: #003B4F;">or</span> [x, y, z], unit of nanometer</span>
-<span id="cb2-23">box_dimension <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">30</span> <span class="op" style="color: #5E5E5E;">;</span> [<span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">60</span>]</span>
-<span id="cb2-24"></span>
-<span id="cb2-25"><span class="op" style="color: #5E5E5E;">;</span> <span class="bu" style="color: null;">input</span></span>
-<span id="cb2-26">protein_code <span class="op" style="color: #5E5E5E;">=</span> ASYN</span>
-<span id="cb2-27">pdb_file <span class="op" style="color: #5E5E5E;">=</span> asyn.pdb</span>
-<span id="cb2-28"><span class="op" style="color: #5E5E5E;">;</span> output</span>
-<span id="cb2-29">checkpoint <span class="op" style="color: #5E5E5E;">=</span> asyn.chk</span>
-<span id="cb2-30"><span class="op" style="color: #5E5E5E;">;</span>Use GPU<span class="op" style="color: #5E5E5E;">/</span>CPU</span>
-<span id="cb2-31">device <span class="op" style="color: #5E5E5E;">=</span> GPU</span>
-<span id="cb2-32"><span class="op" style="color: #5E5E5E;">;</span> If CPU <span class="kw" style="color: #003B4F;">is</span> specified, then use ppn variable</span>
-<span id="cb2-33">ppn <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">4</span></span>
-<span id="cb2-34"><span class="op" style="color: #5E5E5E;">;</span>Restart simulation</span>
-<span id="cb2-35">restart <span class="op" style="color: #5E5E5E;">=</span> no</span>
-<span id="cb2-36">minimize <span class="op" style="color: #5E5E5E;">=</span> yes <span class="op" style="color: #5E5E5E;">;</span><span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> restart, then minimize will be loaded, otherwise, minimize<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span></span></code></pre></div>
+<span id="cb2-23"><span class="op" style="color: #5E5E5E;">;</span> otherwise, box_dimension <span class="kw" style="color: #003B4F;">is</span> <span class="kw" style="color: #003B4F;">not</span> required <span class="kw" style="color: #003B4F;">and</span> does <span class="kw" style="color: #003B4F;">not</span> take <span class="bu" style="color: null;">any</span> effect.</span>
+<span id="cb2-24">box_dimension <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">30</span> <span class="op" style="color: #5E5E5E;">;</span> [<span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">60</span>]</span>
+<span id="cb2-25"></span>
+<span id="cb2-26"><span class="op" style="color: #5E5E5E;">;</span> <span class="bu" style="color: null;">input</span></span>
+<span id="cb2-27">protein_code <span class="op" style="color: #5E5E5E;">=</span> ASYN</span>
+<span id="cb2-28">pdb_file <span class="op" style="color: #5E5E5E;">=</span> asyn.pdb</span>
+<span id="cb2-29"><span class="op" style="color: #5E5E5E;">;</span> output</span>
+<span id="cb2-30">checkpoint <span class="op" style="color: #5E5E5E;">=</span> asyn.chk</span>
+<span id="cb2-31"><span class="op" style="color: #5E5E5E;">;</span>Use GPU<span class="op" style="color: #5E5E5E;">/</span>CPU</span>
+<span id="cb2-32">device <span class="op" style="color: #5E5E5E;">=</span> GPU</span>
+<span id="cb2-33"><span class="op" style="color: #5E5E5E;">;</span> If CPU <span class="kw" style="color: #003B4F;">is</span> specified, then use ppn variable</span>
+<span id="cb2-34">ppn <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">4</span></span>
+<span id="cb2-35"><span class="op" style="color: #5E5E5E;">;</span>Restart simulation</span>
+<span id="cb2-36">restart <span class="op" style="color: #5E5E5E;">=</span> no</span>
+<span id="cb2-37">minimize <span class="op" style="color: #5E5E5E;">=</span> yes <span class="op" style="color: #5E5E5E;">;</span><span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> restart, then minimize will be loaded, otherwise, minimize<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span></span></code></pre></div>
 <p>This control file is almost self-explaination if you are familiar with other MD simulation packages.</p>
 </section>
 <section id="running-simulation" class="level1">

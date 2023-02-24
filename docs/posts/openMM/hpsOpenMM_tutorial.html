@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -221,6 +221,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
 <p><img src="hpsOpenMM.png" class="img-fluid"></p>
+<section id="installation-hpsopenmm" class="level1">
+<h1>Installation <code>hpsOpenMM</code></h1>
+<p>First, you need to follow the <a href="https://github.com/qvv5013/hpsOpenMM#how-to-use-hpsopenmm">Readme file here</a> to install the package.</p>
+</section>
 <section id="generate-initial-structure" class="level1">
 <h1>Generate initial structure:</h1>
 <p>To generate initial structure, we can use a provided script: <code>scripts/generate_structure_from_fasta/generate_structure.py</code></p>
@@ -246,7 +250,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-4"><a href="#cb2-4"></a>nstxout <span class="op">=</span> <span class="dv">100</span> <span class="op">;</span> number of steps to write checkpoint <span class="op">=</span> nstxout</span>
 <span id="cb2-5"><a href="#cb2-5"></a>nstlog <span class="op">=</span> <span class="dv">100</span> <span class="op">;</span> number of steps to <span class="bu">print</span> log</span>
 <span id="cb2-6"><a href="#cb2-6"></a>nstcomm <span class="op">=</span> <span class="dv">100</span> <span class="op">;</span> frequency <span class="cf">for</span> center of mass motion removal</span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="op">;</span> select HPS model, available options: hps_kr, hps_urry, <span class="kw">or</span> hps_ss</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="op">;</span> select HPS model, available options: hps_kr, hps_urry, hps_ss, <span class="kw">or</span> mpipi</span>
 <span id="cb2-8"><a href="#cb2-8"></a>model <span class="op">=</span> mpipi</span>
 <span id="cb2-9"><a href="#cb2-9"></a></span>
 <span id="cb2-10"><a href="#cb2-10"></a><span class="op">;</span> control temperature coupling</span>
@@ -262,20 +266,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-20"><a href="#cb2-20"></a><span class="op">;</span> Periodic boundary condition: <span class="cf">if</span> pcoupl <span class="kw">is</span> yes then pbc must be yes.</span>
 <span id="cb2-21"><a href="#cb2-21"></a>pbc <span class="op">=</span> yes</span>
 <span id="cb2-22"><a href="#cb2-22"></a><span class="op">;</span> <span class="cf">if</span> pbc<span class="op">=</span>yes, then use box_dimension option to specify box_dimension <span class="op">=</span> x <span class="kw">or</span> [x, y, z], unit of nanometer</span>
-<span id="cb2-23"><a href="#cb2-23"></a>box_dimension <span class="op">=</span> <span class="dv">30</span> <span class="op">;</span> [<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">60</span>]</span>
-<span id="cb2-24"><a href="#cb2-24"></a></span>
-<span id="cb2-25"><a href="#cb2-25"></a><span class="op">;</span> <span class="bu">input</span></span>
-<span id="cb2-26"><a href="#cb2-26"></a>protein_code <span class="op">=</span> ASYN</span>
-<span id="cb2-27"><a href="#cb2-27"></a>pdb_file <span class="op">=</span> asyn.pdb</span>
-<span id="cb2-28"><a href="#cb2-28"></a><span class="op">;</span> output</span>
-<span id="cb2-29"><a href="#cb2-29"></a>checkpoint <span class="op">=</span> asyn.chk</span>
-<span id="cb2-30"><a href="#cb2-30"></a><span class="op">;</span>Use GPU<span class="op">/</span>CPU</span>
-<span id="cb2-31"><a href="#cb2-31"></a>device <span class="op">=</span> GPU</span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="op">;</span> If CPU <span class="kw">is</span> specified, then use ppn variable</span>
-<span id="cb2-33"><a href="#cb2-33"></a>ppn <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb2-34"><a href="#cb2-34"></a><span class="op">;</span>Restart simulation</span>
-<span id="cb2-35"><a href="#cb2-35"></a>restart <span class="op">=</span> no</span>
-<span id="cb2-36"><a href="#cb2-36"></a>minimize <span class="op">=</span> yes <span class="op">;</span><span class="cf">if</span> <span class="kw">not</span> restart, then minimize will be loaded, otherwise, minimize<span class="op">=</span><span class="va">False</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="op">;</span> otherwise, box_dimension <span class="kw">is</span> <span class="kw">not</span> required <span class="kw">and</span> does <span class="kw">not</span> take <span class="bu">any</span> effect.</span>
+<span id="cb2-24"><a href="#cb2-24"></a>box_dimension <span class="op">=</span> <span class="dv">30</span> <span class="op">;</span> [<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">60</span>]</span>
+<span id="cb2-25"><a href="#cb2-25"></a></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="op">;</span> <span class="bu">input</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>protein_code <span class="op">=</span> ASYN</span>
+<span id="cb2-28"><a href="#cb2-28"></a>pdb_file <span class="op">=</span> asyn.pdb</span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="op">;</span> output</span>
+<span id="cb2-30"><a href="#cb2-30"></a>checkpoint <span class="op">=</span> asyn.chk</span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="op">;</span>Use GPU<span class="op">/</span>CPU</span>
+<span id="cb2-32"><a href="#cb2-32"></a>device <span class="op">=</span> GPU</span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="op">;</span> If CPU <span class="kw">is</span> specified, then use ppn variable</span>
+<span id="cb2-34"><a href="#cb2-34"></a>ppn <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-35"><a href="#cb2-35"></a><span class="op">;</span>Restart simulation</span>
+<span id="cb2-36"><a href="#cb2-36"></a>restart <span class="op">=</span> no</span>
+<span id="cb2-37"><a href="#cb2-37"></a>minimize <span class="op">=</span> yes <span class="op">;</span><span class="cf">if</span> <span class="kw">not</span> restart, then minimize will be loaded, otherwise, minimize<span class="op">=</span><span class="va">False</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This control file is almost self-explaination if you are familiar with other MD simulation packages.</p>
 </section>
 <section id="running-simulation" class="level1">
