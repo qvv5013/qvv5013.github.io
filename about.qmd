@@ -15,7 +15,7 @@ about:
 
 ---
 
-Quyen Vu 
+# `Quyen V. Vu`
 
 PhD student at IFPAN, Poland.
 
@@ -31,9 +31,9 @@ I am nowhere and I am everywhere.
 ### Brief CV:
 
 
-| Time               | Degree           | Where                                           | Supervisors          |
+| Period               | Degree           | Where                                         | Supervisor(s)          |
 |--------------------|----------------|---------------------------------------------------|---------------------------|
-| 2011-2015          | Bsc in Physics | VNU-US<br /> (Talented Program of Physics)        | Toan T. Nguyen |
-| 2015-2017          | Msc in Physics | VNU-US                                            | Toan T. Nguyen |
-| 2018-2023          | PhD            | Institute of Physics, Polish Academy of Sciences  | Edward P. O'Brien,<br /> Mai Suan Li  |
+| 2011-2015          | Bsc in Physics | Vietnam National University-University of Science <br /> (Talented Program of Physics)        | `Toan T. Nguyen` |
+| 2015-2017          | Msc in Physics | Vietnam National University-University of Science | `Toan T. Nguyen` |
+| 2018-2023          | PhD in Physics (Computational Biophysics)| Institute of Physics, Polish Academy of Sciences  | `Edward P. O'Brien,`<br/> `Mai Suan Li`  |
 : {tbl-colwidths="[20,10,45, 25]"}
