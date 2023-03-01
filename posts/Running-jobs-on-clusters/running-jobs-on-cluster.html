@@ -9,7 +9,7 @@
 <meta name="author" content="Quyen Vu">
 <meta name="dcterms.date" content="2022-11-26">
 
-<title>Quyen Vu - Running jobs on clusters</title>
+<title>Quyen Vu - Slurm scripts and commands to submit jobs on clusters</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -180,7 +180,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
-      <h1 class="title">Running jobs on clusters</h1>
+      <h1 class="title">Slurm scripts and commands to submit jobs on clusters</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">HPC</div>
                 <div class="quarto-category">Slurm</div>
@@ -263,6 +263,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-21"><a href="#cb2-21"></a><span class="co">#</span></span>
 <span id="cb2-22"><a href="#cb2-22"></a><span class="ex">python</span> single_run.py <span class="at">-f</span> control.cntrl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+<section id="interactive-mode-on-ares" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-mode-on-ares">Interactive mode on Ares</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-p</span> plgrid <span class="at">-N</span> 1 <span class="at">--ntasks-per-node</span><span class="op">=</span>1 <span class="at">-n</span> 1 <span class="at">-A</span> plgrisa-cpu <span class="at">--pty</span> /bin/bash <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 </section>
 <section id="prometheus-supercomputer" class="level1">
 <h1>Prometheus supercomputer</h1>
@@ -271,21 +275,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="gpu-job-scripts" class="level4">
 <h4 class="anchored" data-anchor-id="gpu-job-scripts">GPU job scripts</h4>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#!/bin/bash -l</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#SBATCH -J pGcat_SETINDEX</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#SBATCH -N 1</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#SBATCH --ntasks-per-node=1</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#SBATCH --mem-per-cpu=5GB</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#SBATCH --time=72:00:00</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#SBATCH -A plgribo3gpu</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#SBATCH --gres=gpu</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#SBATCH -p plgrid-gpu</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#SBATCH --output=output.out</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#SBATCH --error=error.err</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="bu">cd</span> <span class="va">$SLURM_SUBMIT_DIR</span></span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="ex">srun</span> /bin/hostname</span>
-<span id="cb3-14"><a href="#cb3-14"></a></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="fu">perl</span> calc_entanglement_number.pl <span class="at">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at">-o</span> ./</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">#!/bin/bash -l</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#SBATCH -J pGcat_SETINDEX</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#SBATCH -N 1</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#SBATCH --ntasks-per-node=1</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#SBATCH --mem-per-cpu=5GB</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#SBATCH --time=72:00:00</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#SBATCH -A plgribo3gpu</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#SBATCH --gres=gpu</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#SBATCH -p plgrid-gpu</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#SBATCH --output=output.out</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#SBATCH --error=error.err</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="bu">cd</span> <span class="va">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="ex">srun</span> /bin/hostname</span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="fu">perl</span> calc_entanglement_number.pl <span class="at">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at">-o</span> ./</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
