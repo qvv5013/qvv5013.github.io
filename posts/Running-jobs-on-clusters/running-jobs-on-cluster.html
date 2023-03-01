@@ -265,7 +265,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="interactive-mode-on-ares" class="level2">
 <h2 class="anchored" data-anchor-id="interactive-mode-on-ares">Interactive mode on Ares</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-p</span> plgrid <span class="at">-N</span> 1 <span class="at">--ntasks-per-node</span><span class="op">=</span>1 <span class="at">-n</span> 1 <span class="at">-A</span> plgrisa-cpu <span class="at">--pty</span> /bin/bash <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-p</span> plgrid <span class="at">-N</span> 1 <span class="at">--ntasks-per-node</span><span class="op">=</span>8 <span class="at">-n</span> 8 <span class="at">--time</span><span class="op">=</span>0-8 <span class="at">-A</span> plgrisa-cpu <span class="at">--pty</span> /bin/bash <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To request for 1 node (-N 1), 8 threads and 8hrs</p>
 </section>
 </section>
 <section id="prometheus-supercomputer" class="level1">

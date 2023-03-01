@@ -2636,7 +2636,8 @@ if (IPython.notebook.kernel !== null) {
 </section>
 <section id="interactive-mode-on-ares" class="level2">
 <h2 class="anchored" data-anchor-id="interactive-mode-on-ares">Interactive mode on Ares</h2>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;">srun</span> <span class="at" style="color: #657422;">-p</span> plgrid <span class="at" style="color: #657422;">-N</span> 1 <span class="at" style="color: #657422;">--ntasks-per-node</span><span class="op" style="color: #5E5E5E;">=</span>1 <span class="at" style="color: #657422;">-n</span> 1 <span class="at" style="color: #657422;">-A</span> plgrisa-cpu <span class="at" style="color: #657422;">--pty</span> /bin/bash <span class="at" style="color: #657422;">-l</span></span></code></pre></div>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;">srun</span> <span class="at" style="color: #657422;">-p</span> plgrid <span class="at" style="color: #657422;">-N</span> 1 <span class="at" style="color: #657422;">--ntasks-per-node</span><span class="op" style="color: #5E5E5E;">=</span>8 <span class="at" style="color: #657422;">-n</span> 8 <span class="at" style="color: #657422;">--time</span><span class="op" style="color: #5E5E5E;">=</span>0-8 <span class="at" style="color: #657422;">-A</span> plgrisa-cpu <span class="at" style="color: #657422;">--pty</span> /bin/bash <span class="at" style="color: #657422;">-l</span></span></code></pre></div>
+<p>To request for 1 node (-N 1), 8 threads and 8hrs</p>
 </section>
 </section>
 <section id="prometheus-supercomputer" class="level1">
