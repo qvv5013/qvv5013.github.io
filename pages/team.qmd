@@ -11,7 +11,7 @@ format:
 
 | Avatar | Descriptions | ID |
 |:-----:|:------:|:------:|
-| ![Quyen Vu](../img/quyen.jpg){width=300} | who is a representative to interact with reality are often characterized as being warm, amicable, and considerate. Although he may exhibit a tendency towards shyness. | M-0  |
-| ![Noname](../img/avatar7.png){width=300} | A challenging character, he possesses a toxic demeanor, however, this makes him to be effective in resolving complex issues. Although he may take the control without notice, the main character is unaware of his actions. | M-2015|
+| ![Quyen Vu](../img/quyen.jpg){width=300} | nice | M-0  |
+| ![Noname](../img/avatar7.png){width=300} | toxic demeanor, unpredictable. | M-2015|
 : {tbl-colwidths="[25,55, 20]"}
 
