@@ -15,7 +15,7 @@ about:
 
 <div style="text-align: left">
 
-1) Vu, Q. V; Nissley, D. A.; Jiang, Y.; O’Brien, E. P.; Li, M. S.
+1) <u>Vu, Q. V</u>; Nissley, D. A.; Jiang, Y.; O’Brien, E. P.; Li, M. S.
 `Is Posttranslational Folding More Efficient Than Refolding from a Denatured State: A Computational Study.`
 J. Phys. Chem. B 2023.
 [Read more](https://pubs.acs.org/doi/10.1021/acs.jpcb.3c01694)
