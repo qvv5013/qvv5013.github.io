@@ -18,7 +18,7 @@ about:
 1) Halder, R.; Nissley, D. A.; Sitarik, I.; Jiang, Y.; Rao, Y.; <u>Vu, Q. V</u>; Li, M. S.; Pritchard, J.; O’Brien, E. P.
 `How Soluble Misfolded Proteins Bypass Chaperones at the Molecular Level.`
 Nat. Commun. 2023, 14 (1), 3689.
-[Read more] (https://doi.org/10.1038/s41467-023-38962-z)
+[Read more](https://doi.org/10.1038/s41467-023-38962-z)
 
 1) <u>Vu, Q. V</u>; Nissley, D. A.; Jiang, Y.; O’Brien, E. P.; Li, M. S.
 `Is Posttranslational Folding More Efficient Than Refolding from a Denatured State: A Computational Study.`
