@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Quyen Vu">
-<meta name="dcterms.date" content="2022-12-09">
+<meta name="dcterms.date" content="2023-02-04">
 
-<title>Quyen Vu - Openmm Coarse-grained Simulations</title>
+<title>Quyen Vu - COSMO tutorial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -154,10 +154,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
-      <h1 class="title">Openmm Coarse-grained Simulations</h1>
+      <h1 class="title">COSMO tutorial</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">HPC</div>
-                <div class="quarto-category">Slurm</div>
+                <div class="quarto-category">IDP</div>
                 <div class="quarto-category">OpenMM</div>
               </div>
                   </div>
@@ -176,7 +175,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">December 9, 2022</p>
+        <p class="date">February 4, 2023</p>
       </div>
     </div>
     
@@ -194,73 +193,84 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="ares-supercomputer" class="level1">
-<h1>Ares supercomputer</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition plgrid</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name cryosparc-master</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes 1</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node 1</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem 15GB</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time 72:00:00</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -C localfs</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -A plgrisa-cpu</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --dependency=singleton</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Job run"</span> <span class="op">&gt;</span> test.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This tutorial guide you how to use cosmo package to perform coarse-grained simulations of IDPs</p>
+<p><img src="hpsOpenMM.png" class="img-fluid"></p>
+<section id="installation-hpsopenmm" class="level1">
+<h1>Installation <code>hpsOpenMM</code></h1>
+<p>First, you need to follow the <a href="https://github.com/qvv5013/hpsOpenMM#how-to-use-hpsopenmm">Readme file here</a> to install the package.</p>
 </section>
-<section id="prepare-environment-for-simulations" class="level1">
-<h1>Prepare environment for simulations</h1>
-<section id="install-packages" class="level2">
-<h2 class="anchored" data-anchor-id="install-packages">Install packages</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> openmm=7.7 parmed mdtraj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Notes on cluster information:</p>
-<pre><code>* local machine: (py310) openMM 7.7+ cudatoolkit 11.6
-* Plgrid: (py310) openMM 7.7+ cudatoolkit 10.2
-* ACI: (base) OpenMM 7.7+ cudatoolkit 11.7
-* Ares: openMM 7.7 + cudatoolkit 11.6 ( GPU Tesla V100)</code></pre>
-<section id="job-with-gpu" class="level3">
-<h3 class="anchored" data-anchor-id="job-with-gpu">Job with GPU</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name ares_gpu</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes 1</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition plgrid-gpu-v100</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:1</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node 1</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem 15GB</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time 48:00:00</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -C localfs</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -A plgrisa-gpu</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --dependency=singleton</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output cryosparc-master-log-%J.txt</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --signal=B:2@240</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">## prometheus</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#source /net/people/plgqvuvan/anaconda3/etc/profile.d/conda.sh</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">## ares</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$SLURM_SUBMIT_DIR</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init bash</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> /net/people/plgrid/plgqvuvan/plggligroup/qvv5013/anaconda3/etc/profile.d/conda.sh</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate py310</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> add cuda/11.6.0</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"NVIDIA-DRIVER version:"</span><span class="kw">`</span><span class="ex">nvidia-smi</span><span class="kw">`</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> single_run_extend.py <span class="at">-f</span> control.cntrl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-</section>
-<section id="interactive-mode-on-ares" class="level2">
-<h2 class="anchored" data-anchor-id="interactive-mode-on-ares">interactive mode on ares:</h2>
+<section id="generate-initial-structure" class="level1">
+<h1>Generate initial structure:</h1>
+<p>To generate initial structure, we can use a provided script: <code>scripts/generate_structure_from_fasta/generate_structure.py</code></p>
+<p>In this script, there are some parameters need to be changed:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python numberLines lineAnchors code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>seq <span class="op">=</span> <span class="st">'MRTQWPSPAKLNLFLYITGQRADGYHTLQTLFQFLDYGDTISIELRDDGDIRLLTPVEGVEHEDNLIVRAARLLMKTAADSGRLPTGSGANISIDKRLPMGGGLGGGSSNAATVLVALNHLWQCGLSMDELAEMGLTLGADVPVFVRGHAAFAEGVGEILTPVDPPEKWYLVAHPGVSIPTPVIFKDPELPRNTPKRSIETLLKCEFSNDCEVIARKRFREVDAVLSWLLEYAPSRLTGTGACVFAEFDTESEARQVLEQAPEWLNGFVAKGANLSPLHRAML'</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>protein_name <span class="op">=</span> <span class="st">"2ww4"</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># number of chains = nx*ny</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>nx <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>ny <span class="op">=</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The long axis of molecule will be aligned along z-axis, we will expand the system along x-y plane.</p>
 <ul>
-<li>using GPU: <code>srun -p plgrid-gpu-v100 --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
-<li>using CPU: <code>srun -p plgrid --nodes=1 --ntasks=1 --mem=5GB --time=0-1 --pty bash</code></li>
+<li>line 1: the fasta sequence of protein we are studying</li>
+<li>line 2: name of protein, will be used to write pdb output file name</li>
+<li>lines 3-4: number of copies in x-y dimension, in case simulation of multichains</li>
 </ul>
-
-
 </section>
+<section id="simulation-control-file" class="level1">
+<h1>Simulation control file:</h1>
+<p>Simulation control parameters are saved in *ini file format (python file format): here, I will named it as md.ini</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python numberLines lineAnchors code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>[OPTIONS]</span>
+<span id="cb2-2"><a href="#cb2-2"></a>md_steps <span class="op">=</span> <span class="dv">10_000</span> <span class="co"># number of steps</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>dt <span class="op">=</span> <span class="fl">0.01</span> <span class="op">;</span> time step <span class="kw">in</span> ps</span>
+<span id="cb2-4"><a href="#cb2-4"></a>nstxout <span class="op">=</span> <span class="dv">100</span> <span class="op">;</span> number of steps to write checkpoint <span class="op">=</span> nstxout</span>
+<span id="cb2-5"><a href="#cb2-5"></a>nstlog <span class="op">=</span> <span class="dv">100</span> <span class="op">;</span> number of steps to <span class="bu">print</span> log</span>
+<span id="cb2-6"><a href="#cb2-6"></a>nstcomm <span class="op">=</span> <span class="dv">100</span> <span class="op">;</span> frequency <span class="cf">for</span> center of mass motion removal</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="op">;</span> select HPS model, available options: hps_kr, hps_urry, hps_ss, <span class="kw">or</span> mpipi</span>
+<span id="cb2-8"><a href="#cb2-8"></a>model <span class="op">=</span> mpipi</span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="op">;</span> control temperature coupling</span>
+<span id="cb2-11"><a href="#cb2-11"></a>tcoupl <span class="op">=</span> yes</span>
+<span id="cb2-12"><a href="#cb2-12"></a>ref_t <span class="op">=</span> <span class="dv">310</span> <span class="op">;</span> Kelvin<span class="op">-</span> reference temperature</span>
+<span id="cb2-13"><a href="#cb2-13"></a>tau_t <span class="op">=</span> <span class="fl">0.01</span> <span class="op">;</span> ps<span class="op">^-</span><span class="dv">1</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="op">;</span>pressure coupling</span>
+<span id="cb2-16"><a href="#cb2-16"></a>pcoupl <span class="op">=</span> no</span>
+<span id="cb2-17"><a href="#cb2-17"></a>ref_p <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>frequency_p <span class="op">=</span> <span class="dv">25</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="op">;</span> Periodic boundary condition: <span class="cf">if</span> pcoupl <span class="kw">is</span> yes then pbc must be yes.</span>
+<span id="cb2-21"><a href="#cb2-21"></a>pbc <span class="op">=</span> yes</span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="op">;</span> <span class="cf">if</span> pbc<span class="op">=</span>yes, then use box_dimension option to specify box_dimension <span class="op">=</span> x <span class="kw">or</span> [x, y, z], unit of nanometer</span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="op">;</span> otherwise, box_dimension <span class="kw">is</span> <span class="kw">not</span> required <span class="kw">and</span> does <span class="kw">not</span> take <span class="bu">any</span> effect.</span>
+<span id="cb2-24"><a href="#cb2-24"></a>box_dimension <span class="op">=</span> <span class="dv">30</span> <span class="op">;</span> [<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">60</span>]</span>
+<span id="cb2-25"><a href="#cb2-25"></a></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="op">;</span> <span class="bu">input</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>protein_code <span class="op">=</span> ASYN</span>
+<span id="cb2-28"><a href="#cb2-28"></a>pdb_file <span class="op">=</span> asyn.pdb</span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="op">;</span> output</span>
+<span id="cb2-30"><a href="#cb2-30"></a>checkpoint <span class="op">=</span> asyn.chk</span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="op">;</span>Use GPU<span class="op">/</span>CPU</span>
+<span id="cb2-32"><a href="#cb2-32"></a>device <span class="op">=</span> GPU</span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="op">;</span> If CPU <span class="kw">is</span> specified, then use ppn variable</span>
+<span id="cb2-34"><a href="#cb2-34"></a>ppn <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-35"><a href="#cb2-35"></a><span class="op">;</span>Restart simulation</span>
+<span id="cb2-36"><a href="#cb2-36"></a>restart <span class="op">=</span> no</span>
+<span id="cb2-37"><a href="#cb2-37"></a>minimize <span class="op">=</span> yes <span class="op">;</span><span class="cf">if</span> <span class="kw">not</span> restart, then minimize will be loaded, otherwise, minimize<span class="op">=</span><span class="va">False</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This control file is almost self-explaination if you are familiar with other MD simulation packages.</p>
+</section>
+<section id="running-simulation" class="level1">
+<h1>Running simulation</h1>
+<p>To run simulation, there are two options:</p>
+<ol type="1">
+<li><p>Normal canonical simulation using Langevin dynamics: <code>hps-simulation -f md.ini</code></p></li>
+<li><p>If you want to customize your simulation to use some advanced methods, make a copy of <code>examples/standard_example/run_simulation.py</code> Customize the content of this script then execute the command: <code>python run_simulation -f md.ini</code></p></li>
+</ol>
+</section>
+<section id="analyze-simulation-trajectory" class="level1">
+<h1>Analyze simulation trajectory</h1>
+<p>Simulation will generate a psf file for topology and dcd file for trajectory, in addition, a log file that contains potential energy, kinetics energy, total energy and time remain to run simulations. But mainly you will need to analyze the trajectory to extract the information you need.</p>
+<p>In the scripts/ directory, I provided some scripts I used in my study but you may need to develop for yours.</p>
+
+
 </section>
 
 </main> <!-- /main -->
