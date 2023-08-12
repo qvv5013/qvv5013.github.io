@@ -1,5 +1,5 @@
 ---
-title: "**About**"
+title: "**About me**"
 comments: false
 image: img/quyen.jpg
 about:
@@ -13,6 +13,7 @@ about:
       text: Github
       href: https://github.com/qvv5013
 
+title-block-banner: true
 ---
 
 # `Quyen V. Vu`
@@ -34,7 +35,7 @@ I am nowhere and I am everywhere.
 
 
 | Period               | Degree           | Where                                         | Supervisor(s)          |
-|--------------------|----------------|---------------------------------------------------|---------------------------|
+|--------------------|----------------:|---------------------------------------------------|---------------------------|
 | 2011-2015          | Bsc in Physics | Vietnam National University-University of Science <br /> (Talented Program of Physics)        | `Toan T. Nguyen` |
 | 2015-2017          | Msc in Physics | Vietnam National University-University of Science | `Toan T. Nguyen` |
 | 2018-2023          | PhD in Physics (Computational Biophysics)| Institute of Physics, Polish Academy of Sciences  | `Edward P. O'Brien,`<br/> `Mai Suan Li`  |
