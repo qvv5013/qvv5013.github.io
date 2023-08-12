@@ -5,7 +5,7 @@
       xmlns:dc="http://purl.org/dc/elements/1.1/" 
       version="2.0">
 <channel>
-<title>&lt;b&gt;Quyen Vu&lt;/b&gt;</title>
+<title>&lt;b&gt;Home&lt;/b&gt;</title>
 <link>https://qvv5013.github.io/index.html</link>
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
@@ -29,6 +29,8 @@
 <li>Create a new environment: <code>conda create -n ENV_NAME python=PYTHON_VERSION</code></li>
 <li>List all env: <code>conda env list</code></li>
 <li>Delete environment: <code>conda env remove -n ENV_NAME</code></li>
+<li>List all packages in the current env to text file so that can create new env later: <code>conda list -e &gt; requirements.txt</code></li>
+<li>Create new env from text file generated in step (4): <code>conda create --name &lt;ENV_NAME&gt; --file requirements.txt</code></li>
 </ol>
 
 
@@ -127,15 +129,15 @@
   <pubDate>Wed, 08 Feb 2023 23:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>hpsOpenMM tutorial</title>
+  <title>COSMO tutorial</title>
   <dc:creator>Quyen Vu</dc:creator>
-  <link>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</link>
+  <link>https://qvv5013.github.io/posts/openMM/cosmo_tutorial.html</link>
   <description><![CDATA[ 
 
 
 
 
-<p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
+<p>This tutorial guide you how to use cosmo package to perform coarse-grained simulations of IDPs</p>
 <p><img src="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" class="img-fluid"></p>
 <section id="installation-hpsopenmm" class="level1">
 <h1>Installation <code>hpsOpenMM</code></h1>
@@ -218,7 +220,7 @@
  ]]></description>
   <category>IDP</category>
   <category>OpenMM</category>
-  <guid>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</guid>
+  <guid>https://qvv5013.github.io/posts/openMM/cosmo_tutorial.html</guid>
   <pubDate>Fri, 03 Feb 2023 23:00:00 GMT</pubDate>
   <media:content url="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" medium="image" type="image/png" height="153" width="144"/>
 </item>
@@ -2582,7 +2584,7 @@ if (IPython.notebook.kernel !== null) {
   <pubDate>Thu, 08 Dec 2022 23:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>Running jobs on clusters</title>
+  <title>Slurm scripts and commands to submit jobs on clusters</title>
   <dc:creator>Quyen Vu</dc:creator>
   <link>https://qvv5013.github.io/posts/Running-jobs-on-clusters/running-jobs-on-cluster.html</link>
   <description><![CDATA[ 
@@ -2634,6 +2636,11 @@ if (IPython.notebook.kernel !== null) {
 <span id="cb2-21"><span class="co" style="color: #5E5E5E;">#</span></span>
 <span id="cb2-22"><span class="ex" style="color: null;">python</span> single_run.py <span class="at" style="color: #657422;">-f</span> control.cntrl</span></code></pre></div>
 </section>
+<section id="interactive-mode-on-ares" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-mode-on-ares">Interactive mode on Ares</h2>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;">srun</span> <span class="at" style="color: #657422;">-p</span> plgrid <span class="at" style="color: #657422;">-N</span> 1 <span class="at" style="color: #657422;">--ntasks-per-node</span><span class="op" style="color: #5E5E5E;">=</span>8 <span class="at" style="color: #657422;">-n</span> 8 <span class="at" style="color: #657422;">--time</span><span class="op" style="color: #5E5E5E;">=</span>0-8 <span class="at" style="color: #657422;">-A</span> plgrisa-cpu <span class="at" style="color: #657422;">--pty</span> /bin/bash <span class="at" style="color: #657422;">-l</span></span></code></pre></div>
+<p>To request for 1 node (-N 1), 8 threads and 8hrs</p>
+</section>
 </section>
 <section id="prometheus-supercomputer" class="level1">
 <h1>Prometheus supercomputer</h1>
@@ -2642,21 +2649,21 @@ if (IPython.notebook.kernel !== null) {
 </section>
 <section id="gpu-job-scripts" class="level4">
 <h4 class="anchored" data-anchor-id="gpu-job-scripts">GPU job scripts</h4>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash -l</span></span>
-<span id="cb3-2"><span class="co" style="color: #5E5E5E;">#SBATCH -J pGcat_SETINDEX</span></span>
-<span id="cb3-3"><span class="co" style="color: #5E5E5E;">#SBATCH -N 1</span></span>
-<span id="cb3-4"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node=1</span></span>
-<span id="cb3-5"><span class="co" style="color: #5E5E5E;">#SBATCH --mem-per-cpu=5GB</span></span>
-<span id="cb3-6"><span class="co" style="color: #5E5E5E;">#SBATCH --time=72:00:00</span></span>
-<span id="cb3-7"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgribo3gpu</span></span>
-<span id="cb3-8"><span class="co" style="color: #5E5E5E;">#SBATCH --gres=gpu</span></span>
-<span id="cb3-9"><span class="co" style="color: #5E5E5E;">#SBATCH -p plgrid-gpu</span></span>
-<span id="cb3-10"><span class="co" style="color: #5E5E5E;">#SBATCH --output=output.out</span></span>
-<span id="cb3-11"><span class="co" style="color: #5E5E5E;">#SBATCH --error=error.err</span></span>
-<span id="cb3-12"><span class="bu" style="color: null;">cd</span> <span class="va" style="color: #111111;">$SLURM_SUBMIT_DIR</span></span>
-<span id="cb3-13"><span class="ex" style="color: null;">srun</span> /bin/hostname</span>
-<span id="cb3-14"></span>
-<span id="cb3-15"><span class="fu" style="color: #4758AB;">perl</span> calc_entanglement_number.pl <span class="at" style="color: #657422;">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at" style="color: #657422;">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at" style="color: #657422;">-o</span> ./</span></code></pre></div>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash numberLines lineAnchors code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash -l</span></span>
+<span id="cb4-2"><span class="co" style="color: #5E5E5E;">#SBATCH -J pGcat_SETINDEX</span></span>
+<span id="cb4-3"><span class="co" style="color: #5E5E5E;">#SBATCH -N 1</span></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;">#SBATCH --ntasks-per-node=1</span></span>
+<span id="cb4-5"><span class="co" style="color: #5E5E5E;">#SBATCH --mem-per-cpu=5GB</span></span>
+<span id="cb4-6"><span class="co" style="color: #5E5E5E;">#SBATCH --time=72:00:00</span></span>
+<span id="cb4-7"><span class="co" style="color: #5E5E5E;">#SBATCH -A plgribo3gpu</span></span>
+<span id="cb4-8"><span class="co" style="color: #5E5E5E;">#SBATCH --gres=gpu</span></span>
+<span id="cb4-9"><span class="co" style="color: #5E5E5E;">#SBATCH -p plgrid-gpu</span></span>
+<span id="cb4-10"><span class="co" style="color: #5E5E5E;">#SBATCH --output=output.out</span></span>
+<span id="cb4-11"><span class="co" style="color: #5E5E5E;">#SBATCH --error=error.err</span></span>
+<span id="cb4-12"><span class="bu" style="color: null;">cd</span> <span class="va" style="color: #111111;">$SLURM_SUBMIT_DIR</span></span>
+<span id="cb4-13"><span class="ex" style="color: null;">srun</span> /bin/hostname</span>
+<span id="cb4-14"></span>
+<span id="cb4-15"><span class="fu" style="color: #4758AB;">perl</span> calc_entanglement_number.pl <span class="at" style="color: #657422;">-i</span> ../../setup/3cla_m_clean_ca.cor <span class="at" style="color: #657422;">-t</span> ../../SETINDEX/cat3_SETINDEX_prod.dcd <span class="at" style="color: #657422;">-o</span> ./</span></code></pre></div>
 
 
 </section>
