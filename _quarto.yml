@@ -4,7 +4,7 @@ project:
 
 website:
 
-  title: "<b>Quyen Vu</b>"
+  title: "<b>Home</b>"
   site-url: "https://qvv5013.github.io/"
   description: "My blog"
   page-navigation: true

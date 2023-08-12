@@ -5,7 +5,7 @@
       xmlns:dc="http://purl.org/dc/elements/1.1/" 
       version="2.0">
 <channel>
-<title>&lt;b&gt;Quyen Vu&lt;/b&gt;</title>
+<title>&lt;b&gt;Home&lt;/b&gt;</title>
 <link>https://qvv5013.github.io/index.html</link>
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
@@ -127,15 +127,15 @@
   <pubDate>Wed, 08 Feb 2023 23:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>hpsOpenMM tutorial</title>
+  <title>COSMO tutorial</title>
   <dc:creator>Quyen Vu</dc:creator>
-  <link>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</link>
+  <link>https://qvv5013.github.io/posts/openMM/cosmo_tutorial.html</link>
   <description><![CDATA[ 
 
 
 
 
-<p>This tutorial guide you how to use hpsOpenMM to perform coarse-grained simulations of IDPs</p>
+<p>This tutorial guide you how to use cosmo package to perform coarse-grained simulations of IDPs</p>
 <p><img src="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" class="img-fluid"></p>
 <section id="installation-hpsopenmm" class="level1">
 <h1>Installation <code>hpsOpenMM</code></h1>
@@ -218,7 +218,7 @@
  ]]></description>
   <category>IDP</category>
   <category>OpenMM</category>
-  <guid>https://qvv5013.github.io/posts/openMM/hpsOpenMM_tutorial.html</guid>
+  <guid>https://qvv5013.github.io/posts/openMM/cosmo_tutorial.html</guid>
   <pubDate>Fri, 03 Feb 2023 23:00:00 GMT</pubDate>
   <media:content url="https://qvv5013.github.io/posts/openMM/hpsOpenMM.png" medium="image" type="image/png" height="153" width="144"/>
 </item>
