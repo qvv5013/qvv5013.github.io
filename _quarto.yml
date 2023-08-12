@@ -37,7 +37,7 @@ format:
   html:
     toc: true
     theme:
-      light: [cosmo]
+      light: [cosmo, theme.scss]
     # theme: lux
     css: styles.css
     page-layout: full
