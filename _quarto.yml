@@ -20,7 +20,7 @@ website:
       - pages/team.qmd
       - pubs.qmd
       - tools.qmd
-      - text: "About me"
+      - text: "**About me**"
         href: about.qmd
       - icon: github
         href: https://github.com/qvv5013
@@ -35,9 +35,17 @@ website:
 
 format:
   html:
-    theme: lux
+    toc: true
+    theme:
+      light: [cosmo, theme.scss]
+    # theme: lux
     css: styles.css
     page-layout: full
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 300px
+
 
 comments:
   giscus:

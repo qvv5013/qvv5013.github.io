@@ -164,6 +164,8 @@ ul.task-list li input[type="checkbox"] {
 <li>Create a new environment: <code>conda create -n ENV_NAME python=PYTHON_VERSION</code></li>
 <li>List all env: <code>conda env list</code></li>
 <li>Delete environment: <code>conda env remove -n ENV_NAME</code></li>
+<li>List all packages in the current env to text file so that can create new env later: <code>conda list -e &gt; requirements.txt</code></li>
+<li>Create new env from text file generated in step (4): <code>conda create --name &lt;ENV_NAME&gt; --file requirements.txt</code></li>
 </ol>
 
 
