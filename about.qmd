@@ -13,6 +13,7 @@ about:
       text: Github
       href: https://github.com/qvv5013
 
+title-block-banner: true
 ---
 
 # `Quyen V. Vu`
