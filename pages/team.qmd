@@ -12,7 +12,7 @@ title-block-banner: true
 
 | Avatar | Descriptions | ID |
 |:-----:|:------:|:------:|
-| <img src="../img/quyen.jpg" alt="Quyen Vu"  width="300" style="border-radius:50%">| Nice|M-0|
-| <img src="../img/avatar7.png" alt="member"  width="300" style="border-radius:50%"> | toxic demeanor, unpredictable. | M-2015|
+| <img src="../img/quyen.jpg" alt="Quyen Vu"  width="300" style="border-radius:50%">| Nice.|M-0|
+| <img src="../img/avatar7.png" alt="member"  width="300" style="border-radius:50%"> | Toxic demeanor, Unpredictable. | M-2015|
 : {tbl-colwidths="[25,55, 20]"}
 
