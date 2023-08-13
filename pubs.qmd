@@ -1,6 +1,9 @@
 ---
 title: "**Publications**"
 comments: false
+execute:
+  echo: false
+jupyter: python3
 about:
   template: solana
   links:
@@ -44,5 +47,7 @@ Chemical Science 2021. 12, 11851-11857. [Read more](https://pubs.rsc.org/en/cont
 1) Nissley, D. A.; <u>Vu, Q. V.</u>; Trovato, F.; Ahmed, N.; Jiang, Y.; Li, M. S.; O’Brien, E. P.
 `Electrostatic Interactions Govern Extreme Nascent Protein Ejection Times from Ribosomes and Can Delay Ribosome Recycling.`
 J. Am. Chem. Soc. 142, 13, 6103-6110 (2020). [Read more](https://pubs.acs.org/doi/10.1021/jacs.9b12264){target="_blank"}
+
+
 
 </div>
