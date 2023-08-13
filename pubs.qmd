@@ -1,9 +1,6 @@
 ---
 title: "**Publications**"
 comments: false
-execute:
-  echo: false
-jupyter: python3
 about:
   template: solana
   links:
