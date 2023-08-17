@@ -10,7 +10,41 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Thu, 23 Feb 2023 23:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 16 Aug 2023 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>All-Atom simulations of IDP</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/Research/All-Atom_simulations_IDPs.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="list-of-simulation-works-using-all-atom-resolution-and-force-field-used" class="level3">
+<h3 class="anchored" data-anchor-id="list-of-simulation-works-using-all-atom-resolution-and-force-field-used">List of simulation works using all-atom resolution and force field used:</h3>
+<ul>
+<li><p><span class="citation" data-cites="Galvanetto2023">Galvanetto et al. (2023)</span> used Amber99SBws force field with the TIP4P/2005s water model. Their FFs for Gromacs can be download from: <a href="https://github.com/bestlab/force_fields">https://github.com/bestlab/force_fields</a>. This folder contains various FFs with an explaination. I have made a fork from their repo for backup to my own account.</p></li>
+<li><p><span class="citation" data-cites="Priyesh2023">Mohanty et al. (2023)</span> used AMBER99SBws-STQ force field with TIP4P/2005. Download from <a href="https://bitbucket.org/jeetain/all-atom_ff_refinements/src/master/amber99sbws-stq.ff/">HERE</a>. A backup version is located in: <code>Research/IDP_AA_FFs/</code></p></li>
+</ul>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Galvanetto2023" class="csl-entry">
+Galvanetto, Nicola, Miloš T. Ivanović, Aritra Chowdhury, Andrea Sottini, Mark F. Nüesch, Daniel Nettels, Robert B. Best, and Benjamin Schuler. 2023. <span>“<span class="nocase">Extreme dynamics in a biomolecular condensate</span>.”</span> <em>Nature</em> 25 (February). <a href="https://doi.org/10.1038/s41586-023-06329-5">https://doi.org/10.1038/s41586-023-06329-5</a>.
+</div>
+<div id="ref-Priyesh2023" class="csl-entry">
+Mohanty, Priyesh, Jayakrishna Shenoy, Azamat Rizuan, José F. Mercado-Ortiz, Nicolas L. Fawzi, and Jeetain Mittal. 2023. <span>“A Synergy Between Site-Specific and Transient Interactions Drives the Phase Separation of a Disordered, Low-Complexity Domain.”</span> <em>Proceedings of the National Academy of Sciences</em> 120 (34): e2305625120. <a href="https://doi.org/10.1073/pnas.2305625120">https://doi.org/10.1073/pnas.2305625120</a>.
+</div>
+</div></section></div> ]]></description>
+  <category>Research</category>
+  <category>IDP</category>
+  <category>LLPS</category>
+  <guid>https://qvv5013.github.io/posts/Research/All-Atom_simulations_IDPs.html</guid>
+  <pubDate>Wed, 16 Aug 2023 22:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Some Conda Commands Frequently Used</title>
   <dc:creator>Quyen Vu</dc:creator>
