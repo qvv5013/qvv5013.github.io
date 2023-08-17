@@ -17,7 +17,7 @@ title-block-banner: true
 <div style="text-align: left">
 
 <!--
-Open link in new tab: add {targer="_blank"}
+Open link in new tab: add {target="_blank"}
 -->
 1) Halder, R.; Nissley, D. A.; Sitarik, I.; Jiang, Y.; Rao, Y.; <u>Vu, Q. V</u>; Li, M. S.; Pritchard, J.; O’Brien, E. P.
 `How Soluble Misfolded Proteins Bypass Chaperones at the Molecular Level.`

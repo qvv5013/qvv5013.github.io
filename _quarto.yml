@@ -18,10 +18,10 @@ website:
     pinned: true
     right:
       - pages/team.qmd
-      - pubs.qmd
+      - pages/Publications/index.qmd
       - tools.qmd
       - text: "**About me**"
-        href: about.qmd
+        href: pages/About/index.qmd
       - icon: github
         href: https://github.com/qvv5013
       - icon: twitter
