@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Research/All-Atom_simulations_IDPs.html",
       "/posts/python/conda-commands.html",
       "/posts/openMM/openmm_code_snippet.html",
       "/posts/openMM/cosmo_tutorial.html",
