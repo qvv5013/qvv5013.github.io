@@ -1,0 +1,42 @@
+---
+title: "**About me**"
+comments: false
+image: ../../img/quyen.jpg
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/qvv5013
+
+    - icon: github
+      text: Github
+      href: https://github.com/qvv5013
+
+title-block-banner: true
+---
+
+# `Quyen V. Vu`
+
+PhD student at IFPAN, Poland (`vuqv.phys@gmail.com`).
+
+I am nowhere and I am everywhere.
+
+[Full CV (PDF)](QVV_CV_July_2023.pdf){target="_blank"}
+
+##### Favourite quote:
+```We all fear what we do not understand.```
+
+― Dan Brown, The Lost Symbol
+
+---------
+
+### Brief CV:
+
+
+| Period               | Degree           | Where                                         | Supervisor(s)          |
+|--------------------|:----------------:|---------------------------------------------------|---------------------------|
+| 2011-2015          | Bsc in Physics | Vietnam National University-University of Science <br /> (Talented Program of Physics)        | [`Toan T. Nguyen`](https://mscskeylab.hus.vnu.edu.vn/){target="_blank"} |
+| 2015-2017          | Msc in Physics | Vietnam National University-University of Science | [`Toan T. Nguyen`](https://mscskeylab.hus.vnu.edu.vn/){target="_blank"} |
+| 2018-2023          | PhD in Physics (Computational Biophysics)| Institute of Physics, Polish Academy of Sciences  | [`Edward P. O'Brien`](https://obrien.vmhost.psu.edu/){target="_blank"}, and <br/> [`Mai Suan Li`](http://info.ifpan.edu.pl/~masli/index.html){target="_blank"}  |
+: {tbl-colwidths="[20,10,45, 25]"}
