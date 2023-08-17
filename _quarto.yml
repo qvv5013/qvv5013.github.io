@@ -17,9 +17,9 @@ website:
     search: true
     pinned: true
     right:
-      - pages/team.qmd
+      - pages/Team/index.qmd
       - pages/Publications/index.qmd
-      - tools.qmd
+      - pages/Tools/index.qmd
       - text: "**About me**"
         href: pages/About/index.qmd
       - icon: github
@@ -30,7 +30,7 @@ website:
   page-footer:
     center: 
       - text: "About"
-        href: about.qmd
+        href: pages/About/index.qmd
 
 
 format:

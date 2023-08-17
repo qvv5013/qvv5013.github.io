@@ -98,25 +98,25 @@
     "text": "With the recent update of ipywidgets, Pyemma, MDAnalysis and some other package encounter problems with ipywidgets.\nThe dirty solution is install version ipywidgets<8. version 7.7 may help and wait till developers of ipywidgets fix it."
   },
   {
-    "objectID": "tools.html",
-    "href": "tools.html",
-    "title": "Tools",
-    "section": "",
-    "text": "COSMO:\nCOarse-grained Simulation of intrinsically disordered prOteins with openMM. Package utilize the customizable, high-performance of OpenMM and good science from high-quality researches.\nCurrently, there are four models are supported:\n\nhps_urry: Hydropathy according to Urry scale (default, Recommended).\nhps_kr: Kapcha-Rossy scale. This model has parameters for nucleic acids and post-translational modification residues.\nhps_ss: hps_urry with bonded potential.\nmpipi: another model that using Wang-Frenkel short range potential instead of LJ 12-6\nOther models can be easily implemented by defining them in cosmo/parameters/model_parameters.py\n\nThe package is ready for studying various problems such as, conformation dynamics of single chain, LLPS …\n(Source code is available on Github)\nCheck out docs for more details here\n\n\nentanglement Analysis\nThere are two main version of entanglement analysis:\n\nThe first one is characterized by the linking number of loops and the open terminal, which is composed of the whole terminal. Please check this paper for more details. This kind of entanglement can be calculated by the following code which is developed by Ian Sitarik (Penn State). Python version\nThe maximum linking number between the loop and all possible segments of the terminal is calculated by the following code: Julia version. There are two versions for this kind of entanglement calculation, in python and Julia. julia is much faster than Python."
-  },
-  {
-    "objectID": "pages/team.html",
-    "href": "pages/team.html",
-    "title": "Team",
-    "section": "",
-    "text": "Avatar\nDescriptions\nID\n\n\n\n\n\nQuyen Vu  Nice, friendly.\nM-0\n\n\n\nNoname  Toxic demeanor, Unpredictable.\nM-2015"
-  },
-  {
     "objectID": "pages/About/index.html",
     "href": "pages/About/index.html",
     "title": "About me",
     "section": "",
     "text": "Quyen V. Vu\nPhD student at IFPAN, Poland (vuqv.phys@gmail.com).\nI am nowhere and I am everywhere.\nFull CV (PDF)\n\nFavourite quote:\nWe all fear what we do not understand.\n― Dan Brown, The Lost Symbol\n\n\n\nBrief CV:\n\n\n\n\n\n\n\n\n\nPeriod\nDegree\nWhere\nSupervisor(s)\n\n\n\n\n2011-2015\nBsc in Physics\nVietnam National University-University of Science  (Talented Program of Physics)\nToan T. Nguyen\n\n\n2015-2017\nMsc in Physics\nVietnam National University-University of Science\nToan T. Nguyen\n\n\n2018-2023\nPhD in Physics (Computational Biophysics)\nInstitute of Physics, Polish Academy of Sciences\nEdward P. O'Brien, and  Mai Suan Li"
+  },
+  {
+    "objectID": "pages/Tools/index.html",
+    "href": "pages/Tools/index.html",
+    "title": "Tools",
+    "section": "",
+    "text": "COSMO:\nCOarse-grained Simulation of intrinsically disordered prOteins with openMM. Package utilize the customizable, high-performance of OpenMM and good science from high-quality researches.\nCurrently, there are four models are supported:\n\nhps_urry: Hydropathy according to Urry scale (default, Recommended).\nhps_kr: Kapcha-Rossy scale. This model has parameters for nucleic acids and post-translational modification residues.\nhps_ss: hps_urry with bonded potential.\nmpipi: another model that using Wang-Frenkel short range potential instead of LJ 12-6\nOther models can be easily implemented by defining them in cosmo/parameters/model_parameters.py\n\nThe package is ready for studying various problems such as, conformation dynamics of single chain, LLPS …\n(Source code is available on Github)\nCheck out docs for more details here\n\n\nentanglement Analysis\nThere are two main version of entanglement analysis:\n\nThe first one is characterized by the linking number of loops and the open terminal, which is composed of the whole terminal. Please check this paper for more details. This kind of entanglement can be calculated by the following code which is developed by Ian Sitarik (Penn State). Python version\nThe maximum linking number between the loop and all possible segments of the terminal is calculated by the following code: Julia version. There are two versions for this kind of entanglement calculation, in python and Julia. julia is much faster than Python."
+  },
+  {
+    "objectID": "pages/Team/index.html",
+    "href": "pages/Team/index.html",
+    "title": "Team",
+    "section": "",
+    "text": "Avatar\nDescriptions\nID\n\n\n\n\n\nQuyen Vu  Nice, friendly.\nM-0\n\n\n\nNoname  Toxic demeanor, Unpredictable.\nM-2015"
   },
   {
     "objectID": "pages/Publications/index.html",
