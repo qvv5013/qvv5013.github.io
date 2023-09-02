@@ -1,0 +1,23 @@
+---
+title: "**News**"
+comments: false
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/qvv5013
+
+    - icon: github
+      text: Github
+      href: https://github.com/qvv5013
+
+title-block-banner: true
+---
+
+| Dates              | Events           |
+|--------------------|:----------------:|
+| 01/09/2023          | Quyen Vu has successfully passed the Physics Exam at IFPAN with a score of 4.5/5. This marks the final examination before he defends his PhD thesis. The exam covered General Physics and profile-specific themes.|
+| 06/07/2023          | Quyen Vu delivered a brief presentation about his PhD thesis in front of the Scientific Council of IFPAN. |
+| 22/06/2023          | Quyen Vu has submitted his PhD thesis. |
+: {tbl-colwidths="[30,80]"}

@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Quyen Vu">
-<meta name="dcterms.date" content="2022-12-09">
 
-<title>Home - Counting number of line from file in linux2</title>
+<title>Home - News</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -35,7 +33,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
@@ -82,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../pages/News/index.html">
+    <a class="nav-link active" href="../../pages/News/index.html" aria-current="page">
  <span class="menu-text"><strong>News</strong></span></a>
   </li>  
   <li class="nav-item">
@@ -121,50 +118,60 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
-      <h1 class="title">Counting number of line from file in linux2</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">Linux</div>
-              </div>
-                  </div>
+      <h1 class="title"><strong>News</strong></h1>
+                      </div>
   </div>
-    
-  
   <div class="quarto-title-meta">
-
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Quyen Vu </p>
-            </div>
     </div>
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">December 9, 2022</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<div class="quarto-about-jolla column-page">
+ <main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<table class="table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 73%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dates</th>
+<th style="text-align: center;">Events</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>01/09/2023</td>
+<td style="text-align: center;">Quyen Vu has successfully passed the Physics Exam at IFPAN with a score of 4.5/5. This marks the final examination before he defends his PhD thesis. The exam covered General Physics and profile-specific themes.</td>
+</tr>
+<tr class="even">
+<td>06/07/2023</td>
+<td style="text-align: center;">Quyen Vu delivered a brief presentation about his PhD thesis in front of the Scientific Council of IFPAN.</td>
+</tr>
+<tr class="odd">
+<td>22/06/2023</td>
+<td style="text-align: center;">Quyen Vu has submitted his PhD thesis.</td>
+</tr>
+</tbody>
+</table>
 
 
-
-
-<p>Sometime, after perform a long analysis of many simulations. We want to make sure if the analysis is done automatically, instead of looking into single file one-by-one, we can use <code>bash</code> script to do so.</p>
-<p>In this example, we loop through all simulations (1 to 100) and use command: <code>wc -l &lt; $i/G_traj_${i}.dat</code> to count the number of lines in file. we assign the output from this command to <code>nl</code> variable by packing previous command by <code>$(command)</code></p>
-
-
-
-</main> <!-- /main -->
+</main> 
+  <hr class="about-sep">
+   <div class="about-links">
+  <a href="https://twitter.com/qvv5013" class="about-link">
+    <i class="bi bi-twitter"></i>
+     <span class="about-link-text">Twitter</span>
+  </a>
+  <a href="https://github.com/qvv5013" class="about-link">
+    <i class="bi bi-github"></i>
+     <span class="about-link-text">Github</span>
+  </a>
+</div>
+</div>
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -185,13 +192,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
   const clipboard = new window.ClipboardJS('.code-copy-button', {
     target: function(trigger) {
       return trigger.previousElementSibling;
@@ -297,8 +297,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<script src="https://giscus.app/client.js" data-repo="qvv5013/qvv5013.github.io" data-repo-id="R_kgDOIfTJSQ" data-category="General" data-category-id="DIC_kwDOIfTJSc4CUDXd" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 <footer class="footer">

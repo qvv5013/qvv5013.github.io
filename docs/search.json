@@ -119,6 +119,13 @@
     "text": "COSMO:\nCOarse-grained Simulation of intrinsically disordered prOteins with openMM. Package utilize the customizable, high-performance of OpenMM and good science from high-quality researches.\nCurrently, there are four models are supported:\n\nhps_urry: Hydropathy according to Urry scale (default, Recommended).\nhps_kr: Kapcha-Rossy scale. This model has parameters for nucleic acids and post-translational modification residues.\nhps_ss: hps_urry with bonded potential.\nmpipi: another model that using Wang-Frenkel short range potential instead of LJ 12-6\nOther models can be easily implemented by defining them in cosmo/parameters/model_parameters.py\n\nThe package is ready for studying various problems such as, conformation dynamics of single chain, LLPS …\n(Source code is available on Github)\nCheck out docs for more details here\n\n\nentanglement Analysis\nThere are two main version of entanglement analysis:\n\nThe first one is characterized by the linking number of loops and the open terminal, which is composed of the whole terminal. Please check this paper for more details. This kind of entanglement can be calculated by the following code which is developed by Ian Sitarik (Penn State). Python version\nThe maximum linking number between the loop and all possible segments of the terminal is calculated by the following code: Julia version. There are two versions for this kind of entanglement calculation, in python and Julia. julia is much faster than Python."
   },
   {
+    "objectID": "pages/News/index.html",
+    "href": "pages/News/index.html",
+    "title": "News",
+    "section": "",
+    "text": "Dates\nEvents\n\n\n\n\n01/09/2023\nQuyen Vu has successfully passed the Physics Exam at IFPAN with a score of 4.5/5. This marks the final examination before he defends his PhD thesis. The exam covered General Physics and profile-specific themes.\n\n\n06/07/2023\nQuyen Vu delivered a brief presentation about his PhD thesis in front of the Scientific Council of IFPAN.\n\n\n22/06/2023\nQuyen Vu has submitted his PhD thesis."
+  },
+  {
     "objectID": "pages/Team/index.html",
     "href": "pages/Team/index.html",
     "title": "Team",

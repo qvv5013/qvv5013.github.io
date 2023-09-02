@@ -17,6 +17,7 @@ website:
     search: true
     pinned: true
     right:
+      - pages/News/index.qmd
       - pages/Team/index.qmd
       - pages/Publications/index.qmd
       - pages/Tools/index.qmd
