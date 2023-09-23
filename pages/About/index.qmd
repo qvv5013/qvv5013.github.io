@@ -33,10 +33,59 @@ I am nowhere and I am everywhere.
 
 ### Brief CV:
 
+<table class="table table-hover table-striped">
+  <thead>
+    <tr class="table-info">
+      <th scope="col">Period</th>
+      <th scope="col">Degree</th>
+      <th scope="col">Where</th>
+      <th scope="col">Supervisor(s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr >
+      <th scope="row" class="text-center align-middle">
+        2018-2023
+      </th>
+      <td class="text-center align-middle">
+        PhD in Physics (Computational Biophysics)
+      </td>
+      <td class="text-center align-middle">
+        Institute of Physics, Polish Academy of Sciences-[Thesis](../../resources/Quyen_V__Vu_Thesis_2023.pdf){target="_blank"}
+       </td>
+      <td class="text-center align-middle">
+        [`Prof. Edward P. O'Brien`](https://obrien22.vmhost.psu.edu/){target="_blank"}, and <br/> [`Prof. Mai Suan Li`](http://info.ifpan.edu.pl/~masli/index.html){target="_blank"}
+      </td>
+    </tr>
 
-| Period               | Degree           | Where                                         | Supervisor(s)          |
-|--------------------|:----------------:|---------------------------------------------------|---------------------------|
-| 2018-2023          | PhD in Physics (Computational Biophysics)| Institute of Physics, Polish Academy of Sciences-[Thesis](../../resources/Quyen_V__Vu_Thesis_2023.pdf){target="_blank"}  | [`Edward P. O'Brien`](https://obrien22.vmhost.psu.edu/){target="_blank"}, and <br/> [`Mai Suan Li`](http://info.ifpan.edu.pl/~masli/index.html){target="_blank"}  |
-| 2015-2017          | Msc in Physics | Vietnam National University-University of Science | [`Toan T. Nguyen`](https://mscskeylab.hus.vnu.edu.vn/){target="_blank"} |
-| 2011-2015          | Bsc in Physics | Vietnam National University-University of Science <br /> (Talented Program of Physics)        | [`Toan T. Nguyen`](https://mscskeylab.hus.vnu.edu.vn/){target="_blank"} |
-: {tbl-colwidths="[20,20,35, 25]"}
+    <tr >
+      <th scope="row" class="text-center align-middle">
+        2015-2017
+      </th>
+      <td class="text-center align-middle">
+        Msc in Physics
+      </td>
+      <td class="text-center align-middle">
+        Vietnam National University-University of Science
+       </td>
+      <td class="text-center align-middle">
+        [`Prof. Toan T. Nguyen`](https://mscskeylab.hus.vnu.edu.vn/){target="_blank"}
+      </td>
+    </tr>
+
+    <tr >
+      <th scope="row" class="text-center align-middle">
+        2011-2015
+      </th>
+      <td class="text-center align-middle">
+        Bsc in Physics
+      </td>
+      <td class="text-center align-middle">
+        Vietnam National University-University of Science <br /> (Talented Program of Physics)
+        </td>
+      <td class="text-center align-middle">
+        [`Prof. Toan T. Nguyen`](https://mscskeylab.hus.vnu.edu.vn/){target="_blank"}
+      </td>
+    </tr>
+  </tbody>
+</table>
