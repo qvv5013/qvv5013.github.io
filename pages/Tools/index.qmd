@@ -38,7 +38,7 @@ The package is ready for studying various problems such as, conformation dynamic
 
 Check out docs for more details [here](https://qvv5013.github.io/docs-hpsOpenMM/)
 
-# entanglement Analysis
+# `Entanglement Analysis`:
 
 There are two main version of entanglement analysis:
 
