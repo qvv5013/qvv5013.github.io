@@ -21,13 +21,13 @@ title-block-banner: true
   </thead>
   <tbody>
     <tr class="table-success">
-      <th scope="row"><img class="profile_img" src="../../img/quyen.jpg" alt="Quyen Vu"></th>
+      <th scope="row" class="text-center align-middle"><img class="profile_img" src="../../img/quyen.jpg" alt="Quyen Vu"></th>
       <td class="text-center align-middle">Quyen Vu</td>
       <td class="text-center align-middle">Nice, friendly.</td>
       <td class="text-center align-middle">M-0</td>
     </tr>
     <tr class="table-danger">
-      <th scope="row"><img class="profile_img" src="../../img/quyen.jpg" alt="Quyen Vu"></th>
+      <th scope="row" class="text-center align-middle"><img class="profile_img" src="../../img/quyen.jpg" alt="Quyen Vu"></th>
       <td class="text-center align-middle">Quyen Vu</td>
       <td class="text-center align-middle">Yes- still me but with a toxic demeanor, unpredictable.</td>
       <td class="text-center align-middle">M-2015</td>
