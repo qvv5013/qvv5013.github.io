@@ -19,7 +19,7 @@ title-block-banner: true
 # `COSMO`:
 
 COarse-grained Simulation of intrinsically disordered prOteins with openMM.
-Package utilize the customizable, high-performance of OpenMM and good science from high-quality researches.
+Package utilize the customizable, high-performance of OpenMM and good science from high-quality research.
 
 
 Currently, there are four models are supported:
