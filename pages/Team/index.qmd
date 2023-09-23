@@ -10,9 +10,28 @@ format:
 title-block-banner: true
 ---
 
-| Avatar | Descriptions | ID |
-|:-----:|:------:|:------:|
-| <img class="profile_img" src="../../img/quyen.jpg" alt="Quyen Vu">| Quyen Vu <br> Nice, friendly.|M-0|
-| <img class="profile_img" src="../../img/quyen.jpg" alt="member"> | Quyen Vu <br> Yes- still me but with Toxic demeanor, Unpredictable. | M-2015|
-: {tbl-colwidths="[25,55, 20]"}
-
+<table class="table table-hover table-info">
+  <thead>
+    <tr>
+      <th scope="col" class="text-center">Avatar</th>
+      <th scope="col" class="text-center">Name</th>
+      <th scope="col" class="text-center">Descriptions</th>
+      <th scope="col" class="text-center">ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="table-success">
+      <th scope="row"><img class="profile_img" src="../../img/quyen.jpg" alt="Quyen Vu"></th>
+      <td class="text-center align-middle">Quyen Vu</td>
+      <td class="text-center align-middle">Nice, friendly.</td>
+      <td class="text-center align-middle">M-0</td>
+    </tr>
+    <tr class="table-danger">
+      <th scope="row"><img class="profile_img" src="../../img/quyen.jpg" alt="Quyen Vu"></th>
+      <td class="text-center align-middle">Quyen Vu</td>
+      <td class="text-center align-middle">Yes- still me but with a toxic demeanor, unpredictable.</td>
+      <td class="text-center align-middle">M-2015</td>
+    </tr>
+ 
+  </tbody>
+</table>
