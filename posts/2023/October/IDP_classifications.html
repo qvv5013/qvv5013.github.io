@@ -230,11 +230,11 @@ div.csl-indent {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Follow the ideas from <span class="citation" data-cites="Necci2016">Necci, Piovesan, and Tosatto (<a href="#ref-Necci2016" role="doc-biblioref">2016</a>)</span> that intrinsically disordered proteins can be classified based on the number of consecutive disordered residues: * Short IDR: 5-19 residues * Long IDR: &gt;= 20 residues * Fully disordered protein: &gt;= 50 residues and &gt; 95% ID content.</p>
+<p>Follow the ideas from <span class="citation" data-cites="Necci2016">Necci, Piovesan, and Tosatto (<a href="#ref-Necci2016" role="doc-biblioref">2016</a>)</span> that intrinsically disordered proteins can be classified based on the number of consecutive disordered residues: 1. Short IDR: 5-19 residues 2. Long IDR: &gt;= 20 residues 3. Fully disordered protein: &gt;= 50 residues and &gt; 95% ID content.</p>
 </section>
 <section id="code-implementation" class="level1">
 <h1>Code implementation</h1>
-<div class="cell" data-execution_count="1">
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import library</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -345,6 +345,7 @@ div.csl-indent {
 <span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>                get_mobidb_disordered_stats(fragment_stats[<span class="st">'uniprot'</span>])</span>
 <span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>To use the functions, run the following block code in which, <code>ID</code> is the entry ID.</p>
 <div class="cell" data-tags="[]" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ID<span class="op">=</span><span class="dv">431</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>PEDID<span class="op">=</span><span class="st">'PED'</span><span class="op">+</span><span class="ss">f'</span><span class="sc">{</span>ID<span class="sc">:05d}</span><span class="ss">'</span></span>
@@ -394,6 +395,7 @@ prediction-disorder-priority: ([1, 446], [549, 549], [696, 819])
 ...</code></pre>
 </div>
 </div>
+<p>To manually check the information from MobiDB:</p>
 <div class="cell" data-execution_count="75">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>get_mobidb_disordered_stats(<span class="st">"P0DP29"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -406,53 +408,54 @@ prediction-disorder-priority: ([1, 446], [549, 549], [696, 819])
 <h1>Other functions</h1>
 <p>In the previous sections, we discussed the fundamental core functions for extracting information. However, the world of data analysis often requires more than just the basics. In this section, we’ll delve into some other essential functions that can be incredibly valuable in specific scenarios.</p>
 <p>One common situation that researchers often encounter is the need to handle disordered residues. In some cases, curated information about disordered residues may differ from predictions. To create a unified approach where a residue is considered disordered if either it’s curated as disordered or predicted as disordered, you can employ the following code snippet. It’s worth noting that the code provided accomplishes the task but doesn’t standardize the results yet.</p>
-<div class="cell" data-execution_count="62">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>disorder_regions_1 <span class="op">=</span> [[<span class="dv">8</span>, <span class="dv">12</span>]]</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>disorder_regions_2 <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">10</span>], [<span class="dv">15</span>, <span class="dv">19</span>]]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>disorder_region <span class="op">=</span> disorder_regions_1<span class="op">+</span>disorder_regions_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>disorder_regions_1 <span class="op">=</span> [[<span class="dv">8</span>, <span class="dv">12</span>]]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>disorder_regions_2 <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">10</span>], [<span class="dv">15</span>, <span class="dv">19</span>]]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>disorder_region <span class="op">=</span> disorder_regions_1<span class="op">+</span>disorder_regions_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="63">
+<div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>disorder_region</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="63">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>[[8, 12], [1, 10], [15, 19]]</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="64">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>final_list <span class="op">=</span> []</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> reg <span class="kw">in</span> disorder_region:</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    final_list <span class="op">+=</span> <span class="bu">list</span>(<span class="bu">range</span>(reg[<span class="dv">0</span>], reg[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>8 12
-1 10
-15 19</code></pre>
+<p>As we can see, disorder contain 3 regions that are separated by some residues that makes it not consecutive.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract every residues in disorder region</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>final_list <span class="op">=</span> []</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> reg <span class="kw">in</span> disorder_region:</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    final_list <span class="op">+=</span> <span class="bu">list</span>(<span class="bu">range</span>(reg[<span class="dv">0</span>], reg[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="cell" data-execution_count="65">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>final_list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="65">
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># residues that are disordered</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>final_list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>[8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18, 19]</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove duplicated value</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>final_list <span class="op">=</span> <span class="bu">list</span>( <span class="bu">dict</span>.fromkeys(final_list) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove duplicated value</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>final_list <span class="op">=</span> <span class="bu">list</span>( <span class="bu">dict</span>.fromkeys(final_list) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="66">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>final_list <span class="op">=</span> <span class="bu">sorted</span>(final_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sort by residue indices for group them togather latter</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>final_list <span class="op">=</span> <span class="bu">sorted</span>(final_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="67">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ranges <span class="op">=</span> []</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,g <span class="kw">in</span> groupby(<span class="bu">enumerate</span>(final_list),<span class="kw">lambda</span> x:x[<span class="dv">0</span>]<span class="op">-</span>x[<span class="dv">1</span>]):</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    group <span class="op">=</span> (<span class="bu">map</span>(itemgetter(<span class="dv">1</span>),g))</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    group <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,group))</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    ranges.append((group[<span class="dv">0</span>],group[<span class="op">-</span><span class="dv">1</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ranges <span class="op">=</span> []</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,g <span class="kw">in</span> groupby(<span class="bu">enumerate</span>(final_list),<span class="kw">lambda</span> x:x[<span class="dv">0</span>]<span class="op">-</span>x[<span class="dv">1</span>]):</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    group <span class="op">=</span> (<span class="bu">map</span>(itemgetter(<span class="dv">1</span>),g))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    group <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,group))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    ranges.append((group[<span class="dv">0</span>],group[<span class="op">-</span><span class="dv">1</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="68">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ranges</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="68">
-<pre><code>[(1, 8), (8, 9), (9, 10), (10, 12), (15, 19)]</code></pre>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ranges</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>[(1, 12), (15, 19)]</code></pre>
 </div>
 </div>
+<p>See! two region of <code>[1,10]</code> and <code>[8, 12]</code> have been merge to <code>[1,12]</code></p>
 <p>This code snippet will help you harmonize the disparate sources of data related to disordered residues, allowing for a more comprehensive analysis. However, for a complete and standardized solution, further steps may be necessary, depending on your specific use case.</p>
 <p>In the world of data analysis, having a variety of functions at your disposal is crucial. These additional functions go beyond the basics and empower you to handle more complex scenarios, enhancing the depth and accuracy of your analyses.</p>
 

@@ -22,11 +22,11 @@
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Follow the ideas from <span class="citation" data-cites="Necci2016">Necci, Piovesan, and Tosatto (2016)</span> that intrinsically disordered proteins can be classified based on the number of consecutive disordered residues: * Short IDR: 5-19 residues * Long IDR: &gt;= 20 residues * Fully disordered protein: &gt;= 50 residues and &gt; 95% ID content.</p>
+<p>Follow the ideas from <span class="citation" data-cites="Necci2016">Necci, Piovesan, and Tosatto (2016)</span> that intrinsically disordered proteins can be classified based on the number of consecutive disordered residues: 1. Short IDR: 5-19 residues 2. Long IDR: &gt;= 20 residues 3. Fully disordered protein: &gt;= 50 residues and &gt; 95% ID content.</p>
 </section>
 <section id="code-implementation" class="level1">
 <h1>Code implementation</h1>
-<div class="cell" data-execution_count="1">
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># import library</span></span>
@@ -617,6 +617,7 @@ font-style: inherit;">\n</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">..."</span>)</span></code></pre></div>
 </div>
+<p>To use the functions, run the following block code in which, <code>ID</code> is the entry ID.</p>
 <div class="cell" data-tags="[]" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">ID<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -686,6 +687,7 @@ prediction-disorder-priority: ([1, 446], [549, 549], [696, 819])
 ...</code></pre>
 </div>
 </div>
+<p>To manually check the information from MobiDB:</p>
 <div class="cell" data-execution_count="75">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">get_mobidb_disordered_stats(<span class="st" style="color: #20794D;
 background-color: null;
@@ -700,15 +702,18 @@ font-style: inherit;">"P0DP29"</span>)</span></code></pre></div>
 <h1>Other functions</h1>
 <p>In the previous sections, we discussed the fundamental core functions for extracting information. However, the world of data analysis often requires more than just the basics. In this section, we’ll delve into some other essential functions that can be incredibly valuable in specific scenarios.</p>
 <p>One common situation that researchers often encounter is the need to handle disordered residues. In some cases, curated information about disordered residues may differ from predictions. To create a unified approach where a residue is considered disordered if either it’s curated as disordered or predicted as disordered, you can employ the following code snippet. It’s worth noting that the code provided accomplishes the task but doesn’t standardize the results yet.</p>
-<div class="cell" data-execution_count="62">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">disorder_regions_1 <span class="op" style="color: #5E5E5E;
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Example:</span></span>
+<span id="cb8-2">disorder_regions_1 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">8</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">12</span>]]</span>
-<span id="cb8-2">disorder_regions_2 <span class="op" style="color: #5E5E5E;
+<span id="cb8-3">disorder_regions_2 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -719,28 +724,32 @@ background-color: null;
 font-style: inherit;">15</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">19</span>]]</span>
-<span id="cb8-3">disorder_region <span class="op" style="color: #5E5E5E;
+<span id="cb8-4">disorder_region <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> disorder_regions_1<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span>disorder_regions_2</span></code></pre></div>
 </div>
-<div class="cell" data-execution_count="63">
+<div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">disorder_region</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="63">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>[[8, 12], [1, 10], [15, 19]]</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="64">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1">final_list <span class="op" style="color: #5E5E5E;
+<p>As we can see, disorder contain 3 regions that are separated by some residues that makes it not consecutive.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># extract every residues in disorder region</span></span>
+<span id="cb11-2">final_list <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> []</span>
-<span id="cb11-2"><span class="cf" style="color: #003B4F;
+<span id="cb11-3"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> reg <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> disorder_region:</span>
-<span id="cb11-3">    final_list <span class="op" style="color: #5E5E5E;
+<span id="cb11-4">    final_list <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+=</span> <span class="bu" style="color: null;
 background-color: null;
@@ -755,23 +764,21 @@ background-color: null;
 font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>8 12
-1 10
-15 19</code></pre>
 </div>
-</div>
-<div class="cell" data-execution_count="65">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">final_list</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="65">
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># residues that are disordered</span></span>
+<span id="cb12-2">final_list</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>[8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18, 19]</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># remove duplicated value</span></span>
-<span id="cb15-2">final_list <span class="op" style="color: #5E5E5E;
+<span id="cb14-2">final_list <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
 background-color: null;
@@ -779,18 +786,21 @@ font-style: inherit;">list</span>( <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">dict</span>.fromkeys(final_list) )</span></code></pre></div>
 </div>
-<div class="cell" data-execution_count="66">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1">final_list <span class="op" style="color: #5E5E5E;
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sort by residue indices for group them togather latter</span></span>
+<span id="cb15-2">final_list <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">sorted</span>(final_list)</span></code></pre></div>
 </div>
-<div class="cell" data-execution_count="67">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">ranges <span class="op" style="color: #5E5E5E;
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1">ranges <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> []</span>
-<span id="cb17-2"><span class="cf" style="color: #003B4F;
+<span id="cb16-2"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> k,g <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -805,14 +815,14 @@ background-color: null;
 font-style: inherit;">-</span>x[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>]):</span>
-<span id="cb17-3">    group <span class="op" style="color: #5E5E5E;
+<span id="cb16-3">    group <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> (<span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">map</span>(itemgetter(<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>),g))</span>
-<span id="cb17-4">    group <span class="op" style="color: #5E5E5E;
+<span id="cb16-4">    group <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
 background-color: null;
@@ -821,7 +831,7 @@ background-color: null;
 font-style: inherit;">map</span>(<span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">int</span>,group))</span>
-<span id="cb17-5">    ranges.append((group[<span class="dv" style="color: #AD0000;
+<span id="cb16-5">    ranges.append((group[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>],group[<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -829,12 +839,13 @@ font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>]))</span></code></pre></div>
 </div>
-<div class="cell" data-execution_count="68">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1">ranges</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="68">
-<pre><code>[(1, 8), (8, 9), (9, 10), (10, 12), (15, 19)]</code></pre>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">ranges</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>[(1, 12), (15, 19)]</code></pre>
 </div>
 </div>
+<p>See! two region of <code>[1,10]</code> and <code>[8, 12]</code> have been merge to <code>[1,12]</code></p>
 <p>This code snippet will help you harmonize the disparate sources of data related to disordered residues, allowing for a more comprehensive analysis. However, for a complete and standardized solution, further steps may be necessary, depending on your specific use case.</p>
 <p>In the world of data analysis, having a variety of functions at your disposal is crucial. These additional functions go beyond the basics and empower you to handle more complex scenarios, enhancing the depth and accuracy of your analyses.</p>
 
