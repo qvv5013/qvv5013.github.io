@@ -218,7 +218,11 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#classifying-proteins-based-on-disorder" id="toc-classifying-proteins-based-on-disorder" class="nav-link" data-scroll-target="#classifying-proteins-based-on-disorder">Classifying Proteins Based on Disorder:</a></li>
+  <li><a href="#mapping-sequence-features" id="toc-mapping-sequence-features" class="nav-link" data-scroll-target="#mapping-sequence-features">Mapping Sequence Features:</a></li>
+  </ul></li>
   <li><a href="#code-implementation" id="toc-code-implementation" class="nav-link" data-scroll-target="#code-implementation">Code implementation</a></li>
   <li><a href="#other-functions" id="toc-other-functions" class="nav-link" data-scroll-target="#other-functions">Other functions</a></li>
   </ul>
@@ -232,14 +236,22 @@ div.csl-indent {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Given a protein sequence and structural ensemble, how do we know if it is fully IDP, protein with some IDR regions or it is fully structured with some loop?</p>
-<p>Follow the ideas from <span class="citation" data-cites="Necci2016">Necci, Piovesan, and Tosatto (<a href="#ref-Necci2016" role="doc-biblioref">2016</a>)</span> that intrinsically disordered proteins can be classified based on the number of consecutive disordered residues:</p>
+<p>Proteins are complex biomolecules crucial for the functioning of living organisms. They come in various shapes and sizes, each designed for specific functions within cells. Some proteins are well-structured, while others exhibit intrinsic disorder. Understanding the level of disorder in a protein is essential for unraveling its biological role. In this blog post, we’ll explore how we can determine if a protein is fully intrinsically disordered, contains structured regions with disordered loops, or is entirely structured, using insights from Necci et al.’s 2016 research (<span class="citation" data-cites="Necci2016">Necci, Piovesan, and Tosatto (<a href="#ref-Necci2016" role="doc-biblioref">2016</a>)</span>). Given a protein sequence and structural ensemble, how do we know if it is fully IDP, protein with some IDR regions or it is fully structured with some loops?</p>
+<section id="classifying-proteins-based-on-disorder" class="level2">
+<h2 class="anchored" data-anchor-id="classifying-proteins-based-on-disorder">Classifying Proteins Based on Disorder:</h2>
+<p>Necci and colleagues proposed a classification scheme for intrinsically disordered proteins (IDPs) based on the number of consecutive disordered residues:</p>
 <ol type="1">
-<li><p>Short IDR: <span class="math inline">\(5-19\)</span> residues</p></li>
-<li><p>Long IDR: <span class="math inline">\(\ge\)</span> 20 residues</p></li>
-<li><p>Fully disordered protein: <span class="math inline">\(\ge\)</span> 50 residues and <span class="math inline">\(&gt; 95\%\)</span> ID content.</p></li>
+<li><p>Short IDR: Proteins with <span class="math inline">\(5-19\)</span> consecutive disordered residues.</p></li>
+<li><p>Long IDR: Proteins with 20 or more consecutive disordered residues.</p></li>
+<li><p>Fully Disordered Protein: Proteins with 50 or more consecutive disordered residues and more than 95% of their content being disordered.</p></li>
 </ol>
-<p>In this example, we are going to map sequence features from DISPROT and MobiDB (where in the sequence are structured, disorder) to protein entry in PED (protein ensemble database).</p>
+<p>This classification scheme provides a straightforward way to categorize proteins based on their disorder characteristics, offering valuable insights into their potential functions.</p>
+</section>
+<section id="mapping-sequence-features" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-sequence-features">Mapping Sequence Features:</h2>
+<p>To determine a protein’s disorder characteristics, we need to map sequence features from two primary resources: DISPROT and MobiDB. DISPROT is a database that provides information about where structured and disordered regions are located in a protein sequence, while MobiDB offers valuable data on protein mobility and disorder.</p>
+<p>Using these resources, we can efficiently evaluate the disorder characteristics of a given protein entry in the PED (Protein Ensemble Database). By cross-referencing the information from DISPROT and MobiDB with the PED entries, we can gain a comprehensive understanding of a protein’s structural properties.</p>
+</section>
 </section>
 <section id="code-implementation" class="level1">
 <h1>Code implementation</h1>
