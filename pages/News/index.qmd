@@ -17,7 +17,7 @@ title-block-banner: true
 
 <table class="table table-hover table-striped">
   <thead>
-    <tr>
+    <tr class="table-info">
       <th scope="col">Dates</th>
       <th scope="col">Events</th>
     </tr>

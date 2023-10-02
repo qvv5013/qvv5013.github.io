@@ -33,10 +33,10 @@ I am nowhere and I am everywhere.
 
 ### Brief CV:
 
-<table class="table table-hover table-striped">
+<table class="table  table-bordered table-hover responsive-lg">
   <thead>
     <tr class="table-info">
-      <th scope="col">Period</th>
+      <th scope="col">Period        </th>
       <th scope="col">Degree</th>
       <th scope="col">Where</th>
       <th scope="col">Supervisor(s)</th>
@@ -48,13 +48,13 @@ I am nowhere and I am everywhere.
         2018-2023
       </th>
       <td class="text-center align-middle">
-        PhD in Physics (Computational Biophysics)
+        PhD in Physics <br>(Computational Biophysics)
       </td>
       <td class="text-center align-middle">
-        Institute of Physics, Polish Academy of Sciences-[Thesis](../../resources/Quyen_V__Vu_Thesis_2023.pdf){target="_blank"}
+        Institute of Physics, Polish Academy of Sciences <br/> [Thesis](../../resources/Quyen_V__Vu_Thesis_2023.pdf){target="_blank"}
        </td>
       <td class="text-center align-middle">
-        [`Prof. Edward P. O'Brien`](https://obrien22.vmhost.psu.edu/){target="_blank"}, and <br/> [`Prof. Mai Suan Li`](http://info.ifpan.edu.pl/~masli/index.html){target="_blank"}
+        [`Prof. Edward P. O'Brien`](https://obrien22.vmhost.psu.edu/){target="_blank"},<br/> and <br/> [`Prof. Mai Suan Li`](http://info.ifpan.edu.pl/~masli/index.html){target="_blank"}
       </td>
     </tr>
 
