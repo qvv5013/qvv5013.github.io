@@ -33,7 +33,7 @@ I am nowhere and I am everywhere.
 
 ### Brief CV:
 
-<table class="table  table-bordered table-hover responsive-lg">
+<table class="table  table-hover responsive-lg">
   <thead>
     <tr class="table-info">
       <th scope="col">Period        </th>
