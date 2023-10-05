@@ -15,7 +15,9 @@ about:
 title-block-banner: true
 ---
 
-<table class="table table-hover table-striped">
+
+
+<table class="table table-hover responsive-lg">
   <thead>
     <tr class="table-info">
       <th scope="col">Dates</th>
@@ -24,9 +26,9 @@ title-block-banner: true
   </thead>
   <tbody>
     <tr >
-      <th scope="row" class="text-center align-middle">
+      <td scope="row" class="text-center align-middle">
         01/09/2023
-      </th>
+      </td>
       <td class="text-center align-middle">
         Quyen Vu has successfully passed the Physics Exam at IFPAN with a score of 4.5/5. 
         This marks the final examination before he defends his PhD thesis. 
@@ -54,3 +56,4 @@ title-block-banner: true
     </tr>
   </tbody>
 </table>
+

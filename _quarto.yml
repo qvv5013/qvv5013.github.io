@@ -17,12 +17,12 @@ website:
     search: true
     pinned: true
     right:
-      - pages/News/index.qmd
-      - pages/Team/index.qmd
-      - pages/Publications/index.qmd
-      - pages/Tools/index.qmd
+      - pages/news/index.qmd
+      - pages/team/index.qmd
+      - pages/publications/index.qmd
+      - pages/tools/index.qmd
       - text: "**About me**"
-        href: pages/About/index.qmd
+        href: pages/about/index.qmd
       - icon: github
         href: https://github.com/qvv5013
       - icon: twitter
@@ -30,14 +30,14 @@ website:
 
   page-footer:
     center: 
-      - text: "About"
-        href: pages/About/index.qmd
+      - text: "about"
+        href: pages/about/index.qmd
 
 
 format:
   html:
     theme: sandstone
-    css: styles.css
+    css: theme.scss
     page-layout: full
 
 comments:
