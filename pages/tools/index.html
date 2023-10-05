@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Home - News</title>
+<title>Home - Tools</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,7 +60,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../theme.scss">
 </head>
 
 <body class="nav-fixed">
@@ -81,23 +81,23 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../../pages/News/index.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../pages/news/index.html" rel="" target="">
  <span class="menu-text"><strong>News</strong></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../pages/Team/index.html" rel="" target="">
+    <a class="nav-link" href="../../pages/team/index.html" rel="" target="">
  <span class="menu-text"><strong>Team</strong></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../pages/Publications/index.html" rel="" target="">
+    <a class="nav-link" href="../../pages/publications/index.html" rel="" target="">
  <span class="menu-text"><strong>Publications</strong></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../pages/Tools/index.html" rel="" target="">
+    <a class="nav-link active" href="../../pages/tools/index.html" rel="" target="" aria-current="page">
  <span class="menu-text"><strong>Tools</strong></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../pages/About/index.html" rel="" target="">
+    <a class="nav-link" href="../../pages/about/index.html" rel="" target="">
  <span class="menu-text"><strong>About me</strong></span></a>
   </li>  
   <li class="nav-item compact">
@@ -121,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
-      <h1 class="title"><strong>News</strong></h1>
+      <h1 class="title"><strong>Tools</strong></h1>
                       </div>
   </div>
   <div class="quarto-title-meta">
@@ -133,44 +133,31 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <div class="quarto-about-jolla column-page">
  <main class="content quarto-banner-title-block column-page" id="quarto-document-content">
-<table class="table table-hover table-striped">
-<thead>
-<tr class="table-info">
-<th scope="col">
-Dates
-</th>
-<th scope="col">
-Events
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th scope="row" class="text-center align-middle">
-01/09/2023
-</th>
-<td class="text-center align-middle">
-Quyen Vu has successfully passed the Physics Exam at IFPAN with a score of 4.5/5. This marks the final examination before he defends his PhD thesis. The exam covered General Physics and profile-specific themes.
-</td>
-</tr>
-<tr>
-<th scope="row" class="text-center align-middle">
-06/07/2023
-</th>
-<td class="text-center align-middle">
-Quyen Vu delivered a brief presentation about his PhD thesis in front of the Scientific Council of IFPAN.
-</td>
-</tr>
-<tr>
-<th scope="row" class="text-center align-middle">
-22/06/2023
-</th>
-<td class="text-center align-middle">
-Quyen Vu has submitted his PhD thesis.
-</td>
-</tr>
-</tbody>
-</table>
+<div style="text-align: left">
+<section id="cosmo" class="level1">
+<h1><code>COSMO</code>:</h1>
+<p>COarse-grained Simulation of intrinsically disordered prOteins with openMM. Package utilize the customizable, high-performance of OpenMM and good science from high-quality research.</p>
+<p>Currently, there are four models are supported:</p>
+<ol type="1">
+<li><code>hps_urry:</code> Hydropathy according to Urry scale (default, Recommended).</li>
+<li><code>hps_kr:</code> Kapcha-Rossy scale. This model has parameters for nucleic acids and post-translational modification residues.</li>
+<li><code>hps_ss:</code> <code>hps_urry</code> with bonded potential.</li>
+<li><code>mpipi</code>: another model that using Wang-Frenkel short range potential instead of LJ 12-6</li>
+<li>Other models can be easily implemented by defining them in <code>cosmo/parameters/model_parameters.py</code></li>
+</ol>
+<p>The package is ready for studying various problems such as, conformation dynamics of single chain, LLPS …</p>
+<p>(Source code is available on <a href="https://github.com/qvv5013/cosmo">Github</a>)</p>
+<p>Check out docs for more details <a href="https://qvv5013.github.io/docs-hpsOpenMM/">here</a></p>
+</section>
+<section id="entanglement-analysis" class="level1">
+<h1><code>Entanglement Analysis</code>:</h1>
+<p>There are two main version of entanglement analysis:</p>
+<ul>
+<li><p>The first one is characterized by the linking number of loops and the open terminal, which is composed of the whole terminal. Please check this paper for more details. This kind of entanglement can be calculated by the following code which is developed by Ian Sitarik (Penn State). <a href="">Python version</a></p></li>
+<li><p>The maximum linking number between the loop and all possible segments of the terminal is calculated by the following code: <a href="https://github.com/qvv5013/entanglement_analysis">Julia version</a>. There are two versions for this kind of entanglement calculation, in python and Julia. julia is much faster than Python.</p></li>
+</ul>
+</section>
+</div>
 
 
 </main> 
@@ -422,7 +409,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-center">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="../../pages/About/index.html">About</a>
+    <a class="nav-link" href="../../pages/about/index.html">about</a>
   </li>  
 </ul>
     </div>
