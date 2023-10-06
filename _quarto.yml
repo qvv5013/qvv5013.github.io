@@ -8,6 +8,7 @@ website:
   site-url: "https://qvv5013.github.io/"
   description: "My blog"
   page-navigation: true
+  reader-mode: true
   favicon: img/QV.png
   search: 
     location: navbar
@@ -29,8 +30,8 @@ website:
         href: https://twitter.com/qvv5013
 
   page-footer:
-    center: 
-      - text: "about"
+    center:
+      - text: "Copyright 2023, Quyen Vu"
         href: pages/about/index.qmd
 
 
