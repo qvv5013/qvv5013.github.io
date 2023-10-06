@@ -33,9 +33,9 @@ I am nowhere and I am everywhere.
 
 ### Brief CV:
 
-<table class="table  table-hover responsive-lg">
+<table class="table table-hover responsive-lg">
   <thead>
-    <tr class="table-info">
+    <tr class="card-header">
       <th scope="col">Period        </th>
       <th scope="col">Degree</th>
       <th scope="col">Where</th>
@@ -89,3 +89,4 @@ I am nowhere and I am everywhere.
     </tr>
   </tbody>
 </table>
+
