@@ -55,6 +55,8 @@
 </section>
 <section id="code-implementation" class="level1">
 <h1>Code implementation</h1>
+<section id="import-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="import-libraries">Import libraries</h2>
 <div class="cell" data-is_executing="true">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -87,84 +89,300 @@ font-style: inherit;">from</span> operator <span class="im" style="color: #00769
 background-color: null;
 font-style: inherit;">import</span> itemgetter</span></code></pre></div>
 </div>
-<div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+</section>
+<section id="retrieve-disorder-information-from-mobidb" class="level2">
+<h2 class="anchored" data-anchor-id="retrieve-disorder-information-from-mobidb">Retrieve disorder information from MobiDB</h2>
+<p>Next, we define a function to retrieve disorder-related information for a protein using the DISPROT/MobiDB database.</p>
+<p>Here, we only use data with highest confidence from MobiDB. All highest confidence sources of evidence are treated equally.</p>
+<p>Specifically, the following categories will be used:</p>
+<ol type="1">
+<li><p><code>curated-disorder-priority</code>: Residues are annotated with the source with the highest of evidence from curated data</p></li>
+<li><p><code>homology-disorder-priority</code>: Residues are annotated with the source with the highest of evidence from homology (see above for more information)</p></li>
+<li><p><code>derived-missing_residues-priority</code>: Residues are annotated when at least 90% of the children are annotated</p></li>
+<li><p><code>prediction-disorder-priority</code>: Residues are annotated with the source with the highest of evidence from prediction (see above for more information)</p></li>
+<li><p><code>derived-mobile-th_90</code>: Mobile residues, residues are annotated when at least 90% of the children are annotated</p></li>
+</ol>
+<div class="cell" data-execution_count="121">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"></span>
+<span id="cb2-2"><span class="kw" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">def</span> merge_data(data_sets):</span>
-<span id="cb2-2">    <span class="co" style="color: #5E5E5E;
+font-style: inherit;">def</span> get_mobidb_disordered_data(uniprot):</span>
+<span id="cb2-3">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">"""</span></span>
-<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    Merge and compact intervals from multiple data sets.</span></span>
-<span id="cb2-4"></span>
-<span id="cb2-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    This function takes a list of data sets, where each data set consists of one or more intervals.</span></span>
+font-style: inherit;">    Retrieve disorder-related information for a protein using the DISPROT/MobiDB database.</span></span>
+<span id="cb2-5"></span>
 <span id="cb2-6"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    It combines intervals from all data sets, merges overlapping intervals, and further merges adjacent intervals.</span></span>
+font-style: inherit;">    This function takes a UniProt ID as input and queries the DISPROT/MobiDB database to retrieve disorder-related</span></span>
 <span id="cb2-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    The resulting merged intervals are printed in compact form.</span></span>
-<span id="cb2-8"></span>
-<span id="cb2-9"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">    information for the specified protein. It returns a list of intervals representing disordered regions based on</span></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    Args:</span></span>
+font-style: inherit;">    specific keywords, with a preference for "curated" disorder information.</span></span>
+<span id="cb2-9"></span>
 <span id="cb2-10"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">        data_sets (list): A list of data sets, where each data set is represented as a tuple of intervals.</span></span>
+font-style: inherit;">    Args:</span></span>
 <span id="cb2-11"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">            Each interval is represented as a list with two elements: [start, end].</span></span>
+font-style: inherit;">        uniprot (str): The UniProt ID of the protein for which disorder information is to be retrieved.</span></span>
 <span id="cb2-12"></span>
 <span id="cb2-13"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">    Returns:</span></span>
 <span id="cb2-14"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">        None: The function prints the merged intervals but does not return a value.</span></span>
+font-style: inherit;">        list: A list of intervals representing disordered regions. Each interval is represented as a tuple (start, end).</span></span>
 <span id="cb2-15"></span>
 <span id="cb2-16"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">    Example:</span></span>
 <span id="cb2-17"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">        data_sets = [([1, 56],), ([1, 56],), ([59, 68],), ([57, 58], [150, 160])]</span></span>
+font-style: inherit;">        disordered_regions = get_mobidb_disordered_data("P12345")</span></span>
 <span id="cb2-18"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">        merge_data(data_sets)</span></span>
-<span id="cb2-19"></span>
+font-style: inherit;">        print("Disordered Regions:")</span></span>
+<span id="cb2-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        for interval in disordered_regions:</span></span>
 <span id="cb2-20"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    Output:</span></span>
-<span id="cb2-21"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        Compact Merged Intervals:</span></span>
+font-style: inherit;">            print(f"[{interval[0]}, {interval[1]}]")</span></span>
+<span id="cb2-21"></span>
 <span id="cb2-22"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">        [[1, 68], [150, 160]]</span></span>
-<span id="cb2-23"></span>
+font-style: inherit;">    Note:</span></span>
+<span id="cb2-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - The function queries the DISPROT/MobiDB database via its API.</span></span>
 <span id="cb2-24"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    Note:</span></span>
+font-style: inherit;">        - It prioritizes "curated" disorder information when available.</span></span>
 <span id="cb2-25"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">        - Intervals within each data set are merged if they overlap.</span></span>
+font-style: inherit;">        - Disorder information is returned based on specific keywords.</span></span>
 <span id="cb2-26"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">        - Intervals across different data sets are combined and merged.</span></span>
+font-style: inherit;">        - If no disorder information is found, an empty list is returned.</span></span>
 <span id="cb2-27"><span class="co" style="color: #5E5E5E;
 background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb2-28">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The information about these triplets can be found here: https://mobidb.org/help#vocabulary</span></span>
+<span id="cb2-29">    keywords <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'curated-disorder-priority'</span>,</span>
+<span id="cb2-30">            <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'homology-disorder-priority'</span>,</span>
+<span id="cb2-31">            <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'derived-missing_residues-priority'</span>, </span>
+<span id="cb2-32">            <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'prediction-disorder-priority'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'derived-mobile-th_90'</span>]</span>
+<span id="cb2-33"></span>
+<span id="cb2-34">    url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'https://mobidb.org/api/download?format=json&amp;acc='</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> uniprot</span>
+<span id="cb2-35"></span>
+<span id="cb2-36">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if the ID exists in DISPROT/MOBIDB</span></span>
+<span id="cb2-37">    res <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(url)</span>
+<span id="cb2-38"></span>
+<span id="cb2-39">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> res.status_code <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span>:</span>
+<span id="cb2-40">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">try</span>:</span>
+<span id="cb2-41">            result <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> res.json()</span>
+<span id="cb2-42">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">except</span>:</span>
+<span id="cb2-43">            <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ID DOES NOT EXITS IN THE DATABASE"</span>)</span>
+<span id="cb2-44">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> []  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Return an empty list if JSON parsing fails</span></span>
+<span id="cb2-45"></span>
+<span id="cb2-46">        disordered_regions <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb2-47"></span>
+<span id="cb2-48">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> key <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> keywords:</span>
+<span id="cb2-49">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> key <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> result.keys():</span>
+<span id="cb2-50">                regions <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> result[key][<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'regions'</span>]</span>
+<span id="cb2-51">                <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(key, regions)</span></span>
+<span id="cb2-52">                disordered_regions.append(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">tuple</span>(regions))</span>
+<span id="cb2-53"></span>
+<span id="cb2-54">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(disordered_regions)</span></span>
+<span id="cb2-55">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(disordered_regions) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>:</span>
+<span id="cb2-56">            <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"NO DISORDER REGION FOUND"</span>)</span>
+<span id="cb2-57">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> []</span>
+<span id="cb2-58">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> disordered_regions</span>
+<span id="cb2-59"></span>
+<span id="cb2-60">    </span>
+<span id="cb2-61">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> []  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Return an empty list if the ID does not exist in the database</span></span>
+<span id="cb2-62"></span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="108">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">get_mobidb_disordered_data(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"P02751"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="108">
+<pre><code>[([1, 47], [272, 296], [2083, 2198], [2432, 2477]),
+ ([153, 166], [702, 730], [2330, 2339])]</code></pre>
+</div>
+</div>
+</section>
+<section id="merge-data-in-compact-continuous-region-form" class="level2">
+<h2 class="anchored" data-anchor-id="merge-data-in-compact-continuous-region-form">Merge data in compact, continuous region form</h2>
+<p>As an example, the <code>get_mobidb_disordered_data</code> prints all regions without sorting. This is quite messy. We will define a <code>merge_data</code> function to sort, combine the results and print in compact form:</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> merge_data(data_sets):</span>
+<span id="cb5-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Merge and compact intervals from multiple data sets.</span></span>
+<span id="cb5-4"></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    This function takes a list of data sets, where each data set consists of one or more intervals.</span></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    It combines intervals from all data sets, merges overlapping intervals, and further merges adjacent intervals.</span></span>
+<span id="cb5-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    The resulting merged intervals are printed in compact form.</span></span>
+<span id="cb5-8"></span>
+<span id="cb5-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Args:</span></span>
+<span id="cb5-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        data_sets (list): A list of data sets, where each data set is represented as a tuple of intervals.</span></span>
+<span id="cb5-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">            Each interval is represented as a list with two elements: [start, end].</span></span>
+<span id="cb5-12"></span>
+<span id="cb5-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb5-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        None: The function prints the merged intervals but does not return a value.</span></span>
+<span id="cb5-15"></span>
+<span id="cb5-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example:</span></span>
+<span id="cb5-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        data_sets = [([1, 56],), ([1, 56],), ([59, 68],), ([57, 58], [150, 160])]</span></span>
+<span id="cb5-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        merge_data(data_sets)</span></span>
+<span id="cb5-19"></span>
+<span id="cb5-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Output:</span></span>
+<span id="cb5-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        Compact Merged Intervals:</span></span>
+<span id="cb5-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        [[1, 68], [150, 160]]</span></span>
+<span id="cb5-23"></span>
+<span id="cb5-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Note:</span></span>
+<span id="cb5-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - Intervals within each data set are merged if they overlap.</span></span>
+<span id="cb5-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - Intervals across different data sets are combined and merged.</span></span>
+<span id="cb5-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
 font-style: inherit;">        - Adjacent intervals are further merged into compact intervals.</span></span>
-<span id="cb2-28"></span>
-<span id="cb2-29"><span class="co" style="color: #5E5E5E;
+<span id="cb5-28"></span>
+<span id="cb5-29"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">    """</span></span>
-<span id="cb2-30">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-30">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># print(data_sets)</span></span>
-<span id="cb2-31">    <span class="cf" style="color: #003B4F;
+<span id="cb5-31">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> <span class="bu" style="color: null;
 background-color: null;
@@ -173,56 +391,56 @@ background-color: null;
 font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>:</span>
-<span id="cb2-32">        <span class="co" style="color: #5E5E5E;
+<span id="cb5-32">        <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># print("[ID does not exist in Database]")</span></span>
-<span id="cb2-33">        <span class="cf" style="color: #003B4F;
+<span id="cb5-33">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">return</span> </span>
-<span id="cb2-34">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-34">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Initialize an empty list to store all intervals</span></span>
-<span id="cb2-35">    all_intervals <span class="op" style="color: #5E5E5E;
+<span id="cb5-35">    all_intervals <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> []</span>
-<span id="cb2-36"></span>
-<span id="cb2-37">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-36"></span>
+<span id="cb5-37">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Iterate through each data set and collect all intervals</span></span>
-<span id="cb2-38">    <span class="cf" style="color: #003B4F;
+<span id="cb5-38">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> intervals <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> data_sets:</span>
-<span id="cb2-39">        all_intervals.extend(intervals)</span>
-<span id="cb2-40"></span>
-<span id="cb2-41">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-39">        all_intervals.extend(intervals)</span>
+<span id="cb5-40"></span>
+<span id="cb5-41">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Sort the intervals by their start values</span></span>
-<span id="cb2-42">    all_intervals.sort(key<span class="op" style="color: #5E5E5E;
+<span id="cb5-42">    all_intervals.sort(key<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">lambda</span> x: x[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>])</span>
-<span id="cb2-43"></span>
-<span id="cb2-44">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-43"></span>
+<span id="cb5-44">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Initialize a list to store the merged intervals</span></span>
-<span id="cb2-45">    merged_intervals <span class="op" style="color: #5E5E5E;
+<span id="cb5-45">    merged_intervals <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> []</span>
-<span id="cb2-46"></span>
-<span id="cb2-47">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-46"></span>
+<span id="cb5-47">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Iterate through the sorted intervals and merge overlapping intervals</span></span>
-<span id="cb2-48">    <span class="cf" style="color: #003B4F;
+<span id="cb5-48">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> interval <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> all_intervals:</span>
-<span id="cb2-49">        <span class="cf" style="color: #003B4F;
+<span id="cb5-49">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -239,17 +457,17 @@ background-color: null;
 font-style: inherit;">1</span>][<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>]:</span>
-<span id="cb2-50">            <span class="co" style="color: #5E5E5E;
+<span id="cb5-50">            <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># If the interval does not overlap with the last merged interval, add it as a new merged interval</span></span>
-<span id="cb2-51">            merged_intervals.append(interval)</span>
-<span id="cb2-52">        <span class="cf" style="color: #003B4F;
+<span id="cb5-51">            merged_intervals.append(interval)</span>
+<span id="cb5-52">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span>:</span>
-<span id="cb2-53">            <span class="co" style="color: #5E5E5E;
+<span id="cb5-53">            <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># If the interval overlaps with the last merged interval, merge them</span></span>
-<span id="cb2-54">            merged_intervals[<span class="op" style="color: #5E5E5E;
+<span id="cb5-54">            merged_intervals[<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
 background-color: null;
@@ -272,27 +490,27 @@ background-color: null;
 font-style: inherit;">1</span>], interval[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>])]</span>
-<span id="cb2-55"></span>
-<span id="cb2-56">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-55"></span>
+<span id="cb5-56">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Further merge adjacent intervals</span></span>
-<span id="cb2-57">    final_merged_intervals <span class="op" style="color: #5E5E5E;
+<span id="cb5-57">    final_merged_intervals <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> []</span>
-<span id="cb2-58">    current_interval <span class="op" style="color: #5E5E5E;
+<span id="cb5-58">    current_interval <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> merged_intervals[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>]</span>
-<span id="cb2-59"></span>
-<span id="cb2-60">    <span class="cf" style="color: #003B4F;
+<span id="cb5-59"></span>
+<span id="cb5-60">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> interval <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> merged_intervals[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>:]:</span>
-<span id="cb2-61">        <span class="cf" style="color: #003B4F;
+<span id="cb5-61">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> current_interval[<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -305,252 +523,46 @@ background-color: null;
 font-style: inherit;">==</span> interval[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>]:</span>
-<span id="cb2-62">            current_interval[<span class="dv" style="color: #AD0000;
+<span id="cb5-62">            current_interval[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> interval[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>]</span>
-<span id="cb2-63">        <span class="cf" style="color: #003B4F;
+<span id="cb5-63">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span>:</span>
-<span id="cb2-64">            final_merged_intervals.append(current_interval)</span>
-<span id="cb2-65">            current_interval <span class="op" style="color: #5E5E5E;
+<span id="cb5-64">            final_merged_intervals.append(current_interval)</span>
+<span id="cb5-65">            current_interval <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> interval</span>
-<span id="cb2-66"></span>
-<span id="cb2-67">    final_merged_intervals.append(current_interval)</span>
-<span id="cb2-68"></span>
-<span id="cb2-69">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-66"></span>
+<span id="cb5-67">    final_merged_intervals.append(current_interval)</span>
+<span id="cb5-68"></span>
+<span id="cb5-69">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Print the merged intervals in compact form</span></span>
-<span id="cb2-70">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-70">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># print("Disorder regions:")</span></span>
-<span id="cb2-71">    <span class="co" style="color: #5E5E5E;
+<span id="cb5-71">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># print(tuple(final_merged_intervals))</span></span>
-<span id="cb2-72">    <span class="cf" style="color: #003B4F;
+<span id="cb5-72">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">return</span> <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">tuple</span>(final_merged_intervals)</span>
-<span id="cb2-73"></span>
-<span id="cb2-74">    </span>
-<span id="cb2-75"><span class="co" style="color: #5E5E5E;
+<span id="cb5-73"></span>
+<span id="cb5-74">    </span>
+<span id="cb5-75"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># merge_data(data_sets)</span></span></code></pre></div>
 </div>
-<p>Next, we define a function to retrieve disorder-related information for a protein using the DISPROT/MobiDB database.</p>
-<p>Here, we only use data with highest confidence from MobiDB. All highest confidence sources of evidence are treated equally.</p>
-<p>Specifically, the following categories will be used:</p>
-<ol type="1">
-<li><p><code>curated-disorder-priority</code>: Residues are annotated with the source with the highest of evidence from curated data</p></li>
-<li><p><code>homology-disorder-priority</code>: Residues are annotated with the source with the highest of evidence from homology (see above for more information)</p></li>
-<li><p><code>derived-missing_residues-priority</code>: Residues are annotated when at least 90% of the children are annotated</p></li>
-<li><p><code>prediction-disorder-priority</code>: Residues are annotated with the source with the highest of evidence from prediction (see above for more information)</p></li>
-<li><p><code>derived-mobile-th_90</code>: Mobile residues, residues are annotated when at least 90% of the children are annotated</p></li>
-</ol>
-<div class="cell" data-execution_count="121">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"></span>
-<span id="cb3-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> get_mobidb_disordered_data(uniprot):</span>
-<span id="cb3-3">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">"""</span></span>
-<span id="cb3-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    Retrieve disorder-related information for a protein using the DISPROT/MobiDB database.</span></span>
-<span id="cb3-5"></span>
-<span id="cb3-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    This function takes a UniProt ID as input and queries the DISPROT/MobiDB database to retrieve disorder-related</span></span>
-<span id="cb3-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    information for the specified protein. It returns a list of intervals representing disordered regions based on</span></span>
-<span id="cb3-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    specific keywords, with a preference for "curated" disorder information.</span></span>
-<span id="cb3-9"></span>
-<span id="cb3-10"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    Args:</span></span>
-<span id="cb3-11"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        uniprot (str): The UniProt ID of the protein for which disorder information is to be retrieved.</span></span>
-<span id="cb3-12"></span>
-<span id="cb3-13"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    Returns:</span></span>
-<span id="cb3-14"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        list: A list of intervals representing disordered regions. Each interval is represented as a tuple (start, end).</span></span>
-<span id="cb3-15"></span>
-<span id="cb3-16"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    Example:</span></span>
-<span id="cb3-17"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        disordered_regions = get_mobidb_disordered_data("P12345")</span></span>
-<span id="cb3-18"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        print("Disordered Regions:")</span></span>
-<span id="cb3-19"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        for interval in disordered_regions:</span></span>
-<span id="cb3-20"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">            print(f"[{interval[0]}, {interval[1]}]")</span></span>
-<span id="cb3-21"></span>
-<span id="cb3-22"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    Note:</span></span>
-<span id="cb3-23"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        - The function queries the DISPROT/MobiDB database via its API.</span></span>
-<span id="cb3-24"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        - It prioritizes "curated" disorder information when available.</span></span>
-<span id="cb3-25"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        - Disorder information is returned based on specific keywords.</span></span>
-<span id="cb3-26"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">        - If no disorder information is found, an empty list is returned.</span></span>
-<span id="cb3-27"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    """</span></span>
-<span id="cb3-28">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># The information about these triplets can be found here: https://mobidb.org/help#vocabulary</span></span>
-<span id="cb3-29">    keywords <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'curated-disorder-priority'</span>,</span>
-<span id="cb3-30">            <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'homology-disorder-priority'</span>,</span>
-<span id="cb3-31">            <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'derived-missing_residues-priority'</span>, </span>
-<span id="cb3-32">            <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'prediction-disorder-priority'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'derived-mobile-th_90'</span>]</span>
-<span id="cb3-33"></span>
-<span id="cb3-34">    url <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'https://mobidb.org/api/download?format=json&amp;acc='</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> uniprot</span>
-<span id="cb3-35"></span>
-<span id="cb3-36">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Check if the ID exists in DISPROT/MOBIDB</span></span>
-<span id="cb3-37">    res <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> requests.get(url)</span>
-<span id="cb3-38"></span>
-<span id="cb3-39">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> res.status_code <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">200</span>:</span>
-<span id="cb3-40">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">try</span>:</span>
-<span id="cb3-41">            result <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> res.json()</span>
-<span id="cb3-42">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">except</span>:</span>
-<span id="cb3-43">            <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ID DOES NOT EXITS IN THE DATABASE"</span>)</span>
-<span id="cb3-44">            <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> []  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Return an empty list if JSON parsing fails</span></span>
-<span id="cb3-45"></span>
-<span id="cb3-46">        disordered_regions <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> []</span>
-<span id="cb3-47"></span>
-<span id="cb3-48">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> key <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> keywords:</span>
-<span id="cb3-49">            <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> key <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> result.keys():</span>
-<span id="cb3-50">                regions <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> result[key][<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'regions'</span>]</span>
-<span id="cb3-51">                <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print(key, regions)</span></span>
-<span id="cb3-52">                disordered_regions.append(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">tuple</span>(regions))</span>
-<span id="cb3-53"></span>
-<span id="cb3-54">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print(disordered_regions)</span></span>
-<span id="cb3-55">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(disordered_regions) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>:</span>
-<span id="cb3-56">            <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"NO DISORDER REGION FOUND"</span>)</span>
-<span id="cb3-57">            <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> []</span>
-<span id="cb3-58">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> disordered_regions</span>
-<span id="cb3-59"></span>
-<span id="cb3-60">    </span>
-<span id="cb3-61">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> []  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Return an empty list if the ID does not exist in the database</span></span>
-<span id="cb3-62"></span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="108">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">get_mobidb_disordered_data(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"P02751"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="108">
-<pre><code>[([1, 47], [272, 296], [2083, 2198], [2432, 2477]),
- ([153, 166], [702, 730], [2330, 2339])]</code></pre>
-</div>
-</div>
+</section>
+<section id="count-how-many-disorder-residues-in-a-given-sequence" class="level2">
+<h2 class="anchored" data-anchor-id="count-how-many-disorder-residues-in-a-given-sequence">Count how many disorder residues in a given sequence</h2>
 <div class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="kw" style="color: #003B4F;
 background-color: null;
@@ -706,6 +718,9 @@ font-style: inherit;"># overlaps = count_overlap(first_range, second_ranges)</sp
 background-color: null;
 font-style: inherit;"># print(overlaps)</span></span></code></pre></div>
 </div>
+</section>
+<section id="classify-protein-based-on-the-length-of-disorder-regions" class="level2">
+<h2 class="anchored" data-anchor-id="classify-protein-based-on-the-length-of-disorder-regions">Classify protein based on the length of disorder regions</h2>
 <div class="cell" data-execution_count="58">
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="kw" style="color: #003B4F;
 background-color: null;
@@ -947,6 +962,9 @@ font-style: inherit;">"Classification:"</span>, classification)</span></code></p
 <pre><code>Classification: Not Classified</code></pre>
 </div>
 </div>
+</section>
+<section id="combine-all-together" class="level2">
+<h2 class="anchored" data-anchor-id="combine-all-together">Combine all together:</h2>
 <div class="cell" data-execution_count="51">
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -1268,6 +1286,7 @@ font-style: inherit;">"</span>)</span>
 <span id="cb9-62"></span>
 <span id="cb9-63"></span></code></pre></div>
 </div>
+</section>
 </section>
 <section id="example-usage" class="level1">
 <h1>Example usage:</h1>
