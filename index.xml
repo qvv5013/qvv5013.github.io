@@ -14,7 +14,7 @@
 <item>
   <title>Extracting information from IDP database and IDP classification</title>
   <dc:creator>Quyen Vu</dc:creator>
-  <link>https://qvv5013.github.io/posts/2023/October/IDP_classifications.html</link>
+  <link>https://qvv5013.github.io/posts/2023/October/Extracting_disorder_regions_from_MobiDB.html</link>
   <description><![CDATA[ 
 
 
@@ -39,9 +39,23 @@
 <p>Using these resources, we can efficiently evaluate the disorder characteristics of a given protein entry in the PED (Protein Ensemble Database). By cross-referencing the information from DISPROT and MobiDB with the PED entries, we can gain a comprehensive understanding of a protein’s structural properties.</p>
 </section>
 </section>
+<section id="what-is-mobidb" class="level1">
+<h1>What is MobiDB?</h1>
+<p>MobiDB comprises different types of disorder annotations and different quality levels of disorder evidence. (More information can be found here: <span class="citation" data-cites="Monzon2020">Monzon et al. (2020)</span>)</p>
+<p>The source of evidence in MobiDB can be classified depending on the quality of evidence:</p>
+<ol type="1">
+<li><p><b>High-quality:</b> data are imported from manually curated external databases.</p></li>
+<li><p><b>Intermediate-quality:</b> annotations are derived from experimental data such as X-ray diffraction, NMR, and NMR chemical shifts.</p></li>
+<li><p><b>Lowest-quality:</b> Disorder predictions are provided by different computational methods and represent the lowest quality and confidence, even though they have by far the largest coverage by including all UniProt proteins</p></li>
+</ol>
+<p><u>In order to provide the most reliable disorder annotation for each protein, MobiDB combines all its data sources into a consensus annotation, prioritizing curated and indirect pieces of evidence over predictions.</u></p>
+<p><b>Curated Data:</b> High-quality annotations in MobiDB come from external resources which provide manually curated evidence. Intrinsically disordered regions are extracted from three databases, DisProt, FuzDB, and UniProt. DisProt is the largest database which covers manually curated ID annotations. In the latest version of MobiDB, DisProt disordered regions are propagated by homology, exploiting GeneTree alignments with a similarity constraint of 80%.</p>
+<p><b> Derived Data:</b> Indirect experimental data sources provide annotations from X-ray experiments, NMR three-dimensional models, and NMRchemical shift data. Indirect disorder information is derived from PDB in three different ways by considering (1) missing, (2) high temperature, and (3) mobile residues. Missing residues are those for which the detected electron density is not sharp enough to model the corresponding structure.</p>
+<p><b>Predicted Data:</b> To define a residue as disordered, at least five out of eight predictors have to agree with the prediction.</p>
+</section>
 <section id="code-implementation" class="level1">
 <h1>Code implementation</h1>
-<div class="cell" data-execution_count="10">
+<div class="cell" data-is_executing="true">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># import library</span></span>
@@ -74,373 +88,1045 @@ background-color: null;
 font-style: inherit;">import</span> itemgetter</span></code></pre></div>
 </div>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
 background-color: null;
-font-style: inherit;"># function to get disorder from DISPROT/MobiDB</span></span>
-<span id="cb2-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> get_mobidb_disordered_stats(uniprot):</span>
-<span id="cb2-3">    <span class="co" style="color: #5E5E5E;
+font-style: inherit;">def</span> merge_data(data_sets):</span>
+<span id="cb2-2">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">"""</span></span>
-<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    as the disorder information from mobiDB, the order of method I trust: curated-disorder-disprot-which is curated by the team.</span></span>
+font-style: inherit;">    Merge and compact intervals from multiple data sets.</span></span>
+<span id="cb2-4"></span>
 <span id="cb2-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">    then, homology. Prediction is not accurate-this observation comes from various manually check.</span></span>
+font-style: inherit;">    This function takes a list of data sets, where each data set consists of one or more intervals.</span></span>
 <span id="cb2-6"><span class="co" style="color: #5E5E5E;
 background-color: null;
+font-style: inherit;">    It combines intervals from all data sets, merges overlapping intervals, and further merges adjacent intervals.</span></span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    The resulting merged intervals are printed in compact form.</span></span>
+<span id="cb2-8"></span>
+<span id="cb2-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Args:</span></span>
+<span id="cb2-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        data_sets (list): A list of data sets, where each data set is represented as a tuple of intervals.</span></span>
+<span id="cb2-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">            Each interval is represented as a list with two elements: [start, end].</span></span>
+<span id="cb2-12"></span>
+<span id="cb2-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb2-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        None: The function prints the merged intervals but does not return a value.</span></span>
+<span id="cb2-15"></span>
+<span id="cb2-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example:</span></span>
+<span id="cb2-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        data_sets = [([1, 56],), ([1, 56],), ([59, 68],), ([57, 58], [150, 160])]</span></span>
+<span id="cb2-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        merge_data(data_sets)</span></span>
+<span id="cb2-19"></span>
+<span id="cb2-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Output:</span></span>
+<span id="cb2-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        Compact Merged Intervals:</span></span>
+<span id="cb2-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        [[1, 68], [150, 160]]</span></span>
+<span id="cb2-23"></span>
+<span id="cb2-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Note:</span></span>
+<span id="cb2-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - Intervals within each data set are merged if they overlap.</span></span>
+<span id="cb2-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - Intervals across different data sets are combined and merged.</span></span>
+<span id="cb2-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - Adjacent intervals are further merged into compact intervals.</span></span>
+<span id="cb2-28"></span>
+<span id="cb2-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
 font-style: inherit;">    """</span></span>
-<span id="cb2-7">    keywords <span class="op" style="color: #5E5E5E;
+<span id="cb2-30">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(data_sets)</span></span>
+<span id="cb2-31">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(data_sets) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>:</span>
+<span id="cb2-32">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print("[ID does not exist in Database]")</span></span>
+<span id="cb2-33">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> </span>
+<span id="cb2-34">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Initialize an empty list to store all intervals</span></span>
+<span id="cb2-35">    all_intervals <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb2-36"></span>
+<span id="cb2-37">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Iterate through each data set and collect all intervals</span></span>
+<span id="cb2-38">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> intervals <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> data_sets:</span>
+<span id="cb2-39">        all_intervals.extend(intervals)</span>
+<span id="cb2-40"></span>
+<span id="cb2-41">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Sort the intervals by their start values</span></span>
+<span id="cb2-42">    all_intervals.sort(key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">lambda</span> x: x[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span>
+<span id="cb2-43"></span>
+<span id="cb2-44">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Initialize a list to store the merged intervals</span></span>
+<span id="cb2-45">    merged_intervals <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb2-46"></span>
+<span id="cb2-47">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Iterate through the sorted intervals and merge overlapping intervals</span></span>
+<span id="cb2-48">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> interval <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> all_intervals:</span>
+<span id="cb2-49">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> merged_intervals <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">or</span> interval[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> merged_intervals[<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>][<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]:</span>
+<span id="cb2-50">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># If the interval does not overlap with the last merged interval, add it as a new merged interval</span></span>
+<span id="cb2-51">            merged_intervals.append(interval)</span>
+<span id="cb2-52">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span>:</span>
+<span id="cb2-53">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># If the interval overlaps with the last merged interval, merge them</span></span>
+<span id="cb2-54">            merged_intervals[<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [merged_intervals[<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>][<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>(merged_intervals[<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>][<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>], interval[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>])]</span>
+<span id="cb2-55"></span>
+<span id="cb2-56">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Further merge adjacent intervals</span></span>
+<span id="cb2-57">    final_merged_intervals <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb2-58">    current_interval <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> merged_intervals[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span>
+<span id="cb2-59"></span>
+<span id="cb2-60">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> interval <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> merged_intervals[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:]:</span>
+<span id="cb2-61">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> current_interval[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> interval[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]:</span>
+<span id="cb2-62">            current_interval[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> interval[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb2-63">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span>:</span>
+<span id="cb2-64">            final_merged_intervals.append(current_interval)</span>
+<span id="cb2-65">            current_interval <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> interval</span>
+<span id="cb2-66"></span>
+<span id="cb2-67">    final_merged_intervals.append(current_interval)</span>
+<span id="cb2-68"></span>
+<span id="cb2-69">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Print the merged intervals in compact form</span></span>
+<span id="cb2-70">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print("Disorder regions:")</span></span>
+<span id="cb2-71">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(tuple(final_merged_intervals))</span></span>
+<span id="cb2-72">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">tuple</span>(final_merged_intervals)</span>
+<span id="cb2-73"></span>
+<span id="cb2-74">    </span>
+<span id="cb2-75"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># merge_data(data_sets)</span></span></code></pre></div>
+</div>
+<p>Next, we define a function to tetrieve disorder-related information for a protein using the DISPROT/MobiDB database.</p>
+<p>Here, we only use data with highest confidence from MobiDB. All highest confidence sources of evidence are treated equaly.</p>
+<div class="cell" data-execution_count="121">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># import requests</span></span>
+<span id="cb3-2"></span>
+<span id="cb3-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> get_mobidb_disordered_data(uniprot):</span>
+<span id="cb3-4">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb3-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Retrieve disorder-related information for a protein using the DISPROT/MobiDB database.</span></span>
+<span id="cb3-6"></span>
+<span id="cb3-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    This function takes a UniProt ID as input and queries the DISPROT/MobiDB database to retrieve disorder-related</span></span>
+<span id="cb3-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    information for the specified protein. It returns a list of intervals representing disordered regions based on</span></span>
+<span id="cb3-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    specific keywords, with a preference for "curated" disorder information.</span></span>
+<span id="cb3-10"></span>
+<span id="cb3-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Args:</span></span>
+<span id="cb3-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        uniprot (str): The UniProt ID of the protein for which disorder information is to be retrieved.</span></span>
+<span id="cb3-13"></span>
+<span id="cb3-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb3-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        list: A list of intervals representing disordered regions. Each interval is represented as a tuple (start, end).</span></span>
+<span id="cb3-16"></span>
+<span id="cb3-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example:</span></span>
+<span id="cb3-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        disordered_regions = get_mobidb_disordered_data("P12345")</span></span>
+<span id="cb3-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        print("Disordered Regions:")</span></span>
+<span id="cb3-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        for interval in disordered_regions:</span></span>
+<span id="cb3-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">            print(f"[{interval[0]}, {interval[1]}]")</span></span>
+<span id="cb3-22"></span>
+<span id="cb3-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Note:</span></span>
+<span id="cb3-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - The function queries the DISPROT/MobiDB database via its API.</span></span>
+<span id="cb3-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - It prioritizes "curated" disorder information when available.</span></span>
+<span id="cb3-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - Disorder information is returned based on specific keywords.</span></span>
+<span id="cb3-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - If no disorder information is found, an empty list is returned.</span></span>
+<span id="cb3-28"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb3-29">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The information about these triplets can be found here: https://mobidb.org/help#vocabulary</span></span>
+<span id="cb3-30">    keywords <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'curated-disorder-disprot'</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">'curated-disorder-priority'</span>,</span>
+<span id="cb3-31">            <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'curated-disorder-priority'</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">'homology-disorder-priority'</span>,</span>
+<span id="cb3-32">            <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'homology-disorder-priority'</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">'homology-disorder-uniprot'</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'prediction-disorder-priority'</span>] <span class="co" style="color: #5E5E5E;
+font-style: inherit;">'derived-missing_residues-priority'</span>, </span>
+<span id="cb3-33">            <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">#,</span></span>
-<span id="cb2-8">    url<span class="op" style="color: #5E5E5E;
+font-style: inherit;">'prediction-disorder-priority'</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
+font-style: inherit;">'derived-mobile-th_90'</span>]</span>
+<span id="cb3-34"></span>
+<span id="cb3-35">    url <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">'https://mobidb.org/api/download?format=json&amp;acc='</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">+</span>uniprot</span>
-<span id="cb2-9">    <span class="co" style="color: #5E5E5E;
+font-style: inherit;">'https://mobidb.org/api/download?format=json&amp;acc='</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># check if the ID exists in DISPROT/MOBIDB</span></span>
-<span id="cb2-10">    res <span class="op" style="color: #5E5E5E;
+font-style: inherit;">+</span> uniprot</span>
+<span id="cb3-36"></span>
+<span id="cb3-37">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if the ID exists in DISPROT/MOBIDB</span></span>
+<span id="cb3-38">    res <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(url)</span>
-<span id="cb2-11"></span>
-<span id="cb2-12">    <span class="cf" style="color: #003B4F;
+<span id="cb3-39"></span>
+<span id="cb3-40">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> res.status_code <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">200</span>:</span>
-<span id="cb2-13">        <span class="cf" style="color: #003B4F;
+<span id="cb3-41">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">try</span>:</span>
-<span id="cb2-14">            result <span class="op" style="color: #5E5E5E;
+<span id="cb3-42">            result <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> res.json()</span>
-<span id="cb2-15">        <span class="cf" style="color: #003B4F;
+<span id="cb3-43">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">except</span>:</span>
-<span id="cb2-16">            <span class="bu" style="color: null;
+<span id="cb3-44">            <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"[ID does not exist in Database]"</span>)</span>
-<span id="cb2-17">        <span class="cf" style="color: #003B4F;
+font-style: inherit;">"ID DOES NOT EXITS IN THE DATABASE"</span>)</span>
+<span id="cb3-45">            <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">else</span>:</span>
-<span id="cb2-18">            disorder_found <span class="op" style="color: #5E5E5E;
+font-style: inherit;">return</span> []  <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span> <span class="va" style="color: #111111;
+font-style: inherit;"># Return an empty list if JSON parsing fails</span></span>
+<span id="cb3-46"></span>
+<span id="cb3-47">        disordered_regions <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">False</span></span>
-<span id="cb2-19"></span>
-<span id="cb2-20">            <span class="cf" style="color: #003B4F;
+font-style: inherit;">=</span> []</span>
+<span id="cb3-48"></span>
+<span id="cb3-49">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> key <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> keywords:</span>
-<span id="cb2-21">                <span class="cf" style="color: #003B4F;
+<span id="cb3-50">            <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> key <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> result.keys():</span>
-<span id="cb2-22">                    <span class="bu" style="color: null;
+<span id="cb3-51">                regions <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+font-style: inherit;">=</span> result[key][<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+font-style: inherit;">'regions'</span>]</span>
+<span id="cb3-52">                <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">{</span>key<span class="sc" style="color: #5E5E5E;
+font-style: inherit;"># print(key, regions)</span></span>
+<span id="cb3-53">                disordered_regions.append(<span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+font-style: inherit;">tuple</span>(regions))</span>
+<span id="cb3-54"></span>
+<span id="cb3-55">        <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">: </span><span class="sc" style="color: #5E5E5E;
+font-style: inherit;"># print(disordered_regions)</span></span>
+<span id="cb3-56">        <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">{</span><span class="bu" style="color: null;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">tuple</span>(result[key][<span class="st" style="color: #20794D;
+font-style: inherit;">len</span>(disordered_regions) <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">'regions'</span>])<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+font-style: inherit;">0</span>:</span>
+<span id="cb3-57">            <span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb2-23">                    disorder_found <span class="op" style="color: #5E5E5E;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">=</span> <span class="va" style="color: #111111;
+font-style: inherit;">"NO DISORDER REGION FOUND"</span>)</span>
+<span id="cb3-58">            <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">True</span></span>
-<span id="cb2-24">                    <span class="cf" style="color: #003B4F;
+font-style: inherit;">return</span> []</span>
+<span id="cb3-59">        <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">break</span></span>
-<span id="cb2-25">            <span class="cf" style="color: #003B4F;
+font-style: inherit;">return</span> disordered_regions</span>
+<span id="cb3-60"></span>
+<span id="cb3-61">    </span>
+<span id="cb3-62">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> []  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Return an empty list if the ID does not exist in the database</span></span>
+<span id="cb3-63"></span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="108">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">get_mobidb_disordered_data(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"P02751"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="108">
+<pre><code>[([1, 47], [272, 296], [2083, 2198], [2432, 2477]),
+ ([153, 166], [702, 730], [2330, 2339])]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> count_overlap(first_range, second_ranges):</span>
+<span id="cb6-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb6-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Count the number of overlapping numbers between two range tuples.</span></span>
+<span id="cb6-4"></span>
+<span id="cb6-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Args:</span></span>
+<span id="cb6-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        first_range (tuple): A tuple representing the first range as (start, end).</span></span>
+<span id="cb6-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        second_ranges (tuple or list of tuples): A tuple or list of tuples representing the second ranges.</span></span>
+<span id="cb6-8"></span>
+<span id="cb6-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb6-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        list: A list of counts, where each count corresponds to the number of overlapping numbers for each region</span></span>
+<span id="cb6-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">            in the second_ranges.</span></span>
+<span id="cb6-12"></span>
+<span id="cb6-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example:</span></span>
+<span id="cb6-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        first_range = (57, 160)</span></span>
+<span id="cb6-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        second_ranges = ([1, 68], [150, 160])</span></span>
+<span id="cb6-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        overlaps = count_overlap(first_range, second_ranges)</span></span>
+<span id="cb6-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        print(overlaps)  # Output: [12, 11]</span></span>
+<span id="cb6-18"></span>
+<span id="cb6-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb6-20">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(first_range, second_ranges)</span></span>
+<span id="cb6-21">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">isinstance</span>(second_ranges, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">tuple</span>):</span>
+<span id="cb6-22">        second_ranges <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(second_ranges)</span>
+<span id="cb6-23">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(second_ranges)</span></span>
+<span id="cb6-24">    overlaps <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb6-25"></span>
+<span id="cb6-26">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">not</span> disorder_found:</span>
-<span id="cb2-26">                <span class="bu" style="color: null;
+font-style: inherit;">not</span> <span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+font-style: inherit;">bool</span>(second_ranges):</span>
+<span id="cb6-27">        <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">"([No_DISPROT_INFO])"</span>)</span>
-<span id="cb2-27"></span>
-<span id="cb2-28">    <span class="cf" style="color: #003B4F;
+font-style: inherit;"># when disorder region is empty-fully structure-return an empty list</span></span>
+<span id="cb6-28">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> []</span>
+<span id="cb6-29">    </span>
+<span id="cb6-30">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> second_range <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> second_ranges:</span>
+<span id="cb6-31">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(second_range)</span></span>
+<span id="cb6-32">        start <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>(first_range[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], second_range[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span>
+<span id="cb6-33">        end <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">min</span>(first_range[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>], second_range[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>])</span>
+<span id="cb6-34"></span>
+<span id="cb6-35">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> start <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> end:</span>
+<span id="cb6-36">            overlap_count <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> end <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> start <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span>
+<span id="cb6-37">            overlaps.append(overlap_count)</span>
+<span id="cb6-38">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span>:</span>
-<span id="cb2-29">        <span class="bu" style="color: null;
+<span id="cb6-39">            overlaps.append(<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+font-style: inherit;">0</span>)</span>
+<span id="cb6-40"></span>
+<span id="cb6-41">    <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">"[ID does not exist in Database]"</span>)</span></code></pre></div>
+font-style: inherit;">return</span> overlaps</span>
+<span id="cb6-42"></span>
+<span id="cb6-43"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Example usage:</span></span>
+<span id="cb6-44"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># first_range = (57, 160)</span></span>
+<span id="cb6-45"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># second_ranges = ([1, 68],)#, [150, 160]</span></span>
+<span id="cb6-46"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># overlaps = count_overlap(first_range, second_ranges)</span></span>
+<span id="cb6-47"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(overlaps)</span></span></code></pre></div>
 </div>
-<div class="cell" data-tags="[]" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="kw" style="color: #003B4F;
 background-color: null;
-font-style: inherit;"># Function to read data from PED</span></span>
-<span id="cb3-2"><span class="kw" style="color: #003B4F;
+font-style: inherit;">def</span> classify_idr_regions(length_of_idr, length_in_ped):</span>
+<span id="cb7-2">    <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">def</span> print_seq(sequence):</span>
-<span id="cb3-3">    l<span class="op" style="color: #5E5E5E;
+font-style: inherit;">"""</span></span>
+<span id="cb7-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span><span class="bu" style="color: null;
+font-style: inherit;">    Classifies Intrinsic Disorder Regions (IDR) based on specified criteria.</span></span>
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">len</span>(sequence)</span>
-<span id="cb3-4">    i<span class="op" style="color: #5E5E5E;
+font-style: inherit;">    Args:</span></span>
+<span id="cb7-6"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">        length_of_idr (list of int): A list of integer values representing the lengths</span></span>
+<span id="cb7-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">0</span></span>
-<span id="cb3-5">    <span class="cf" style="color: #003B4F;
+font-style: inherit;">            of individual IDR regions.</span></span>
+<span id="cb7-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">while</span> i <span class="op" style="color: #5E5E5E;
+font-style: inherit;">        length_of_pdb (int): The total length of the Protein Data Bank (PDB) structure.</span></span>
+<span id="cb7-9"></span>
+<span id="cb7-10"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">&lt;</span> l:</span>
-<span id="cb3-6">        <span class="bu" style="color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb7-11"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">print</span>(sequence[i:i<span class="op" style="color: #5E5E5E;
+font-style: inherit;">        str: A classification string for the IDR regions based on the following criteria:</span></span>
+<span id="cb7-12"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">            - If any region has a length greater than or equal to 50 and accounts for</span></span>
+<span id="cb7-13"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">10</span>], end<span class="op" style="color: #5E5E5E;
+font-style: inherit;">              more than 95% of the PDB length, it is classified as "Full IDP."</span></span>
+<span id="cb7-14"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
+font-style: inherit;">            - If any region has a length greater than or equal to 20, it is classified as</span></span>
+<span id="cb7-15"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">' '</span>)</span>
-<span id="cb3-7">        i<span class="op" style="color: #5E5E5E;
+font-style: inherit;">              "Long IDR."</span></span>
+<span id="cb7-16"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+=</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">            - If any region has a length between 5 and 19 (inclusive), it is classified as</span></span>
+<span id="cb7-17"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">10</span></span>
-<span id="cb3-8"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">              "Short IDR."</span></span>
+<span id="cb7-18"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">#     for i in range(int(l/10)):</span></span>
-<span id="cb3-9"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">            - If all regions have lengths less than 5, the entire structure is classified</span></span>
+<span id="cb7-19"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># #         print(i)</span></span>
-<span id="cb3-10"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">              as "Fully Structured."</span></span>
+<span id="cb7-20"></span>
+<span id="cb7-21"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">#         print(sequence[i:i+10], end=' ')</span></span>
-<span id="cb3-11">    <span class="bu" style="color: null;
+font-style: inherit;">    Examples:</span></span>
+<span id="cb7-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        &gt;&gt;&gt; length_of_idr = [1, 10, 69]</span></span>
+<span id="cb7-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        &gt;&gt;&gt; length_of_pdb = 69</span></span>
+<span id="cb7-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        &gt;&gt;&gt; classification = classify_idr_regions(length_of_idr, leng_of_pdb)</span></span>
+<span id="cb7-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        &gt;&gt;&gt; print(classification)</span></span>
+<span id="cb7-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        "Long IDR"</span></span>
+<span id="cb7-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        </span></span>
+<span id="cb7-28"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Note:</span></span>
+<span id="cb7-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - If multiple criteria apply to different regions, the most strict criteria</span></span>
+<span id="cb7-30"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">          are applied. The priority is "Full IDP" &gt; "Long IDR" &gt; "Short IDR" &gt; "Fully Structured."</span></span>
+<span id="cb7-31"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - This function assumes that the input values are valid and correctly represent</span></span>
+<span id="cb7-32"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">          the lengths of IDR regions and the PDB length.</span></span>
+<span id="cb7-33"></span>
+<span id="cb7-34"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb7-35">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> length_in_ped <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>:</span>
+<span id="cb7-36">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Not Classified"</span></span>
+<span id="cb7-37">    </span>
+<span id="cb7-38">    classifications <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb7-39"></span>
+<span id="cb7-40">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> idr_length <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> length_of_idr:</span>
+<span id="cb7-41">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> idr_length <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">and</span> (idr_length <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> length_in_ped) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.95</span>:</span>
+<span id="cb7-42">            classifications.append(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Full IDP"</span>)</span>
+<span id="cb7-43">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">elif</span> idr_length <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>:</span>
+<span id="cb7-44">            classifications.append(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Long IDR"</span>)</span>
+<span id="cb7-45">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">elif</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> idr_length <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">19</span>:</span>
+<span id="cb7-46">            classifications.append(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Short IDR"</span>)</span>
+<span id="cb7-47">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span>:</span>
+<span id="cb7-48">            classifications.append(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Undefined"</span>)</span>
+<span id="cb7-49"></span>
+<span id="cb7-50">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Determine the final classification based on priority</span></span>
+<span id="cb7-51">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Full IDP"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> classifications:</span>
+<span id="cb7-52">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fully IDP"</span></span>
+<span id="cb7-53">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">elif</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Long IDR"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> classifications:</span>
+<span id="cb7-54">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Long IDR"</span></span>
+<span id="cb7-55">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">elif</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Short IDR"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> classifications:</span>
+<span id="cb7-56">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Short IDR"</span></span>
+<span id="cb7-57">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span>:</span>
+<span id="cb7-58">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fully Structured"</span></span>
+<span id="cb7-59"></span>
+<span id="cb7-60"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Example usage:</span></span>
+<span id="cb7-61">length_of_idr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>]</span>
+<span id="cb7-62">length_in_ped <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">18</span></span>
+<span id="cb7-63">classification <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> classify_idr_regions(length_of_idr, length_in_ped)</span>
+<span id="cb7-64"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">""</span>)</span>
-<span id="cb3-12">    </span>
-<span id="cb3-13"><span class="kw" style="color: #003B4F;
+font-style: inherit;">"Classification:"</span>, classification)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Classification: Not Classified</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb9-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">This function work very well. need some modifies for printing.</span></span>
+<span id="cb9-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb9-4"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> get_ped_stats(PEDID):</span>
-<span id="cb3-14">    url <span class="op" style="color: #5E5E5E;
+<span id="cb9-5">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb9-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Retrieve and display protein ensemble deposition (PED) statistics for a given PED entry.</span></span>
+<span id="cb9-7"></span>
+<span id="cb9-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    This function queries the Protein Ensemble Deposition (PED) API to retrieve statistics and information for a</span></span>
+<span id="cb9-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    specific PED entry identified by its PEDID. It provides details such as the entry ID, title, and information</span></span>
+<span id="cb9-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    about chains and fragments within the entry. Additionally, it calculates the number of overlapping residues</span></span>
+<span id="cb9-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    between fragment positions and disordered regions retrieved from the DISPROT/MobiDB database.</span></span>
+<span id="cb9-12"></span>
+<span id="cb9-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Args:</span></span>
+<span id="cb9-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        PEDID (str): The PED entry ID for the entry to retrieve statistics.</span></span>
+<span id="cb9-15"></span>
+<span id="cb9-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb9-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        None: The function prints the PED statistics and overlap counts but does not return a value.</span></span>
+<span id="cb9-18"></span>
+<span id="cb9-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example:</span></span>
+<span id="cb9-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        get_ped_stats("PED12345")</span></span>
+<span id="cb9-21"></span>
+<span id="cb9-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Note:</span></span>
+<span id="cb9-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - This function requires the 'requests' library for HTTP requests and 'colorama' for colored output.</span></span>
+<span id="cb9-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - It queries the PED API to obtain entry information.</span></span>
+<span id="cb9-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - It retrieves disordered region information using the DISPROT/MobiDB database.</span></span>
+<span id="cb9-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        - Overlapping residues between fragment positions and disordered regions are calculated and displayed.</span></span>
+<span id="cb9-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb9-28">    url <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://deposition.proteinensemble.org/api/v1/entries/"</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> PEDID</span>
-<span id="cb3-15">    res <span class="op" style="color: #5E5E5E;
+<span id="cb9-29">    res <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(url).json()</span>
-<span id="cb3-16">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># source information-UniProt</span></span>
-<span id="cb3-17">    <span class="bu" style="color: null;
+<span id="cb9-30">    </span>
+<span id="cb9-31">    <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"********************************************************************************"</span>)</span>
-<span id="cb3-18">    <span class="bu" style="color: null;
+font-style: inherit;">"PED ID</span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">print</span>(Back.GREEN <span class="op" style="color: #5E5E5E;
+font-style: inherit;">\t</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">+</span><span class="st" style="color: #20794D;
+font-style: inherit;"># chains in entry</span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'Entry ID:'</span>)</span>
-<span id="cb3-19">    <span class="bu" style="color: null;
+font-style: inherit;">\t</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">print</span>(Style.RESET_ALL)</span>
-<span id="cb3-20">    <span class="bu" style="color: null;
+font-style: inherit;">Protein name</span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">print</span>(res[<span class="st" style="color: #20794D;
+font-style: inherit;">\t\"</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'entry_id'</span>])</span>
-<span id="cb3-21">    <span class="bu" style="color: null;
+font-style: inherit;">Length in PED (tag counted)</span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+font-style: inherit;">\"\t</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">f"Title: </span><span class="sc" style="color: #5E5E5E;
+font-style: inherit;">UniProt</span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">{</span>res[<span class="st" style="color: #20794D;
+font-style: inherit;">\t</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'description'</span>]<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">Length UniProt</span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">.</span>get(<span class="st" style="color: #20794D;
+font-style: inherit;">\t\"</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'title'</span>)<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">Disordered region from MobiDB/DisProt</span><span class="ch" style="color: #20794D;
 background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+font-style: inherit;">\"\t\"</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-22">    </span>
-<span id="cb3-23">    construct_chains <span class="op" style="color: #5E5E5E;
+font-style: inherit;">PDB region (align to Uniprot)</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\"\t</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Length of IDR</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> Classification"</span>)</span>
+<span id="cb9-32">    </span>
+<span id="cb9-33">    construct_chains <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> res[<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'construct_chains'</span>]</span>
-<span id="cb3-24"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#     print('Construct Chains:')</span></span>
-<span id="cb3-25">    n_chains<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(construct_chains)</span>
-<span id="cb3-26">    <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"Number of chains in this entry: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>n_chains<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-27">    </span>
-<span id="cb3-28">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#     working with single chain in construct</span></span>
-<span id="cb3-29">    <span class="cf" style="color: #003B4F;
+<span id="cb9-34">    </span>
+<span id="cb9-35">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> chain <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> construct_chains:</span>
-<span id="cb3-30">        <span class="bu" style="color: null;
+<span id="cb9-36">        <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">"----"</span>)</span>
-<span id="cb3-31">        <span class="cf" style="color: #003B4F;
+font-style: inherit;">len</span>(construct_chains) <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">if</span> n_chains <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>:</span>
-<span id="cb3-32">            <span class="bu" style="color: null;
+<span id="cb9-37">            <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+font-style: inherit;"># chain_name = chain['chain_name']</span></span>
+<span id="cb9-38">            entry <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">f"Chain name: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>chain[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'chain_name'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-33">        <span class="cf" style="color: #003B4F;
+font-style: inherit;">=</span> PEDID</span>
+<span id="cb9-39">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span>:</span>
-<span id="cb3-34">            <span class="bu" style="color: null;
+<span id="cb9-40">            <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+font-style: inherit;"># chain_name = res['entry_id'] + '_' + chain['chain_name']</span></span>
+<span id="cb9-41">            entry<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">f"Chain name: </span><span class="sc" style="color: #5E5E5E;
+font-style: inherit;">=</span> PEDID <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">{</span>res[<span class="st" style="color: #20794D;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">'entry_id'</span>]<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">'_'</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+font-style: inherit;">+</span> chain[<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">_</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>chain[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'chain_name'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-35">        </span>
-<span id="cb3-36"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#         print(chain['alignment'])</span></span>
-<span id="cb3-37">        n_fragments <span class="op" style="color: #5E5E5E;
+font-style: inherit;">'chain_name'</span>]</span>
+<span id="cb9-42">        </span>
+<span id="cb9-43">        n_fragments <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">len</span>(chain[<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'fragments'</span>])</span>
-<span id="cb3-38">        fragments <span class="op" style="color: #5E5E5E;
+<span id="cb9-44">        fragments <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> chain[<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'fragments'</span>]</span>
-<span id="cb3-39">        <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f'There are </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>n_fragments<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> fragment(s) in this chain'</span>)</span>
-<span id="cb3-40">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># working with fragment</span></span>
-<span id="cb3-41">        <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(Back.GREEN <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"***INFORMATION ABOUT EACH FRAGMENT***"</span>)</span>
-<span id="cb3-42">        <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(Style.RESET_ALL)</span>
-<span id="cb3-43">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print(chain['alignment'])</span></span>
-<span id="cb3-44">        <span class="cf" style="color: #003B4F;
+<span id="cb9-45">        </span>
+<span id="cb9-46">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> fragment, fragment_stats <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -449,85 +1135,33 @@ background-color: null;
 font-style: inherit;">zip</span>(fragments, chain[<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'fragments_stats'</span>]):</span>
-<span id="cb3-45">            <span class="bu" style="color: null;
+<span id="cb9-47">            protein_name <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">print</span>(Back.YELLOW <span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span> fragment[<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+font-style: inherit;">'description'</span>]</span>
+<span id="cb9-48">            length_in_ped <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">"Protein name:"</span>,end<span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span> fragment_stats[<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
+font-style: inherit;">'length_total_pdb'</span>]</span>
+<span id="cb9-49">            uniprot <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">''</span>)</span>
-<span id="cb3-46">            <span class="bu" style="color: null;
+font-style: inherit;">=</span> fragment_stats[<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">print</span>(Style.RESET_ALL,end<span class="op" style="color: #5E5E5E;
+font-style: inherit;">'uniprot'</span>]</span>
+<span id="cb9-50">            length_uniprot <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
+font-style: inherit;">=</span> fragment_stats[<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">''</span>)</span>
-<span id="cb3-47">            <span class="bu" style="color: null;
+font-style: inherit;">'length_total_uniprot'</span>]</span>
+<span id="cb9-51">            </span>
+<span id="cb9-52">            mobi_disorder_regions <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">f" </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'description'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-48">            <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print("Source_sequence (Full sequence from UniProt):")</span></span>
-<span id="cb3-49">            <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print_seq(fragment['source_sequence'])</span></span>
-<span id="cb3-50">            <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"POSITION OF FRAGMENT IN UNIPROT SEQUENCE: ([</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'start_position'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">, </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'end_position'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">])"</span>)</span>
-<span id="cb3-51"></span>
-<span id="cb3-52">            <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"uniprot_acc: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'uniprot_acc'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-53">            <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"****"</span>)  </span>
-<span id="cb3-54">            </span>
-<span id="cb3-55">            <span class="cf" style="color: #003B4F;
+font-style: inherit;">tuple</span>()</span>
+<span id="cb9-53">            <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> fragment_stats[<span class="st" style="color: #20794D;
 background-color: null;
@@ -538,108 +1172,109 @@ background-color: null;
 font-style: inherit;">not</span> <span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">None</span>:</span>
-<span id="cb3-56">                               </span>
-<span id="cb3-57">                <span class="co" style="color: #5E5E5E;
+<span id="cb9-54">                mobi_disorder_regions <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Length, starting and ending residue in PED PDB file</span></span>
-<span id="cb3-58">                <span class="bu" style="color: null;
+font-style: inherit;">=</span> merge_data(get_mobidb_disordered_data(fragment_stats[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'uniprot'</span>]))</span>
+<span id="cb9-55">            </span>
+<span id="cb9-56">            pdb_region <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">tuple</span>([fragment[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'start_position'</span>], fragment[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'end_position'</span>]])</span>
+<span id="cb9-57">            length_of_idr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> count_overlap(pdb_region, mobi_disorder_regions)</span>
+<span id="cb9-58">            classification <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> classify_idr_regions(length_of_idr, length_in_ped)</span>
+<span id="cb9-59">            </span>
+<span id="cb9-60">            <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
-font-style: inherit;">f"Length_total_PDB: </span><span class="sc" style="color: #5E5E5E;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">{</span>fragment_stats[<span class="st" style="color: #20794D;
+font-style: inherit;">{</span>entry<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">'length_total_pdb'</span>]<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(construct_chains)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>protein_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>length_in_ped<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>uniprot<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>length_uniprot<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>mobi_disorder_regions<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>pdb_region<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>length_of_idr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\t</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>classification<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span>
-<span id="cb3-59">                <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print(f"Start Position alig: {fragment_stats['start_position_alig']}")</span></span>
-<span id="cb3-60">                <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print(f"End Position align: {fragment_stats['end_position_alig']}")</span></span>
-<span id="cb3-61">                <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"Start Position PDB: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment_stats[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'start_position_pdb'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-62">                <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"End Position PDB: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment_stats[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'end_position_pdb'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-63">                </span>
-<span id="cb3-64">                <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"UniProt: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment_stats[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'uniprot'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-65">                <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"Length_total_UniProt: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fragment_stats[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'length_total_uniprot'</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb3-66">                <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Disordered region from Disprot:"</span>)</span>
-<span id="cb3-67">                get_mobidb_disordered_stats(fragment_stats[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'uniprot'</span>])</span>
-<span id="cb3-68">                <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="ch" style="color: #20794D;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">..."</span>)</span></code></pre></div>
+<span id="cb9-61"></span>
+<span id="cb9-62"></span>
+<span id="cb9-63"></span></code></pre></div>
 </div>
-<p>To use the functions, run the following block code in which, <code>ID</code> is the entry ID.</p>
-<div class="cell" data-tags="[]" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">ID<span class="op" style="color: #5E5E5E;
+</section>
+<section id="example-usage" class="level1">
+<h1>Example usage:</h1>
+<div class="cell" data-execution_count="124">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">ID<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">431</span></span>
-<span id="cb4-2">PEDID<span class="op" style="color: #5E5E5E;
+font-style: inherit;">57</span></span>
+<span id="cb10-2">PEDID<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
@@ -654,221 +1289,22 @@ background-color: null;
 font-style: inherit;">:05d}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'</span></span>
-<span id="cb4-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print(PEDID)</span></span>
-<span id="cb4-4">get_ped_stats(PEDID)</span></code></pre></div>
+<span id="cb10-3">get_ped_stats(PEDID)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>********************************************************************************
-Entry ID:
-
-PED00431
-Title: Solution structure of the LEDGF/p75 IBD - IWS1 complex
-Number of chains in this entry: 1
-----
-Chain name: A
-There are 3 fragment(s) in this chain
-***INFORMATION ABOUT EACH FRAGMENT***
-
-Protein name: Expression tag
-POSITION OF FRAGMENT IN UNIPROT SEQUENCE: ([1, 6])
-uniprot_acc: None
-****
-Protein name: LEDGF
-POSITION OF FRAGMENT IN UNIPROT SEQUENCE: ([345, 442])
-uniprot_acc: O75475
-****
-Length_total_PDB: 206
-Start Position PDB: 345
-End Position PDB: 442
-UniProt: O75475
-Length_total_UniProt: 530
-Disordered region from Disprot:
-curated-disorder-disprot: ([430, 471],)
-
-...
-Protein name: IWS1
-POSITION OF FRAGMENT IN UNIPROT SEQUENCE: ([447, 548])
-uniprot_acc: Q96ST2
-****
-Length_total_PDB: 206
-Start Position PDB: 447
-End Position PDB: 548
-UniProt: Q96ST2
-Length_total_UniProt: 819
-Disordered region from Disprot:
-prediction-disorder-priority: ([1, 446], [549, 549], [696, 819])
-
-...</code></pre>
+<pre><code>PED ID  # chains in entry   Protein name    "Length in PED (tag counted)"   UniProt Length UniProt  "Disordered region from MobiDB/DisProt" "PDB region (align to Uniprot)" Length of IDR    Classification
+PED00057_A  2   Poly [ADP-ribose] polymerase 1  214 P09874  1014    ([93, 106], [197, 233], [355, 386], [483, 530], [648, 661]) (1, 214)    [14, 18, 0, 0, 0]   Short IDR
+PED00057_B  2   45-mer  45  None    44  ()  (1, 44) []  Fully Structured</code></pre>
 </div>
 </div>
-<p>To manually check the information from MobiDB:</p>
-<div class="cell" data-execution_count="75">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">get_mobidb_disordered_stats(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"P0DP29"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>([No_DISPROT_INFO])</code></pre>
-</div>
-</div>
-<p>Note that when the output is <code>([No_DISPROT_INFO])</code>, we need to check from MobiDB website to see if the protein is fully structured or the protein does not exist on the database.</p>
-</section>
-<section id="other-functions" class="level1">
-<h1>Other functions</h1>
-<p>In the previous sections, we discussed the fundamental core functions for extracting information. However, the world of data analysis often requires more than just the basics. In this section, we’ll delve into some other essential functions that can be incredibly valuable in specific scenarios.</p>
-<p>One common situation that researchers often encounter is the need to handle disordered residues. In some cases, curated information about disordered residues may differ from predictions. To create a unified approach where a residue is considered disordered if either it’s curated as disordered or predicted as disordered, you can employ the following code snippet. It’s worth noting that the code provided accomplishes the task but doesn’t standardize the results yet.</p>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Example:</span></span>
-<span id="cb8-2">disorder_regions_1 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">12</span>]]</span>
-<span id="cb8-3">disorder_regions_2 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>], [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">19</span>]]</span>
-<span id="cb8-4">disorder_region <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> disorder_regions_1<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span>disorder_regions_2</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">disorder_region</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>[[8, 12], [1, 10], [15, 19]]</code></pre>
-</div>
-</div>
-<p>As we can see, disorder contain 3 regions that are separated by some residues that makes it not consecutive.</p>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># extract every residues in disorder region</span></span>
-<span id="cb11-2">final_list <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> []</span>
-<span id="cb11-3"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> reg <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> disorder_region:</span>
-<span id="cb11-4">    final_list <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(reg[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>], reg[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>]<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>))</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># residues that are disordered</span></span>
-<span id="cb12-2">final_list</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>[8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18, 19]</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># remove duplicated value</span></span>
-<span id="cb14-2">final_list <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>( <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">dict</span>.fromkeys(final_list) )</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># sort by residue indices for group them togather latter</span></span>
-<span id="cb15-2">final_list <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">sorted</span>(final_list)</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1">ranges <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> []</span>
-<span id="cb16-2"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> k,g <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> groupby(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">enumerate</span>(final_list),<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">lambda</span> x:x[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>]<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>x[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>]):</span>
-<span id="cb16-3">    group <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> (<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">map</span>(itemgetter(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>),g))</span>
-<span id="cb16-4">    group <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">map</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">int</span>,group))</span>
-<span id="cb16-5">    ranges.append((group[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>],group[<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>]))</span></code></pre></div>
-</div>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">ranges</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<pre><code>[(1, 12), (15, 19)]</code></pre>
-</div>
-</div>
-<p>See! two region of <code>[1,10]</code> and <code>[8, 12]</code> have been merge to <code>[1,12]</code></p>
-<p>This code snippet will help you harmonize the disparate sources of data related to disordered residues, allowing for a more comprehensive analysis. However, for a complete and standardized solution, further steps may be necessary, depending on your specific use case.</p>
-<p>In the world of data analysis, having a variety of functions at your disposal is crucial. These additional functions go beyond the basics and empower you to handle more complex scenarios, enhancing the depth and accuracy of your analyses.</p>
 
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Monzon2020" class="csl-entry">
+Monzon, Alexander Miguel, András Hatos, Marco Necci, Damiano Piovesan, and Silvio C. E. Tosatto. 2020. <span>“Exploring Protein Intrinsic Disorder with MobiDB.”</span> In <em>Intrinsically Disordered Proteins: Methods and Protocols</em>, edited by Birthe B. Kragelund and Karen Skriver, 127–43. New York, NY: Springer US. <a href="https://doi.org/10.1007/978-1-0716-0524-0_6">https://doi.org/10.1007/978-1-0716-0524-0_6</a>.
+</div>
 <div id="ref-Necci2016" class="csl-entry">
 Necci, Marco, Damiano Piovesan, and Silvio C. E. Tosatto. 2016. <span>“<span class="nocase">Large‐scale analysis of intrinsic disorder flavors and associated functions in the protein sequence universe</span>.”</span> <em>Protein Science</em> 25 (12): 2164–74. <a href="https://doi.org/10.1002/pro.3041">https://doi.org/10.1002/pro.3041</a>.
 </div>
@@ -877,7 +1313,7 @@ Necci, Marco, Damiano Piovesan, and Silvio C. E. Tosatto. 2016. <span>“<span c
   <category>PED</category>
   <category>MobiDB</category>
   <category>DisProt</category>
-  <guid>https://qvv5013.github.io/posts/2023/October/IDP_classifications.html</guid>
+  <guid>https://qvv5013.github.io/posts/2023/October/Extracting_disorder_regions_from_MobiDB.html</guid>
   <pubDate>Sun, 01 Oct 2023 00:00:00 GMT</pubDate>
 </item>
 <item>
