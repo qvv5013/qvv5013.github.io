@@ -238,7 +238,11 @@ div.csl-indent {
   <li><a href="#classify-protein-based-on-the-length-of-disorder-regions" id="toc-classify-protein-based-on-the-length-of-disorder-regions" class="nav-link" data-scroll-target="#classify-protein-based-on-the-length-of-disorder-regions">Classify protein based on the length of disorder regions</a></li>
   <li><a href="#combine-all-together" id="toc-combine-all-together" class="nav-link" data-scroll-target="#combine-all-together">Combine all together:</a></li>
   </ul></li>
-  <li><a href="#example-usage" id="toc-example-usage" class="nav-link" data-scroll-target="#example-usage">Example usage:</a></li>
+  <li><a href="#example-usage" id="toc-example-usage" class="nav-link" data-scroll-target="#example-usage">Example usage:</a>
+  <ul class="collapse">
+  <li><a href="#explanation-of-the-example" id="toc-explanation-of-the-example" class="nav-link" data-scroll-target="#explanation-of-the-example">Explanation of the example</a></li>
+  </ul></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes:</a></li>
   </ul>
 </nav>
     </div>
@@ -256,8 +260,8 @@ div.csl-indent {
 <p>Necci and colleagues proposed a classification scheme for intrinsically disordered proteins (IDPs) based on the number of consecutive disordered residues:</p>
 <ol type="1">
 <li><p>Short IDR: Proteins with <span class="math inline">\(5-19\)</span> consecutive disordered residues.</p></li>
-<li><p>Long IDR: Proteins with 20 or more consecutive disordered residues.</p></li>
-<li><p>Fully Disordered Protein: Proteins with 50 or more consecutive disordered residues and more than 95% of their content being disordered.</p></li>
+<li><p>Long IDR: Proteins with <span class="math inline">\(\ge 20\)</span> consecutive disordered residues.</p></li>
+<li><p>Fully Disordered Protein: Proteins with <span class="math inline">\(\ge 50\)</span> consecutive disordered residues and more than 95% of their content being disordered.</p></li>
 </ol>
 <p>This classification scheme provides a straightforward way to categorize proteins based on their disorder characteristics, offering valuable insights into their potential functions.</p>
 </section>
@@ -285,7 +289,7 @@ div.csl-indent {
 <h1>Code implementation</h1>
 <section id="import-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="import-libraries">Import libraries</h2>
-<div class="cell" data-is_executing="true">
+<div class="cell" data-is_executing="true" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import library</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -308,82 +312,82 @@ div.csl-indent {
 <li><p><code>prediction-disorder-priority</code>: Residues are annotated with the source with the highest of evidence from prediction (see above for more information)</p></li>
 <li><p><code>derived-mobile-th_90</code>: Mobile residues, residues are annotated when at least 90% of the children are annotated</p></li>
 </ol>
-<div class="cell" data-execution_count="121">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mobidb_disordered_data(uniprot):</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Retrieve disorder-related information for a protein using the DISPROT/MobiDB database.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    This function takes a UniProt ID as input and queries the DISPROT/MobiDB database to retrieve disorder-related</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    information for the specified protein. It returns a list of intervals representing disordered regions based on</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    specific keywords, with a preference for "curated" disorder information.</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">        uniprot (str): The UniProt ID of the protein for which disorder information is to be retrieved.</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">        list: A list of intervals representing disordered regions. Each interval is represented as a tuple (start, end).</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Example:</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">        disordered_regions = get_mobidb_disordered_data("P12345")</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">        print("Disordered Regions:")</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">        for interval in disordered_regions:</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">            print(f"[{interval[0]}, {interval[1]}]")</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">    Note:</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">        - The function queries the DISPROT/MobiDB database via its API.</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">        - It prioritizes "curated" disorder information when available.</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">        - Disorder information is returned based on specific keywords.</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">        - If no disorder information is found, an empty list is returned.</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The information about these triplets can be found here: https://mobidb.org/help#vocabulary</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    keywords <span class="op">=</span> [<span class="st">'curated-disorder-priority'</span>,</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            <span class="st">'homology-disorder-priority'</span>,</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>            <span class="st">'derived-missing_residues-priority'</span>, </span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">'prediction-disorder-priority'</span>, <span class="st">'derived-mobile-th_90'</span>]</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">'https://mobidb.org/api/download?format=json&amp;acc='</span> <span class="op">+</span> uniprot</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the ID exists in DISPROT/MOBIDB</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> res.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>            result <span class="op">=</span> res.json()</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>:</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"ID DOES NOT EXITS IN THE DATABASE"</span>)</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> []  <span class="co"># Return an empty list if JSON parsing fails</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        disordered_regions <span class="op">=</span> []</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> key <span class="kw">in</span> keywords:</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> key <span class="kw">in</span> result.keys():</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                regions <span class="op">=</span> result[key][<span class="st">'regions'</span>]</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                <span class="co"># print(key, regions)</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                disordered_regions.append(<span class="bu">tuple</span>(regions))</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(disordered_regions)</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(disordered_regions) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"NO DISORDER REGION FOUND"</span>)</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> []</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> disordered_regions</span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> []  <span class="co"># Return an empty list if the ID does not exist in the database</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mobidb_disordered_data(uniprot):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Retrieve disorder-related information for a protein using the DISPROT/MobiDB database.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    This function takes a UniProt ID as input and queries the DISPROT/MobiDB database to retrieve disorder-related</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    information for the specified protein. It returns a list of intervals representing disordered regions based on</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    specific keywords, with a preference for "curated" disorder information.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">        uniprot (str): The UniProt ID of the protein for which disorder information is to be retrieved.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">        list: A list of intervals representing disordered regions. Each interval is represented as a tuple (start, end).</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Example:</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">        disordered_regions = get_mobidb_disordered_data("P12345")</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">        print("Disordered Regions:")</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">        for interval in disordered_regions:</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">            print(f"[{interval[0]}, {interval[1]}]")</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Note:</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">        - The function queries the DISPROT/MobiDB database via its API.</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">        - It prioritizes "curated" disorder information when available.</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">        - Disorder information is returned based on specific keywords.</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">        - If no disorder information is found, an empty list is returned.</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The information about these triplets can be found here: https://mobidb.org/help#vocabulary</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    keywords <span class="op">=</span> [<span class="st">'curated-disorder-priority'</span>,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                <span class="st">'homology-disorder-priority'</span>,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                <span class="st">'derived-missing_residues-priority'</span>, </span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                <span class="st">'prediction-disorder-priority'</span>, <span class="st">'derived-mobile-th_90'</span>] <span class="co">#, , 'derived-mobile_context_dependent-th_90'</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">'https://mobidb.org/api/download?format=json&amp;acc='</span> <span class="op">+</span> uniprot</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the ID exists in DISPROT/MOBIDB</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> res.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>            result <span class="op">=</span> res.json()</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>:</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"ID DOES NOT EXITS IN THE DATABASE"</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> []  <span class="co"># Return an empty list if JSON parsing fails</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        disordered_regions <span class="op">=</span> []</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> key <span class="kw">in</span> keywords:</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> key <span class="kw">in</span> result.keys():</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>                regions <span class="op">=</span> result[key][<span class="st">'regions'</span>]</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                <span class="co"># print(key, regions)</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                disordered_regions.append(<span class="bu">tuple</span>(regions))</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(disordered_regions)</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(disordered_regions) <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"NO DISORDER REGION FOUND"</span>)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="st">"Fully structured"</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> disordered_regions</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> []  <span class="co"># Return an empty list if the ID does not exist in the database</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="108">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>get_mobidb_disordered_data(<span class="st">"P02751"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="108">
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>get_mobidb_disordered_data(<span class="st">"P02751"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>[([1, 47], [272, 296], [2083, 2198], [2432, 2477]),
  ([153, 166], [702, 730], [2330, 2339])]</code></pre>
 </div>
 </div>
+<p>As we can see, here the function only extracts disorder regions from various criterias and not doing anything. To be more clear, we need to sort out, combine continous regions in a compact form for more intuitative.</p>
 </section>
 <section id="merge-data-in-compact-continuous-region-form" class="level2">
 <h2 class="anchored" data-anchor-id="merge-data-in-compact-continuous-region-form">Merge data in compact, continuous region form</h2>
 <p>As an example, the <code>get_mobidb_disordered_data</code> prints all regions without sorting. This is quite messy. We will define a <code>merge_data</code> function to sort, combine the results and print in compact form:</p>
-<div class="cell" data-execution_count="2">
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> merge_data(data_sets):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Merge and compact intervals from multiple data sets.</span></span>
@@ -414,56 +418,60 @@ div.csl-indent {
 <span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(data_sets)</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(data_sets) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print("[ID does not exist in Database]")</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> </span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize an empty list to store all intervals</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    all_intervals <span class="op">=</span> []</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate through each data set and collect all intervals</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> intervals <span class="kw">in</span> data_sets:</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        all_intervals.extend(intervals)</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sort the intervals by their start values</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    all_intervals.sort(key<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="dv">0</span>])</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(data_sets, <span class="bu">str</span>):</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if protein is fully structure, data_sets will be string- then do nothing</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> []</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(data_sets) <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print("[ID does not exist in Database]")</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> []</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize an empty list to store all intervals</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    all_intervals <span class="op">=</span> []</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate through each data set and collect all intervals</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> intervals <span class="kw">in</span> data_sets:</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        all_intervals.extend(intervals)</span>
 <span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize a list to store the merged intervals</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    merged_intervals <span class="op">=</span> []</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sort the intervals by their start values</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    all_intervals.sort(key<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="dv">0</span>])</span>
 <span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate through the sorted intervals and merge overlapping intervals</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> interval <span class="kw">in</span> all_intervals:</span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> merged_intervals <span class="kw">or</span> interval[<span class="dv">0</span>] <span class="op">&gt;</span> merged_intervals[<span class="op">-</span><span class="dv">1</span>][<span class="dv">1</span>]:</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If the interval does not overlap with the last merged interval, add it as a new merged interval</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>            merged_intervals.append(interval)</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If the interval overlaps with the last merged interval, merge them</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>            merged_intervals[<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> [merged_intervals[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>], <span class="bu">max</span>(merged_intervals[<span class="op">-</span><span class="dv">1</span>][<span class="dv">1</span>], interval[<span class="dv">1</span>])]</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Further merge adjacent intervals</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    final_merged_intervals <span class="op">=</span> []</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    current_interval <span class="op">=</span> merged_intervals[<span class="dv">0</span>]</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> interval <span class="kw">in</span> merged_intervals[<span class="dv">1</span>:]:</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_interval[<span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span> <span class="op">==</span> interval[<span class="dv">0</span>]:</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>            current_interval[<span class="dv">1</span>] <span class="op">=</span> interval[<span class="dv">1</span>]</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>            final_merged_intervals.append(current_interval)</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>            current_interval <span class="op">=</span> interval</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>    final_merged_intervals.append(current_interval)</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Print the merged intervals in compact form</span></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print("Disorder regions:")</span></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(tuple(final_merged_intervals))</span></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">tuple</span>(final_merged_intervals)</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co"># merge_data(data_sets)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize a list to store the merged intervals</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    merged_intervals <span class="op">=</span> []</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate through the sorted intervals and merge overlapping intervals</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> interval <span class="kw">in</span> all_intervals:</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> merged_intervals <span class="kw">or</span> interval[<span class="dv">0</span>] <span class="op">&gt;</span> merged_intervals[<span class="op">-</span><span class="dv">1</span>][<span class="dv">1</span>]:</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If the interval does not overlap with the last merged interval, add it as a new merged interval</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>            merged_intervals.append(interval)</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If the interval overlaps with the last merged interval, merge them</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>            merged_intervals[<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> [merged_intervals[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>], <span class="bu">max</span>(merged_intervals[<span class="op">-</span><span class="dv">1</span>][<span class="dv">1</span>], interval[<span class="dv">1</span>])]</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Further merge adjacent intervals</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    final_merged_intervals <span class="op">=</span> []</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>    current_interval <span class="op">=</span> merged_intervals[<span class="dv">0</span>]</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> interval <span class="kw">in</span> merged_intervals[<span class="dv">1</span>:]:</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_interval[<span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span> <span class="op">==</span> interval[<span class="dv">0</span>]:</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>            current_interval[<span class="dv">1</span>] <span class="op">=</span> interval[<span class="dv">1</span>]</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>            final_merged_intervals.append(current_interval)</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>            current_interval <span class="op">=</span> interval</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>    final_merged_intervals.append(current_interval)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Print the merged intervals in compact form</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print("Disorder regions:")</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(tuple(final_merged_intervals))</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">tuple</span>(final_merged_intervals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="count-how-many-disorder-residues-in-a-given-sequence" class="level2">
 <h2 class="anchored" data-anchor-id="count-how-many-disorder-residues-in-a-given-sequence">Count how many disorder residues in a given sequence</h2>
-<div class="cell" data-execution_count="36">
+<p>Alright, Now we have the information about where is the disorder regions of full sequence (MobiDB) and where is the sequence in PED mapping to MobiDB. Question is how many residues in PED sequence are disorder? For that purpose, we define a <code>count_overlap</code> function to do this job.</p>
+<p>This function takes two arguments (as docs of function below)</p>
+<p><code>first_range</code> is the region of PED sequence, as a tuple</p>
+<p><code>second_ranges</code> is the disorder regions from MobiDB, is a tuple or list of tuples in case sequence contains many disorder regions and not continous.</p>
+<div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count_overlap(first_range, second_ranges):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Count the number of overlapping numbers between two range tuples.</span></span>
@@ -505,167 +513,193 @@ div.csl-indent {
 <span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>            overlaps.append(<span class="dv">0</span>)</span>
 <span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> overlaps</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Example usage:</span></span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="co"># first_range = (57, 160)</span></span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="co"># second_ranges = ([1, 68],)#, [150, 160]</span></span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="co"># overlaps = count_overlap(first_range, second_ranges)</span></span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co"># print(overlaps)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example usage:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>first_range <span class="op">=</span> (<span class="dv">57</span>, <span class="dv">160</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>second_ranges <span class="op">=</span> ([<span class="dv">1</span>, <span class="dv">68</span>],)<span class="co">#, [150, 160]</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>overlaps <span class="op">=</span> count_overlap(first_range, second_ranges)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(overlaps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[12]</code></pre>
+</div>
 </div>
 </section>
 <section id="classify-protein-based-on-the-length-of-disorder-regions" class="level2">
 <h2 class="anchored" data-anchor-id="classify-protein-based-on-the-length-of-disorder-regions">Classify protein based on the length of disorder regions</h2>
-<div class="cell" data-execution_count="58">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify_idr_regions(length_of_idr, length_in_ped):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Classifies Intrinsic Disorder Regions (IDR) based on specified criteria.</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">        length_of_idr (list of int): A list of integer values representing the lengths</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">            of individual IDR regions.</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">        length_of_pdb (int): The total length of the Protein Data Bank (PDB) structure.</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">        str: A classification string for the IDR regions based on the following criteria:</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">            - If any region has a length greater than or equal to 50 and accounts for</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">              more than 95% of the PDB length, it is classified as "Full IDP."</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">            - If any region has a length greater than or equal to 20, it is classified as</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">              "Long IDR."</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">            - If any region has a length between 5 and 19 (inclusive), it is classified as</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">              "Short IDR."</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">            - If all regions have lengths less than 5, the entire structure is classified</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">              as "Fully Structured."</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Examples:</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; length_of_idr = [1, 10, 69]</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; length_of_pdb = 69</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; classification = classify_idr_regions(length_of_idr, leng_of_pdb)</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; print(classification)</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">        "Long IDR"</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">    Note:</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">        - If multiple criteria apply to different regions, the most strict criteria</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">          are applied. The priority is "Full IDP" &gt; "Long IDR" &gt; "Short IDR" &gt; "Fully Structured."</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co">        - This function assumes that the input values are valid and correctly represent</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">          the lengths of IDR regions and the PDB length.</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> length_in_ped <span class="op">&lt;</span> <span class="dv">20</span>:</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Not Classified"</span></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    classifications <span class="op">=</span> []</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idr_length <span class="kw">in</span> length_of_idr:</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> idr_length <span class="op">&gt;=</span> <span class="dv">50</span> <span class="kw">and</span> (idr_length <span class="op">/</span> length_in_ped) <span class="op">&gt;=</span> <span class="fl">0.95</span>:</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Full IDP"</span>)</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> idr_length <span class="op">&gt;=</span> <span class="dv">20</span>:</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Long IDR"</span>)</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="dv">5</span> <span class="op">&lt;=</span> idr_length <span class="op">&lt;=</span> <span class="dv">19</span>:</span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Short IDR"</span>)</span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Undefined"</span>)</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Determine the final classification based on priority</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"Full IDP"</span> <span class="kw">in</span> classifications:</span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Fully IDP"</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">"Long IDR"</span> <span class="kw">in</span> classifications:</span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Long IDR"</span></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">"Short IDR"</span> <span class="kw">in</span> classifications:</span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Short IDR"</span></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Fully Structured"</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Example usage:</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>length_of_idr <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">4</span>]</span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>length_in_ped <span class="op">=</span> <span class="dv">18</span></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>classification <span class="op">=</span> classify_idr_regions(length_of_idr, length_in_ped)</span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Classification:"</span>, classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Classification: Not Classified</code></pre>
-</div>
+<p>We have the length of IDR regions, here we define a function to classify proteins into catagories as stated in the introduction:</p>
+<ul>
+<li><p>Fully IDP</p></li>
+<li><p>Long IDR</p></li>
+<li><p>Short IDR</p></li>
+<li><p>Fully Structured</p></li>
+</ul>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify_idr_regions(length_of_idr, length_in_ped):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Classifies Intrinsic Disorder Regions (IDR) based on specified criteria.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">        length_of_idr (list of int): A list of integer values representing the lengths</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">            of individual IDR regions.</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">        length_of_pdb (int): The total length of the Protein Data Bank (PDB) structure.</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">        str: A classification string for the IDR regions based on the following criteria:</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">            - If any region has a length greater than or equal to 50 and accounts for</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">              more than 95% of the PDB length, it is classified as "Full IDP."</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">            - If any region has a length greater than or equal to 20, it is classified as</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">              "Long IDR."</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">            - If any region has a length between 5 and 19 (inclusive), it is classified as</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">              "Short IDR."</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">            - If all regions have lengths less than 5, the entire structure is classified</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">              as "Fully Structured."</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Examples:</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; length_of_idr = [1, 10, 69]</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; length_of_pdb = 69</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; classification = classify_idr_regions(length_of_idr, leng_of_pdb)</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">        &gt;&gt;&gt; print(classification)</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">        "Long IDR"</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">    Note:</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">        - If multiple criteria apply to different regions, the most strict criteria</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">          are applied. The priority is "Full IDP" &gt; "Long IDR" &gt; "Short IDR" &gt; "Fully Structured."</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">        - This function assumes that the input values are valid and correctly represent</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">          the lengths of IDR regions and the PDB length.</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> length_in_ped <span class="op">&lt;</span> <span class="dv">20</span>:</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Not Classified"</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    classifications <span class="op">=</span> []</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idr_length <span class="kw">in</span> length_of_idr:</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> idr_length <span class="op">&gt;=</span> <span class="dv">50</span> <span class="kw">and</span> (idr_length <span class="op">/</span> length_in_ped) <span class="op">&gt;=</span> <span class="fl">0.95</span>:</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>            <span class="co"># the second condition should be sum(length_of_idr)/ length_in_ped it will make more sense</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Full IDP"</span>)</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> idr_length <span class="op">&gt;=</span> <span class="dv">20</span>:</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Long IDR"</span>)</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="dv">5</span> <span class="op">&lt;=</span> idr_length <span class="op">&lt;=</span> <span class="dv">19</span>:</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Short IDR"</span>)</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>            classifications.append(<span class="st">"Undefined"</span>)</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Determine the final classification based on priority</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"Full IDP"</span> <span class="kw">in</span> classifications:</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Fully IDP"</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">"Long IDR"</span> <span class="kw">in</span> classifications:</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Long IDR"</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">"Short IDR"</span> <span class="kw">in</span> classifications:</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Short IDR"</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Fully Structured"</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Example usage:</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="co"># length_of_idr = [3, 4]</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="co"># length_in_ped = 18</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="co"># classification = classify_idr_regions(length_of_idr, length_in_ped)</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="co"># print("Classification:", classification)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="combine-all-together" class="level2">
 <h2 class="anchored" data-anchor-id="combine-all-together">Combine all together:</h2>
-<div class="cell" data-execution_count="51">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">This function work very well. need some modifies for printing.</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_ped_stats(PEDID):</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Retrieve and display protein ensemble deposition (PED) statistics for a given PED entry.</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">    This function queries the Protein Ensemble Deposition (PED) API to retrieve statistics and information for a</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">    specific PED entry identified by its PEDID. It provides details such as the entry ID, title, and information</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">    about chains and fragments within the entry. Additionally, it calculates the number of overlapping residues</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">    between fragment positions and disordered regions retrieved from the DISPROT/MobiDB database.</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">        PEDID (str): The PED entry ID for the entry to retrieve statistics.</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">        None: The function prints the PED statistics and overlap counts but does not return a value.</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">    Example:</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">        get_ped_stats("PED12345")</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">    Note:</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">        - This function requires the 'requests' library for HTTP requests and 'colorama' for colored output.</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">        - It queries the PED API to obtain entry information.</span></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">        - It retrieves disordered region information using the DISPROT/MobiDB database.</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">        - Overlapping residues between fragment positions and disordered regions are calculated and displayed.</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://deposition.proteinensemble.org/api/v1/entries/"</span> <span class="op">+</span> PEDID</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url).json()</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"PED ID</span><span class="ch">\t</span><span class="st"># chains in entry</span><span class="ch">\t</span><span class="st">Protein name</span><span class="ch">\t\"</span><span class="st">Length in PED (tag counted)</span><span class="ch">\"\t</span><span class="st">UniProt</span><span class="ch">\t</span><span class="st">Length UniProt</span><span class="ch">\t\"</span><span class="st">Disordered region from MobiDB/DisProt</span><span class="ch">\"\t\"</span><span class="st">PDB region (align to Uniprot)</span><span class="ch">\"\t</span><span class="st">Length of IDR</span><span class="ch">\t</span><span class="st"> Classification"</span>)</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    construct_chains <span class="op">=</span> res[<span class="st">'construct_chains'</span>]</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> chain <span class="kw">in</span> construct_chains:</span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(construct_chains) <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># chain_name = chain['chain_name']</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>            entry <span class="op">=</span> PEDID</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>            <span class="co"># chain_name = res['entry_id'] + '_' + chain['chain_name']</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>            entry<span class="op">=</span> PEDID <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> chain[<span class="st">'chain_name'</span>]</span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        n_fragments <span class="op">=</span> <span class="bu">len</span>(chain[<span class="st">'fragments'</span>])</span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        fragments <span class="op">=</span> chain[<span class="st">'fragments'</span>]</span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> fragment, fragment_stats <span class="kw">in</span> <span class="bu">zip</span>(fragments, chain[<span class="st">'fragments_stats'</span>]):</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>            protein_name <span class="op">=</span> fragment[<span class="st">'description'</span>]</span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>            length_in_ped <span class="op">=</span> fragment_stats[<span class="st">'length_total_pdb'</span>]</span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>            uniprot <span class="op">=</span> fragment_stats[<span class="st">'uniprot'</span>]</span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>            length_uniprot <span class="op">=</span> fragment_stats[<span class="st">'length_total_uniprot'</span>]</span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>            mobi_disorder_regions <span class="op">=</span> <span class="bu">tuple</span>()</span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> fragment_stats[<span class="st">'uniprot'</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>                mobi_disorder_regions <span class="op">=</span> merge_data(get_mobidb_disordered_data(fragment_stats[<span class="st">'uniprot'</span>]))</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>            pdb_region <span class="op">=</span> <span class="bu">tuple</span>([fragment[<span class="st">'start_position'</span>], fragment[<span class="st">'end_position'</span>]])</span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>            length_of_idr <span class="op">=</span> count_overlap(pdb_region, mobi_disorder_regions)</span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>            classification <span class="op">=</span> classify_idr_regions(length_of_idr, length_in_ped)</span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>entry<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span><span class="bu">len</span>(construct_chains)<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>protein_name<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>length_in_ped<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>uniprot<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>length_uniprot<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>mobi_disorder_regions<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>pdb_region<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>length_of_idr<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>classification<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Function to do the main task: get information from PED, pass uniprot to call MobiDB then do all other stuffs:</p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">This function work very well. need some modifies for printing.</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_ped_stats(PEDID):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Retrieve and display protein ensemble deposition (PED) statistics for a given PED entry.</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">    This function queries the Protein Ensemble Deposition (PED) API to retrieve statistics and information for a</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">    specific PED entry identified by its PEDID. It provides details such as the entry ID, title, and information</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">    about chains and fragments within the entry. Additionally, it calculates the number of overlapping residues</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">    between fragment positions and disordered regions retrieved from the DISPROT/MobiDB database.</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">        PEDID (str): The PED entry ID for the entry to retrieve statistics.</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">        None: The function prints the PED statistics and overlap counts but does not return a value.</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">    Example:</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">        get_ped_stats("PED12345")</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">    Note:</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">        - This function requires the 'requests' library for HTTP requests and 'colorama' for colored output.</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">        - It queries the PED API to obtain entry information.</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">        - It retrieves disordered region information using the DISPROT/MobiDB database.</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">        - Overlapping residues between fragment positions and disordered regions are calculated and displayed.</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://deposition.proteinensemble.org/api/v1/entries/"</span> <span class="op">+</span> PEDID</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> res.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        res <span class="op">=</span> res.json()</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"PED ID</span><span class="ch">\t</span><span class="st"># chains in entry</span><span class="ch">\t</span><span class="st">Protein name</span><span class="ch">\t\"</span><span class="st">Length in PED (tag counted)</span><span class="ch">\"\t</span><span class="st">UniProt</span><span class="ch">\t</span><span class="st">Length UniProt</span><span class="ch">\t\"</span><span class="st">Disordered region from MobiDB/DisProt</span><span class="ch">\"\t\"</span><span class="st">PDB region (align to Uniprot)</span><span class="ch">\"\t</span><span class="st">Length of IDR</span><span class="ch">\t</span><span class="st"> Classification"</span>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        construct_chains <span class="op">=</span> res[<span class="st">'construct_chains'</span>]</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> chain <span class="kw">in</span> construct_chains:</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">len</span>(construct_chains) <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>                <span class="co"># chain_name = chain['chain_name']</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>                entry <span class="op">=</span> PEDID</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>                <span class="co"># chain_name = res['entry_id'] + '_' + chain['chain_name']</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                entry<span class="op">=</span> PEDID <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> chain[<span class="st">'chain_name'</span>]</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>            n_fragments <span class="op">=</span> <span class="bu">len</span>(chain[<span class="st">'fragments'</span>])</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>            fragments <span class="op">=</span> chain[<span class="st">'fragments'</span>]</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> fragment, fragment_stats <span class="kw">in</span> <span class="bu">zip</span>(fragments, chain[<span class="st">'fragments_stats'</span>]):</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>                protein_name <span class="op">=</span> fragment[<span class="st">'description'</span>]</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>                length_in_ped <span class="op">=</span> fragment_stats[<span class="st">'length_total_pdb'</span>]</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>                uniprot <span class="op">=</span> fragment_stats[<span class="st">'uniprot'</span>]</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>                length_uniprot <span class="op">=</span> fragment_stats[<span class="st">'length_total_uniprot'</span>]</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>                mobi_disorder_regions <span class="op">=</span> <span class="bu">tuple</span>()</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> fragment_stats[<span class="st">'uniprot'</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>                    mobi_disorder_regions <span class="op">=</span> merge_data(get_mobidb_disordered_data(fragment_stats[<span class="st">'uniprot'</span>]))</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>                pdb_region <span class="op">=</span> <span class="bu">tuple</span>([fragment[<span class="st">'start_position'</span>], fragment[<span class="st">'end_position'</span>]])</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>                length_of_idr <span class="op">=</span> count_overlap(pdb_region, mobi_disorder_regions)</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>                classification <span class="op">=</span> classify_idr_regions(length_of_idr, length_in_ped)</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>entry<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span><span class="bu">len</span>(construct_chains)<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>protein_name<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>length_in_ped<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>uniprot<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>length_uniprot<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>mobi_disorder_regions<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>pdb_region<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>length_of_idr<span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>classification<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> res.status_code <span class="op">==</span> <span class="dv">404</span>:</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Entry </span><span class="sc">{</span>PEDID<span class="sc">}</span><span class="ss"> does not exist"</span>)</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="example-usage" class="level1">
 <h1>Example usage:</h1>
-<div class="cell" data-execution_count="124">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ID<span class="op">=</span><span class="dv">57</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>PEDID<span class="op">=</span><span class="st">'PED'</span><span class="op">+</span><span class="ss">f'</span><span class="sc">{</span>ID<span class="sc">:05d}</span><span class="ss">'</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>get_ped_stats(PEDID)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ID<span class="op">=</span><span class="dv">19</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>PEDID<span class="op">=</span><span class="st">'PED'</span><span class="op">+</span><span class="ss">f'</span><span class="sc">{</span>ID<span class="sc">:05d}</span><span class="ss">'</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>get_ped_stats(PEDID)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>PED ID  # chains in entry   Protein name    "Length in PED (tag counted)"   UniProt Length UniProt  "Disordered region from MobiDB/DisProt" "PDB region (align to Uniprot)" Length of IDR    Classification
-PED00057_A  2   Poly [ADP-ribose] polymerase 1  214 P09874  1014    ([93, 106], [197, 233], [355, 386], [483, 530], [648, 661]) (1, 214)    [14, 18, 0, 0, 0]   Short IDR
-PED00057_B  2   45-mer  45  None    44  ()  (1, 44) []  Fully Structured</code></pre>
+PED00019_A  2   None    160 O14558  160 ([1, 68], [150, 160])   (1, 160)    [68, 11]    Long IDR
+PED00019_B  2   Heat shock protein beta-6   160 O14558  160 ([1, 68], [150, 160])   (1, 160)    [68, 11]    Long IDR</code></pre>
 </div>
 </div>
+<section id="explanation-of-the-example" class="level2">
+<h2 class="anchored" data-anchor-id="explanation-of-the-example">Explanation of the example</h2>
+<p>Here, we are looking at the PED entry <code>PED00019</code>.</p>
+<p>This entry comprises two chains: Chain <code>A</code> and Chain <code>B</code>. To enhance clarity, we opt to represent the name as <code>ENTRY+CHAIN</code> for both.</p>
+<p>Chain A consists of 160 residues and can be traced back to the UniProt ID O14558, which is also characterized by 160 residues.</p>
+<p>The disorder regions, as identified by MobiDB, are situated at positions <code>[1, 68]</code> and <code>[150, 160]</code>.</p>
+<p>In the PDB data within PED, the entire sequence, spanning positions <code>[1, 160]</code>, is cataloged.</p>
+<p>Upon a careful comparison of PED PDB data and the disorder regions, we observe the presence of two distinct disorder regions, one spanning 68 residues and the other 11 residues in length.</p>
+<p>Similar explaination for chain B.</p>
+</section>
+</section>
+<section id="notes" class="level1">
+<h1>Notes:</h1>
+<p>In some cases, PED PDB can be complicated such as single chain is combined of multiple segment from multiple UniProt sequence, we need to manually combine information from that.</p>
 
 
 
