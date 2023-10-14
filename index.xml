@@ -28,7 +28,7 @@
 <h1>Download Entry file as tar.gz</h1>
 <section id="note" class="level3">
 <h3 class="anchored" data-anchor-id="note">Note:</h3>
-<p>The following code works with the new version of PED. For the old version, please refer to this page: https://old.proteinensemble.org/help</p>
+<p>The following code works with the new version of PED. For the old version, please refer to this page: <a href="https://old.proteinensemble.org/help" target="_blank">https://old.proteinensemble.org/help</a></p>
 <p>PED provides many ensembles of various proteins. We can write a simple code to automatically download <code>tar.gz</code> file then extract them for analysis.</p>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
