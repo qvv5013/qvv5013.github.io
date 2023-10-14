@@ -10,7 +10,866 @@
 <atom:link href="https://qvv5013.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>My blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Sun, 01 Oct 2023 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 14 Oct 2023 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Download Protein Ensemble Database entries</title>
+  <dc:creator>Quyen Vu</dc:creator>
+  <link>https://qvv5013.github.io/posts/2023/October/download_PED_entries.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>The Protein Ensemble Database (PED) is a freely accessible repository designed for the submission of structural collections, which include intrinsically disordered proteins (IDPs). PED contains manually curated records of structural collections measured through techniques such as nuclear magnetic resonance spectroscopy, small-angle X-ray scattering, and fluorescence resonance energy transfer. These structural coordinates can be utilized to assess these collections, thereby aiding the development of novel modeling approaches aimed at enhancing our ability to establish links between the inherent “absence of a fixed structure” in IDPs and their functions. Each PED entry corresponds to the primary experimental data and the structural collections associated with these datasets.</p>
+</section>
+<section id="download-entry-file-as-tar.gz" class="level1">
+<h1>Download Entry file as tar.gz</h1>
+<p>PED provides many ensembles of various proteins. We can write a simple code to automatically download <code>tar.gz</code> file then extract them for analysis.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> requests</span>
+<span id="cb1-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># for extracting, moving and so on</span></span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> tarfile</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb1-6"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> shutil</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> download_entry(PEDID):</span>
+<span id="cb2-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Download structural ensemble data for a given Protein Ensemble Database (PED) entry.</span></span>
+<span id="cb2-4"></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Parameters:</span></span>
+<span id="cb2-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - PEDID (int): The unique identifier of the PED entry to download.</span></span>
+<span id="cb2-7"></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb2-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - None</span></span>
+<span id="cb2-10"></span>
+<span id="cb2-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    This function fetches and downloads structural ensemble data for a specific PED entry</span></span>
+<span id="cb2-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    identified by its unique PEDID. It connects to the PED API to retrieve information</span></span>
+<span id="cb2-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    about the entry and its associated ensembles, then downloads the corresponding</span></span>
+<span id="cb2-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    structural data in the form of compressed tar.gz files.</span></span>
+<span id="cb2-15"></span>
+<span id="cb2-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example Usage:</span></span>
+<span id="cb2-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    download_entry(123)  # Downloads structural ensemble data for PED entry 123.</span></span>
+<span id="cb2-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb2-19">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create the PED entry ID with leading zeros (e.g., PED00001)</span></span>
+<span id="cb2-20">    ped_id <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"PED</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>PEDID<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:05d}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-21">    </span>
+<span id="cb2-22">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check and create the 'single' and 'multiple' folders if they don't exist</span></span>
+<span id="cb2-23">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> os.path.exists(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'single'</span>):</span>
+<span id="cb2-24">        os.makedirs(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'single'</span>)</span>
+<span id="cb2-25">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> os.path.exists(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'multiple'</span>):</span>
+<span id="cb2-26">        os.makedirs(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'multiple'</span>)</span>
+<span id="cb2-27"></span>
+<span id="cb2-28">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Construct the URL for fetching PED entry information</span></span>
+<span id="cb2-29">    url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://deposition.proteinensemble.org/api/v1/entries/"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> ped_id</span>
+<span id="cb2-30"></span>
+<span id="cb2-31">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Send a GET request to the PED API</span></span>
+<span id="cb2-32">    res <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(url)</span>
+<span id="cb2-33"></span>
+<span id="cb2-34">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check the response status code</span></span>
+<span id="cb2-35">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> res.status_code <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span>:</span>
+<span id="cb2-36">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Parse the response as JSON</span></span>
+<span id="cb2-37">        res <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> res.json()</span>
+<span id="cb2-38"></span>
+<span id="cb2-39">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Print the PED entry ID and its title/description</span></span>
+<span id="cb2-40">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(ped_id)</span>
+<span id="cb2-41">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(res[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'description'</span>].get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'title'</span>))</span>
+<span id="cb2-42"></span>
+<span id="cb2-43">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Determine the folder to save the downloaded files</span></span>
+<span id="cb2-44">        n_constructs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(res[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'construct_chains'</span>])</span>
+<span id="cb2-45">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> n_constructs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:</span>
+<span id="cb2-46">            folder <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'single/'</span></span>
+<span id="cb2-47">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span>:</span>
+<span id="cb2-48">            folder <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'multiple/'</span></span>
+<span id="cb2-49"></span>
+<span id="cb2-50">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Extract ensemble IDs</span></span>
+<span id="cb2-51">        ensembles_ids <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [ensemble[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ensemble_id"</span>] <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ensemble <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> res[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ensembles"</span>]]</span>
+<span id="cb2-52"></span>
+<span id="cb2-53">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Print the ensemble IDs</span></span>
+<span id="cb2-54">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(ensembles_ids)</span>
+<span id="cb2-55"></span>
+<span id="cb2-56">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Define the base download link template</span></span>
+<span id="cb2-57">        download_link <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://deposition.proteinensemble.org/api/v1/entries/ENTRYID/ensembles/ENSID/ensemble-pdb?response_format=json&amp;only_features=true"</span></span>
+<span id="cb2-58"></span>
+<span id="cb2-59">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Iterate through ensemble IDs and download each ensemble's data</span></span>
+<span id="cb2-60">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ensemble_id <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> ensembles_ids:</span>
+<span id="cb2-61">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Replace placeholders in the download link with actual PED and ensemble IDs</span></span>
+<span id="cb2-62">            u <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> download_link.replace(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'ENTRYID'</span>, ped_id)</span>
+<span id="cb2-63">            u <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> u.replace(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ENSID"</span>, ensemble_id)</span>
+<span id="cb2-64"></span>
+<span id="cb2-65">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Download the ensemble data and save it as a tar.gz file</span></span>
+<span id="cb2-66">            res_file <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(u)</span>
+<span id="cb2-67">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>folder<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}{</span>ped_id<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}{</span>ensemble_id<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.tar.gz"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wb"</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb2-68">                f.write(res_file.content)</span>
+<span id="cb2-69"></span>
+<span id="cb2-70">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">elif</span> res.status_code <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">404</span>:</span>
+<span id="cb2-71">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Handle the case where the PED entry does not exist</span></span>
+<span id="cb2-72">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>ped_id<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> does not exist in the database."</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># in case of missing something, can run download function one by one</span></span>
+<span id="cb3-2">download_entry(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">226</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PED00226
+N-terminal domain of dimeric eIF4G1 (1-249) from S. cerevisieae
+['e001']</code></pre>
+</div>
+</div>
+</section>
+<section id="extract-tar-file" class="level1">
+<h1>Extract TAR file</h1>
+<p>now, extract tar file and change the filename, move to proper folders …</p>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> extract_and_move_files(input_path, output_path):</span>
+<span id="cb5-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Extract and move files from tar.gz archives or a folder containing tar.gz archives.</span></span>
+<span id="cb5-4"></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Parameters:</span></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - input_path (str): The path to the tar.gz file or folder containing tar.gz archives.</span></span>
+<span id="cb5-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - output_path (str): The path where extracted files will be moved.</span></span>
+<span id="cb5-8"></span>
+<span id="cb5-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb5-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - None</span></span>
+<span id="cb5-11"></span>
+<span id="cb5-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    This function iterates through tar.gz files in the specified input path or folder, extracts their contents,</span></span>
+<span id="cb5-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    and moves the extracted files to the specified output path with appropriate naming.</span></span>
+<span id="cb5-14"></span>
+<span id="cb5-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example Usage:</span></span>
+<span id="cb5-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    extract_and_move_files('input.tar.gz', 'output_folder/')</span></span>
+<span id="cb5-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    extract_and_move_files('archive_folder/', 'output_folder/')</span></span>
+<span id="cb5-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb5-19">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> os.path.isfile(input_path) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">and</span> input_path.endswith(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".tar.gz"</span>):</span>
+<span id="cb5-20">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Handle the case where the input path is a tar.gz file</span></span>
+<span id="cb5-21">        entry_ensemble_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.splitext(os.path.basename(input_path))[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span>
+<span id="cb5-22">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> tarfile.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(input_path, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'r'</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> tf:</span>
+<span id="cb5-23">            <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Input tar file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>input_path<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">, pdb files in this archive file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>tf<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>getnames()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb5-24">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Extract all files</span></span>
+<span id="cb5-25">            tf.extractall(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>output_path)</span>
+<span id="cb5-26">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Move extracted file to a filename of PED_ENTRY+.pdb</span></span>
+<span id="cb5-27">            src <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.join(output_path, tf.getnames()[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span>
+<span id="cb5-28">            dst <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.join(output_path, <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>entry_ensemble_name[:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.pdb'</span>)</span>
+<span id="cb5-29">            <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"source file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>src<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">, destination file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>dst<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb5-30">            shutil.move(src, dst)</span>
+<span id="cb5-31">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">elif</span> os.path.isdir(input_path):</span>
+<span id="cb5-32">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Handle the case where the input path is a folder containing tar.gz files</span></span>
+<span id="cb5-33">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> tar_file <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> os.listdir(input_path):</span>
+<span id="cb5-34">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> tar_file.endswith(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".tar.gz"</span>):</span>
+<span id="cb5-35">                entry_ensemble_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> tar_file.rsplit(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span>
+<span id="cb5-36">                <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> tarfile.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(os.path.join(input_path, tar_file), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'r'</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> tf:</span>
+<span id="cb5-37">                    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Input tar file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>tar_file<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">, pdb files in this archive file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>tf<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>getnames()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb5-38">                    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Extract all files</span></span>
+<span id="cb5-39">                    tf.extractall(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>output_path)</span>
+<span id="cb5-40">                    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Move extracted file to a filename of PED_ENTRY+.pdb</span></span>
+<span id="cb5-41">                    src <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.join(output_path, tf.getnames()[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span>
+<span id="cb5-42">                    dst <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.join(output_path, <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>entry_ensemble_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.pdb'</span>)</span>
+<span id="cb5-43">                    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"source file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>src<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">, destination file: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>dst<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb5-44">                    shutil.move(src, dst)</span>
+<span id="cb5-45">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span>:</span>
+<span id="cb5-46">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Invalid input_path. Please provide a valid path to a tar.gz file or a folder containing tar.gz archives."</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Example Usage:</span></span>
+<span id="cb6-2">extract_and_move_files(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'single'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'pdb_single/'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Input tar file: PED00001e003.tar.gz, pdb files in this archive file: ['PED00001e003.pdb']
+source file: pdb_single/PED00001e003.pdb, destination file: pdb_single/PED00001e003.pdb
+Input tar file: PED00001e002.tar.gz, pdb files in this archive file: ['PED00001e002.pdb']
+source file: pdb_single/PED00001e002.pdb, destination file: pdb_single/PED00001e002.pdb
+Input tar file: PED00001e001.tar.gz, pdb files in this archive file: ['PED00001e001.pdb']
+source file: pdb_single/PED00001e001.pdb, destination file: pdb_single/PED00001e001.pdb</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">extract_and_move_files(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'single/PED00001e003.tar.gz'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'pdb_single/'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Input tar file: single/PED00001e003.tar.gz, pdb files in this archive file: ['PED00001e003.pdb']
+pdb_single/PED00001e003.pdb pdb_single/PED00001e003.pdb</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">extract_and_move_files(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'multiple'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'pdb_multiple'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Input tar file: PED00226e001.tar.gz, pdb files in this archive file: ['PED00226e000.pdb']
+source file: pdb_multiple/PED00226e000.pdb, destination file: pdb_multiple/PED00226e001.pdb</code></pre>
+</div>
+</div>
+<section id="separate-chains-and-fix-pdb-if-neccessary" class="level2">
+<h2 class="anchored" data-anchor-id="separate-chains-and-fix-pdb-if-neccessary">Separate chains and fix PDB if neccessary</h2>
+<p>For the entry with multiple chains, before we can perform entanglement analysis, we need additional step is seperate individual chain.</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> separate_chains(original_pdb, output_folder):</span>
+<span id="cb12-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb12-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Separate chains from a Protein Data Bank (PDB) file and save them as individual files.</span></span>
+<span id="cb12-4"></span>
+<span id="cb12-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Parameters:</span></span>
+<span id="cb12-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - original_pdb (str): The path to the original PDB file to process.</span></span>
+<span id="cb12-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - output_folder (str): The folder where the separated chain files will be saved.</span></span>
+<span id="cb12-8"></span>
+<span id="cb12-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb12-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    - None</span></span>
+<span id="cb12-11"></span>
+<span id="cb12-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    This function reads an original PDB file and separates its contents into individual chain-specific</span></span>
+<span id="cb12-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    PDB files. Each chain-specific file contains only the alpha carbon (CA) atom records for a particular chain.</span></span>
+<span id="cb12-14"></span>
+<span id="cb12-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    If the specified output folder does not exist, it will be created.</span></span>
+<span id="cb12-16"></span>
+<span id="cb12-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Example Usage:</span></span>
+<span id="cb12-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    separate_chains("input.pdb", "output_folder/")</span></span>
+<span id="cb12-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb12-20">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Extract the base name without the file extension</span></span>
+<span id="cb12-21">    base_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.splitext(os.path.basename(original_pdb))[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span>
+<span id="cb12-22"></span>
+<span id="cb12-23">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if the output folder exists, and create it if it doesn't</span></span>
+<span id="cb12-24">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> os.path.exists(output_folder):</span>
+<span id="cb12-25">        os.makedirs(output_folder)</span>
+<span id="cb12-26"></span>
+<span id="cb12-27">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Read content of the original PDB file</span></span>
+<span id="cb12-28">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(original_pdb, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'r'</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb12-29">        content <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> f.readlines()</span>
+<span id="cb12-30"></span>
+<span id="cb12-31">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Collect unique chain identifiers and alternate location indicators</span></span>
+<span id="cb12-32">    chain_identifiers <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>()</span>
+<span id="cb12-33">    alternate_location_indicators <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>()</span>
+<span id="cb12-34"></span>
+<span id="cb12-35">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> line <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> content:</span>
+<span id="cb12-36">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> line.startswith(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ATOM"</span>):</span>
+<span id="cb12-37">            chain_identifiers.add(line[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">21</span>:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">22</span>])</span>
+<span id="cb12-38">            alternate_location_indicators.add(line[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">17</span>])</span>
+<span id="cb12-39"></span>
+<span id="cb12-40">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create separate PDB files for each chain</span></span>
+<span id="cb12-41">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> chain_identifier <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> chain_identifiers:</span>
+<span id="cb12-42">        output_file <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.join(output_folder, <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>base_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">_</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>chain_identifier<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.pdb"</span>)</span>
+<span id="cb12-43"></span>
+<span id="cb12-44">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(output_file, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'w'</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb12-45">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> line <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> content:</span>
+<span id="cb12-46">                <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> line.startswith(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"MODEL"</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">or</span> line.startswith(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ENDMDL"</span>):</span>
+<span id="cb12-47">                    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Write entire MODEL and ENDMDL lines</span></span>
+<span id="cb12-48">                    f.write(line)</span>
+<span id="cb12-49">                <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">elif</span> line.startswith(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ATOM"</span>):</span>
+<span id="cb12-50">                    atom_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> line[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>].strip()</span>
+<span id="cb12-51">                    current_chain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> line[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">21</span>:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">22</span>]</span>
+<span id="cb12-52">                    alternate_location <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> line[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">17</span>]</span>
+<span id="cb12-53"></span>
+<span id="cb12-54">                    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check if the line matches the criteria for the current chain</span></span>
+<span id="cb12-55">                    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> atom_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"CA"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">and</span> current_chain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> chain_identifier <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">and</span> alternate_location <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> alternate_location_indicators:</span>
+<span id="cb12-56">                        f.write(line)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># separate_chains('pdb_multiple/PED00226e001.pdb', 'fixed_multiple')</span></span>
+<span id="cb13-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Example Usage:</span></span>
+<span id="cb13-3">separate_chains(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'pdb_multiple/PED00226e001.pdb'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"output_folder/"</span>)</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="entanglement-analysis" class="level1">
+<h1>Entanglement analysis</h1>
+<p>Now, time to run entanglement analysis. For multiple chains in entry, we need to seperate chains before run analysis but now, just go ahead with single chain.</p>
+<p>This general command works:</p>
+<p><code>julia -t 8 /home/qvv5013/work3/code/entanglement_analysis/gauss_linking.jl -f pdb_single/PED00216e001.pdb -o .</code></p>
+<p>A more detailed of this analysis will be provided later!</p>
+
+
+</section>
+
+ ]]></description>
+  <category>IDP</category>
+  <category>PED</category>
+  <category>MobiDB</category>
+  <category>DisProt</category>
+  <guid>https://qvv5013.github.io/posts/2023/October/download_PED_entries.html</guid>
+  <pubDate>Sat, 14 Oct 2023 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Extracting information from IDP database and IDP classification</title>
   <dc:creator>Quyen Vu</dc:creator>
