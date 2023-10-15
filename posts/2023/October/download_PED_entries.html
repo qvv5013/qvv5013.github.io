@@ -166,9 +166,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <h1 class="title">Download Protein Ensemble Database entries</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">IDP</div>
-                <div class="quarto-category">PED</div>
-                <div class="quarto-category">MobiDB</div>
-                <div class="quarto-category">DisProt</div>
               </div>
                   </div>
   </div>
@@ -203,10 +200,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#download-entry-file-as-tar.gz" id="toc-download-entry-file-as-tar.gz" class="nav-link" data-scroll-target="#download-entry-file-as-tar.gz">Download Entry file as tar.gz</a></li>
+  <li><a href="#download-entry-file-as-tar.gz" id="toc-download-entry-file-as-tar.gz" class="nav-link" data-scroll-target="#download-entry-file-as-tar.gz">Download Entry file as <code>tar.gz</code></a></li>
   <li><a href="#extract-tar-file" id="toc-extract-tar-file" class="nav-link" data-scroll-target="#extract-tar-file">Extract TAR file</a>
   <ul class="collapse">
-  <li><a href="#separate-chains-and-fix-pdb-if-neccessary" id="toc-separate-chains-and-fix-pdb-if-neccessary" class="nav-link" data-scroll-target="#separate-chains-and-fix-pdb-if-neccessary">Separate chains and fix PDB if neccessary</a></li>
+  <li><a href="#separate-chains-and-fix-pdb-if-necessary" id="toc-separate-chains-and-fix-pdb-if-necessary" class="nav-link" data-scroll-target="#separate-chains-and-fix-pdb-if-necessary">Separate chains and fix PDB if necessary</a></li>
   </ul></li>
   <li><a href="#entanglement-analysis" id="toc-entanglement-analysis" class="nav-link" data-scroll-target="#entanglement-analysis">Entanglement analysis</a></li>
   </ul>
@@ -223,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The Protein Ensemble Database (PED) is a freely accessible repository designed for the submission of structural collections, which include intrinsically disordered proteins (IDPs). PED contains manually curated records of structural collections measured through techniques such as nuclear magnetic resonance spectroscopy, small-angle X-ray scattering, and fluorescence resonance energy transfer. These structural coordinates can be utilized to assess these collections, thereby aiding the development of novel modeling approaches aimed at enhancing our ability to establish links between the inherent “absence of a fixed structure” in IDPs and their functions. Each PED entry corresponds to the primary experimental data and the structural collections associated with these datasets.</p>
 </section>
 <section id="download-entry-file-as-tar.gz" class="level1">
-<h1>Download Entry file as tar.gz</h1>
+<h1>Download Entry file as <code>tar.gz</code></h1>
 <p><u><b> Note:</b></u> The following code works with the new version of PED. For the old version, please refer to this page: <a href="https://old.proteinensemble.org/help" target="_blank">https://old.proteinensemble.org/help</a></p>
 <p>PED provides many ensembles of various proteins. We can write a simple code to automatically download <code>tar.gz</code> file then extract them for analysis.</p>
 <div class="cell" data-execution_count="1">
@@ -308,6 +305,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Handle the case where the PED entry does not exist</span></span>
 <span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>ped_id<span class="sc">}</span><span class="ss"> does not exist in the database."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>In this function, we will download and handle two cases: 1) entry contains single chain <code>n_constructs = 1</code> and 2) entry contains multiple chains <code>n_constructs &gt; 1</code> (which we will separate them later).</p>
+<p>Each type of entry will be saved in separate folder: <code>single</code> and <code>multiple</code> - we first check if folder exists, if not we will create them.</p>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># in case of missing something, can run download function one by one</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>download_entry(<span class="dv">226</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -320,7 +319,7 @@ N-terminal domain of dimeric eIF4G1 (1-249) from S. cerevisieae
 </section>
 <section id="extract-tar-file" class="level1">
 <h1>Extract TAR file</h1>
-<p>now, extract tar file and change the filename, move to proper folders …</p>
+<p>Now, extract tar file and change the filename, move to proper folders …</p>
 <div class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_and_move_files(input_path, output_path):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -369,6 +368,7 @@ N-terminal domain of dimeric eIF4G1 (1-249) from S. cerevisieae
 <span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
 <span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Invalid input_path. Please provide a valid path to a tar.gz file or a folder containing tar.gz archives."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Here, we use <code>shutil.move</code> function to rename ensemble because some entries has ensemble name in <code>tar.gz</code> and the actual ensemble name are different (e.g <code>PED00216</code> which <code>tar.gz</code> file is <code>e001</code> but pdb is named <code>e000</code>, many other entries have pdb file is just <code>pdbfile.pdb</code>).</p>
 <div class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example Usage:</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>extract_and_move_files(<span class="st">'single'</span>, <span class="st">'pdb_single/'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -395,8 +395,8 @@ pdb_single/PED00001e003.pdb pdb_single/PED00001e003.pdb</code></pre>
 source file: pdb_multiple/PED00226e000.pdb, destination file: pdb_multiple/PED00226e001.pdb</code></pre>
 </div>
 </div>
-<section id="separate-chains-and-fix-pdb-if-neccessary" class="level2">
-<h2 class="anchored" data-anchor-id="separate-chains-and-fix-pdb-if-neccessary">Separate chains and fix PDB if neccessary</h2>
+<section id="separate-chains-and-fix-pdb-if-necessary" class="level2">
+<h2 class="anchored" data-anchor-id="separate-chains-and-fix-pdb-if-necessary">Separate chains and fix PDB if necessary</h2>
 <p>For the entry with multiple chains, before we can perform entanglement analysis, we need additional step is seperate individual chain.</p>
 <div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> separate_chains(original_pdb, output_folder):</span>
