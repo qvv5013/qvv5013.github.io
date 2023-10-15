@@ -25,7 +25,8 @@
 <p>The Protein Ensemble Database (PED) is a freely accessible repository designed for the submission of structural collections, which include intrinsically disordered proteins (IDPs). PED contains manually curated records of structural collections measured through techniques such as nuclear magnetic resonance spectroscopy, small-angle X-ray scattering, and fluorescence resonance energy transfer. These structural coordinates can be utilized to assess these collections, thereby aiding the development of novel modeling approaches aimed at enhancing our ability to establish links between the inherent “absence of a fixed structure” in IDPs and their functions. Each PED entry corresponds to the primary experimental data and the structural collections associated with these datasets.</p>
 </section>
 <section id="download-entry-file-as-tar.gz" class="level1">
-<h1>Download Entry file as tar.gz</h1>
+<h1>Download Entry file as <code>tar.gz</code></h1>
+<p><u><b> Note:</b></u> The following code works with the new version of PED. For the old version, please refer to this page: <a href="https://old.proteinensemble.org/help" target="_blank">https://old.proteinensemble.org/help</a></p>
 <p>PED provides many ensembles of various proteins. We can write a simple code to automatically download <code>tar.gz</code> file then extract them for analysis.</p>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;">import</span> requests</span>
@@ -109,6 +110,8 @@
 <span id="cb2-71">        <span class="co" style="color: #5E5E5E;"># Handle the case where the PED entry does not exist</span></span>
 <span id="cb2-72">        <span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"</span><span class="sc" style="color: #5E5E5E;">{</span>ped_id<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;"> does not exist in the database."</span>)</span></code></pre></div>
 </div>
+<p>In this function, we will download and handle two cases: 1) entry contains single chain <code>n_constructs = 1</code> and 2) entry contains multiple chains <code>n_constructs &gt; 1</code> (which we will separate them later).</p>
+<p>Each type of entry will be saved in separate folder: <code>single</code> and <code>multiple</code> - we first check if folder exists, if not we will create them.</p>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;"># in case of missing something, can run download function one by one</span></span>
 <span id="cb3-2">download_entry(<span class="dv" style="color: #AD0000;">226</span>)</span></code></pre></div>
@@ -121,7 +124,7 @@ N-terminal domain of dimeric eIF4G1 (1-249) from S. cerevisieae
 </section>
 <section id="extract-tar-file" class="level1">
 <h1>Extract TAR file</h1>
-<p>now, extract tar file and change the filename, move to proper folders …</p>
+<p>Now, extract tar file and change the filename, move to proper folders …</p>
 <div class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="kw" style="color: #003B4F;">def</span> extract_and_move_files(input_path, output_path):</span>
 <span id="cb5-2">    <span class="co" style="color: #5E5E5E;">"""</span></span>
@@ -170,6 +173,7 @@ N-terminal domain of dimeric eIF4G1 (1-249) from S. cerevisieae
 <span id="cb5-45">    <span class="cf" style="color: #003B4F;">else</span>:</span>
 <span id="cb5-46">        <span class="bu" style="color: null;">print</span>(<span class="st" style="color: #20794D;">"Invalid input_path. Please provide a valid path to a tar.gz file or a folder containing tar.gz archives."</span>)</span></code></pre></div>
 </div>
+<p>Here, we use <code>shutil.move</code> function to rename ensemble because some entries has ensemble name in <code>tar.gz</code> and the actual ensemble name are different (e.g <code>PED00216</code> which <code>tar.gz</code> file is <code>e001</code> but pdb is named <code>e000</code>, many other entries have pdb file is just <code>pdbfile.pdb</code>).</p>
 <div class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;"># Example Usage:</span></span>
 <span id="cb6-2">extract_and_move_files(<span class="st" style="color: #20794D;">'single'</span>, <span class="st" style="color: #20794D;">'pdb_single/'</span>)</span></code></pre></div>
@@ -196,8 +200,8 @@ pdb_single/PED00001e003.pdb pdb_single/PED00001e003.pdb</code></pre>
 source file: pdb_multiple/PED00226e000.pdb, destination file: pdb_multiple/PED00226e001.pdb</code></pre>
 </div>
 </div>
-<section id="separate-chains-and-fix-pdb-if-neccessary" class="level2">
-<h2 class="anchored" data-anchor-id="separate-chains-and-fix-pdb-if-neccessary">Separate chains and fix PDB if neccessary</h2>
+<section id="separate-chains-and-fix-pdb-if-necessary" class="level2">
+<h2 class="anchored" data-anchor-id="separate-chains-and-fix-pdb-if-necessary">Separate chains and fix PDB if necessary</h2>
 <p>For the entry with multiple chains, before we can perform entanglement analysis, we need additional step is seperate individual chain.</p>
 <div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="kw" style="color: #003B4F;">def</span> separate_chains(original_pdb, output_folder):</span>
@@ -276,9 +280,6 @@ source file: pdb_multiple/PED00226e000.pdb, destination file: pdb_multiple/PED00
 
  ]]></description>
   <category>IDP</category>
-  <category>PED</category>
-  <category>MobiDB</category>
-  <category>DisProt</category>
   <guid>https://qvv5013.github.io/posts/2023/October/download_PED_entries.html</guid>
   <pubDate>Fri, 13 Oct 2023 22:00:00 GMT</pubDate>
 </item>
