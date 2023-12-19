@@ -27,6 +27,14 @@ title-block-banner: true
   <tbody>
   <tr >
       <td scope="row" class="text-center align-middle">
+        18/12/2023
+      </td>
+      <td class="text-center align-middle">
+        Quyen Vu has successfully defended his Ph.D. in Physics at the Institute of Physics, Polish Academy of Sciences. Congratulations on this significant accomplishment, Quyen!
+      </td>
+    </tr>
+  <tr >
+      <td scope="row" class="text-center align-middle">
         06/11/2023
       </td>
       <td class="text-center align-middle">
