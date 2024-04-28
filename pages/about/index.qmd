@@ -18,7 +18,11 @@ title-block-banner: true
 
 # `Quyen V. Vu`
 
-PhD student at IFPAN, Poland (`vuqv.phys@gmail.com`).
+Postdoctoral Scholar in O’Brien Group.
+
+Department of Chemistry, Pennsylvania State University
+
+ (`vuqv.phys@gmail.com`).
 
 I am nowhere and I am everywhere.
 
@@ -37,12 +41,27 @@ I am nowhere and I am everywhere.
   <thead>
     <tr class="card-header">
       <th scope="col">Period        </th>
-      <th scope="col">Degree</th>
+      <th scope="col">Degree/Position</th>
       <th scope="col">Where</th>
       <th scope="col">Supervisor(s)</th>
     </tr>
   </thead>
   <tbody>
+      <tr >
+      <td scope="row" class="text-center align-middle">
+        2024 - present
+      </td>
+      <td class="text-center align-middle">
+        Postdoctoral Scholar
+      </td>
+      <td class="text-center align-middle">
+        O’Brien Group, Department of Chemistry, Pennsylvania State University
+       </td>
+      <td class="text-center align-middle">
+        [`Prof. Edward P. O'Brien`](https://obrien22.vmhost.psu.edu/){target="_blank"}
+      </td>
+    </tr>
+
     <tr >
       <td scope="row" class="text-center align-middle">
         2018-2023

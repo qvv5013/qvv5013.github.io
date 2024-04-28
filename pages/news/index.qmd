@@ -27,6 +27,24 @@ title-block-banner: true
   <tbody>
   <tr >
       <td scope="row" class="text-center align-middle">
+        25/04/2024
+      </td>
+      <td class="text-center align-middle">
+        Quyen Vu's PhD thesis has been selected for the Best PhD thesis in 2023 of Institute of Physics, Polish Academy of Sciences
+      </td>
+    </tr>
+  <tr >
+  <tr >
+      <td scope="row" class="text-center align-middle">
+        01/04/2024
+      </td>
+      <td class="text-center align-middle">
+        Quyen Vu has started his job as a postdoc in O'Brien Lab at Department of Chemistry, Pennsylvania State University.
+      </td>
+    </tr>
+  <tr >
+  <tr >
+      <td scope="row" class="text-center align-middle">
         18/12/2023
       </td>
       <td class="text-center align-middle">
