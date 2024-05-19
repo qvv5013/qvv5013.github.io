@@ -5,7 +5,7 @@ project:
 website:
 
   title: "<b>Home</b>"
-  site-url: "https://qvv5013.github.io/"
+  site-url: "https://vuqv.github.io/"
   description: "My blog"
   page-navigation: true
   reader-mode: true
@@ -25,7 +25,7 @@ website:
       - text: "**About me**"
         href: pages/about/index.qmd
       - icon: github
-        href: https://github.com/qvv5013
+        href: https://github.com/vuqv
       - icon: twitter
         href: https://twitter.com/qvv5013
 
@@ -43,4 +43,4 @@ format:
 
 comments:
   giscus:
-    repo: qvv5013/qvv5013.github.io
+    repo: vuqv/vuqv.github.io
